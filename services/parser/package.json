@@ -1,0 +1,61 @@
+{
+	"name": "@pandora/kaede",
+	"version": "0.1.0",
+  	"description": "CQ data decoder and normalizer",
+	"main": "./lib/index.js",
+	"types": "./lib/index.d.ts",
+	"license": "MIT",
+	"private": true,
+	"keywords": [
+		"cq",
+		"crusaders quest",
+		"pandora",
+		"kaede",
+		"parser"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/TrueLecter/pandora.git"
+	},
+	"bugs": "https://github.com/TrueLecter/pandora/issues",
+	"homepage": "https://github.com/TrueLecter/pandora",
+	"author": {
+		"name": "TrueLecter",
+		"email": "gabriel@tenma.moe"
+	},
+	"contributors": [
+		{
+			"name": "TrueLecter",
+			"email": "gabriel@tenma.moe",
+			"web": "https://github.com/TrueLecter"
+		}
+	],
+	"maintainers": [
+		{
+			"name": "TrueLecter",
+			"email": "gabriel@tenma.moe",
+			"web": "https://github.com/TrueLecter"
+		}
+	],
+	"dependencies": {
+	    "axios": "^0.18.0",
+	    "del-cli": "^1.1.0",
+	    "egoroof-blowfish": "^2.1.0",
+	    "glob": "^7.1.2",
+	    "jimp": "^0.3.5",
+	    "lodash": "^4.17.10",
+	    "node-gzip": "^1.1.2",
+	    "node-mkdirs": "0.0.1",
+	    "npm-run-all": "^4.1.3",
+	    "tmp": "0.0.33"
+	},
+	"devDependencies": {
+
+	},
+	"peerDependencies": {
+
+	},
+	"scripts": {
+		"build": "tsc --build ./tsconfig.package.json"
+	}
+}

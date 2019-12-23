@@ -1,0 +1,55 @@
+{
+	"name": "@pandora/entities",
+	"version": "0.1.0",
+	"description": "Shared entites for @pandora services",
+	"main": "./lib/index.js",
+	"types": "./lib/index.d.ts",
+	"license": "MIT",
+	"private": true,
+	"keywords": [
+		"cq",
+		"crusaders quest",
+		"pandora",
+		"parser",
+		"entities"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/TrueLecter/pandora.git"
+	},
+	"bugs": "https://github.com/TrueLecter/pandora/issues",
+	"homepage": "https://github.com/TrueLecter/pandora",
+	"author": {
+		"name": "TrueLecter",
+		"email": "gabriel@tenma.moe"
+	},
+	"contributors": [
+		{
+			"name": "TrueLecter",
+			"email": "gabriel@tenma.moe",
+			"web": "https://github.com/TrueLecter"
+		}
+	],
+	"maintainers": [
+		{
+			"name": "TrueLecter",
+			"email": "gabriel@tenma.moe",
+			"web": "https://github.com/TrueLecter"
+		}
+	],
+	"dependencies": {
+
+	},
+	"dependencies": {
+
+	},
+	"devDependencies": {
+
+	},
+	"peerDependencies": {
+
+	},
+	"scripts": {
+		"build": "tsc --build ./tsconfig.package.json"
+	}
+}

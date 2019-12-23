@@ -1,0 +1,83 @@
+{
+	"name": "@pandora/bot",
+	"version": "2.0.1",
+	"description": "Crusaders Quest data bot for Discord",
+	"main": "./lib/index.js",
+	"types": "./lib/index.d.ts",
+	"license": "MIT",
+	"private": true,
+	"keywords": [
+		"cq",
+		"crusaders quest",
+		"pandora",
+		"bot",
+		"discord",
+		"discord bot"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/TrueLecter/pandora.git"
+	},
+	"bugs": "https://github.com/TrueLecter/pandora/issues",
+	"homepage": "https://github.com/TrueLecter/pandora",
+	"author": {
+		"name": "TrueLecter",
+		"email": "gabriel@tenma.moe"
+	},
+	"contributors": [
+		{
+			"name": "TrueLecter",
+			"email": "gabriel@tenma.moe",
+			"web": "https://github.com/TrueLecter"
+		},
+		{
+			"name": "Peter Han",
+			"email": "peter.han.9493@gmail.com",
+			"web": "https://github.com/peterthehan"
+		},
+		{
+			"name": "Vladlen",
+			"web": "https://github.com/negezor",
+			"url": "https://vk.com/id195624402"
+		}
+	],
+	"maintainers": [
+		{
+			"name": "TrueLecter",
+			"email": "gabriel@tenma.moe",
+			"web": "https://github.com/TrueLecter"
+		}
+	],
+	"engines": {
+		"node": ">=10.0"
+	},
+	"dependencies": {
+		"axios": "^0.19.0",
+		"compare-versions": "^3.4.0",
+		"db-migrate": "^0.11.3",
+		"db-migrate-mysql": "^1.1.10",
+		"discord-paginationembed": "github:gazmull/discord-paginationembed",
+		"discord.js": "github:discordjs/discord.js",
+		"dotenv": "^6.0.0",
+		"fuse.js": "^3.2.1",
+		"jimp": "^0.5.0",
+		"js-beautify": "^1.7.5",
+		"js-yaml": "^3.13.1",
+		"lodash": "^4.17.15",
+		"manage-database": "^0.2.1",
+		"mathjs": "^5.1.1",
+		"mysql2": "^1.6.1",
+		"winston": "^3.1.0"
+	},
+	"devDependencies": {
+		"@types/ws": "^6.0.4"
+	},
+	"peerDependencies": {},
+	"scripts": {
+		"db:init": "node --require dotenv/config init-db.js",
+		"db:migrate": "yarn run db:migrate:up",
+		"db:migrate:up": "db-migrate up",
+		"db:migrate:down": "db-migrate down",
+		"build": "tsc --build ./tsconfig.package.json"
+	}
+}
