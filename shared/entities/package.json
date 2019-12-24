@@ -1,7 +1,7 @@
 {
 	"name": "@pandora/entities",
 	"version": "0.1.0",
-	"description": "Shared entites for @pandora services",
+	"description": "Shared entities for @pandora services",
 	"main": "./lib/index.js",
 	"types": "./lib/index.d.ts",
 	"license": "MIT",
@@ -38,17 +38,10 @@
 		}
 	],
 	"dependencies": {
-
+		"cerialize": "^0.1.18"
 	},
-	"dependencies": {
-
-	},
-	"devDependencies": {
-
-	},
-	"peerDependencies": {
-
-	},
+	"devDependencies": {},
+	"peerDependencies": {},
 	"scripts": {
 		"build": "tsc --build ./tsconfig.package.json"
 	}

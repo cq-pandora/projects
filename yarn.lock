@@ -1445,6 +1445,13 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
+cerialize@^0.1.18:
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/cerialize/-/cerialize-0.1.18.tgz#d0f4f1b61cec7e4ed16a3eda0cac2bc99787414d"
+  integrity sha512-C/hp4UoPrMK060251Pt/21axF9aL4ceJlg3+pThB68VghhRjOzBzy4f8R9AirXdNB4gpqgaV2deU3UaexInL5w==
+  dependencies:
+    typescript "^2.5.0"
+
 chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
@@ -5872,7 +5879,7 @@ typed-function@1.1.0:
   resolved "https://registry.yarnpkg.com/typed-function/-/typed-function-1.1.0.tgz#ea149706e0fb42aca1791c053a6d94ccd6c4fdcb"
   integrity sha512-TuQzwiT4DDg19beHam3E66oRXhyqlyfgjHB/5fcvsRXbfmWPJfto9B4a0TBdTrQAPGlGmXh/k7iUI+WsObgORA==
 
-typescript@^3.7.3:
+typescript@^2.5.0, typescript@^3.7.3:
   version "3.7.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.3.tgz#b36840668a16458a7025b9eabfad11b66ab85c69"
   integrity sha512-Mcr/Qk7hXqFBXMN7p7Lusj1ktCBydylfQM/FZCk5glCNQJrCUKPkMHdo9R0MTFWsC/4kPFvDS0fDPvukfCkFsw==

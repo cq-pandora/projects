@@ -17,6 +17,9 @@
 		"ts-node": "^8.5.4",
 		"typescript": "^3.7.3"
 	},
+	"resolutions": {
+	  "typescript": "^3.7.3"
+	},
 	"scripts": {
 		"build": "yarn run typescript:build",
 		"watch": "yarn run typescript:watch",

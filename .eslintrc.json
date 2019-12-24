@@ -24,14 +24,20 @@
 		"@typescript-eslint/ban-ts-ignore": "off",
 		"@typescript-eslint/semi": ["error"],
 		"no-restricted-syntax": ["error", "WithStatement"],
-		"comma-dangle": ["error", "never"],
+		"comma-dangle": ["error", "only-multiline"],
+		"max-len": ["error", { "code": 120, "ignoreTemplateLiterals": true, "ignoreStrings": true }],
 		"no-param-reassign": ["error", {
 			"props": false
+		}],
+		"import/extensions": ["error", "ignorePackages", {
+		  "js": "never",
+		  "ts": "never"
 		}],
 		"no-dupe-class-members": "off",
 		"no-await-in-loop": "off",
 		"arrow-parens": "off",
 		"no-continue": "off",
+		"lines-between-class-members": "off",
 		"no-tabs": ["error", {
 			"allowIndentationTabs": true
 		}],
