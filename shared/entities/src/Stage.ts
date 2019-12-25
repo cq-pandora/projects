@@ -1,5 +1,7 @@
 import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
 
+import { registerDeserializer } from './Deserializer';
+
 export type StageId = string;
 
 export class Stage {
@@ -33,7 +35,7 @@ type StagesRaw = {
 	[k in StageId]: object;
 };
 
-export function parseStages(rawJson: string): Stages {
+function parseStages(rawJson: string): Stages {
 	const json = JSON.parse(rawJson) as StagesRaw;
 
 	return Object.entries(json).reduce<Stages>((r, [idRaw, stageRaw]) => {
@@ -42,3 +44,5 @@ export function parseStages(rawJson: string): Stages {
 		return r;
 	}, {} as Stages);
 }
+
+registerDeserializer<Stages>('Stages', parseStages);

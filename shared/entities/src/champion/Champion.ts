@@ -1,5 +1,6 @@
-import { autoserializeAs, autoserialize } from 'cerialize';
+import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
 
+import { registerDeserializer } from '../Deserializer';
 import ChampionForm from './ChampionForm';
 
 export type ChampionType = 'util' | 'def' | 'atk';
@@ -26,5 +27,7 @@ export class Champion {
 		this.forms = forms;
 	}
 }
+
+registerDeserializer(Champion, (input: string) => Deserialize(input, Champion));
 
 export type Champions = Array<Champion>;

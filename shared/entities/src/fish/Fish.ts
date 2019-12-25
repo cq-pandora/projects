@@ -1,5 +1,6 @@
-import { autoserializeAs, autoserialize } from 'cerialize';
+import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
 
+import { registerDeserializer } from '../Deserializer';
 import { FishReward, FishRewards } from './FishReward';
 
 export type FishHabitat = 'sea' | 'freshwater' | 'event';
@@ -36,5 +37,7 @@ export class Fish {
 		this.rewards = rewards;
 	}
 }
+
+registerDeserializer(Fish, (input: string) => Deserialize(input, Fish));
 
 export type Fishes = Array<Fish>;

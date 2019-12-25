@@ -2,7 +2,7 @@ export type HeroClass = 'priest' | 'archer' | 'hunter'| 'paladin' | 'warrior' | 
 
 export type HeroGender = 'male' | 'female';
 
-export type HeroType = 'promotable' | 'legendary' | 'contract' | 'collab' | 'support';
+export type HeroType = 'promotable' | 'legendary' | 'contract' | 'collab' | 'support' | 'secret';
 
 export type HeroStats =
 	'all' | 'accuracy' | 'armor' |

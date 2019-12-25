@@ -1,6 +1,7 @@
 import { autoserialize, Deserialize } from 'cerialize';
 
-import { TranslationKey } from './commonTypes';
+import { registerDeserializer } from './Deserializer';
+import { TranslationKey } from './common-types';
 
 export class Translation {
 	@autoserialize public readonly text: string;
@@ -22,7 +23,7 @@ type TranslationsRaw = {
 	[k in TranslationKey]: object;
 };
 
-export function parseTranslations(rawJson: string): Translations {
+function parseTranslations(rawJson: string): Translations {
 	const json = JSON.parse(rawJson) as TranslationsRaw;
 
 	return Object.entries(json).reduce<Translations>((r, [idRaw, raw]) => {
@@ -31,3 +32,5 @@ export function parseTranslations(rawJson: string): Translations {
 		return r;
 	}, {} as Translations);
 }
+
+registerDeserializer<Translations>('Translations', parseTranslations);

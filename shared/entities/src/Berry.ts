@@ -1,4 +1,6 @@
-import { autoserializeAs, autoserialize } from 'cerialize';
+import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
+
+import { registerDeserializer } from './Deserializer';
 
 import { HeroStats } from './hero';
 
@@ -38,5 +40,7 @@ export class Berry {
 		this.eatCost = eatCost;
 	}
 }
+
+registerDeserializer(Berry, (input: string) => Deserialize(input, Berry));
 
 export type Berries = Array<Berry>;

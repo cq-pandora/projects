@@ -1,0 +1,33 @@
+import { arraify } from './utils';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Entities = any;
+
+export type Deserializer<Entities> = (input: string) => [Entities] | Entities;
+
+const registered: {
+	[className: string]: Deserializer<Entities>;
+} = {};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type GenericConstructor<T> = new (...args: any[]) => T;
+
+export function registerDeserializer<T extends Entities>(
+	ctor: GenericConstructor<T> | string, d: Deserializer<T>
+): void {
+	registered[typeof ctor === 'string' ? ctor : ctor.name] = d;
+}
+
+export function DeserializeSingle<T extends Entities>(input: string, ctor: GenericConstructor<T> | string): T {
+	const deserializer = registered[typeof ctor === 'string' ? ctor : ctor.name] as Deserializer<T>;
+	const result = deserializer(input);
+
+	return Array.isArray(result) ? result[0] : result;
+}
+
+export function Deserialize<T extends Entities>(input: string, ctor: GenericConstructor<T> | string): Array<T> {
+	const deserializer = registered[typeof ctor === 'string' ? ctor : ctor.name] as Deserializer<T>;
+	const result = deserializer(input);
+
+	return arraify(result);
+}

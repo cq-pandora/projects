@@ -1,8 +1,10 @@
-import { autoserializeAs, autoserialize } from 'cerialize';
+import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
 
+import { registerDeserializer } from './Deserializer';
 import { IStatsHolder } from './interfaces';
 
 export class Boss implements IStatsHolder {
+	readonly all: number = -1;
 	@autoserialize public readonly id: string;
 	@autoserialize public readonly name: string;
 	@autoserialize public readonly image: string;
@@ -43,5 +45,7 @@ export class Boss implements IStatsHolder {
 		this.resistancePenetration = resistancePenetration;
 	}
 }
+
+registerDeserializer(Boss, (input: string) => Deserialize(input, Boss));
 
 export type Bosses = Array<Boss>;

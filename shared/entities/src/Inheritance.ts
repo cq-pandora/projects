@@ -1,5 +1,6 @@
 import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
 
+import { registerDeserializer } from './Deserializer';
 import { IStatsHolder } from './interfaces';
 import { HeroClass } from './hero';
 
@@ -14,6 +15,7 @@ export function isInheritanceLevel(inp: number | string): inp is InheritanceLeve
 }
 
 export class InheritanceStats implements IStatsHolder {
+	readonly all: number = -1;
 	@autoserialize public readonly accuracy: number;
 	@autoserialize public readonly armor: number;
 	@autoserializeAs('armor_pen') public readonly armorPenetration: number;
@@ -76,7 +78,10 @@ type InheritanceLevelsStructure<H> = {
 type InheritanceLevelsRaw = InheritanceLevelsStructure<InheritanceStatsRaw>;
 type InheritanceRaw = InheritanceStructure<InheritanceLevelsRaw>;
 
-export function parseInheritance(rawJson: string): Inheritance {
+export type InheritanceLevels = InheritanceLevelsStructure<InheritanceStats>;
+export type Inheritance = InheritanceStructure<InheritanceLevels>;
+
+function parseInheritance(rawJson: string): Inheritance {
 	const json = JSON.parse(rawJson) as InheritanceRaw;
 
 	return Object.entries(json).reduce<Inheritance>(
@@ -100,5 +105,4 @@ export function parseInheritance(rawJson: string): Inheritance {
 	);
 }
 
-export type InheritanceLevels = InheritanceLevelsStructure<InheritanceStats>;
-export type Inheritance = InheritanceStructure<InheritanceLevels>;
+registerDeserializer('Inheritance', parseInheritance);

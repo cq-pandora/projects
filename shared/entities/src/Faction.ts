@@ -1,6 +1,8 @@
-import { autoserialize, autoserializeAs } from 'cerialize';
+import { autoserialize, autoserializeAs, Deserialize } from 'cerialize';
 
-export default class Faction {
+import { registerDeserializer } from './Deserializer';
+
+export class Faction {
 	@autoserialize public readonly id: string;
 	@autoserialize public readonly name: string;
 	@autoserialize public readonly image: string;
@@ -13,5 +15,7 @@ export default class Faction {
 		this.ingameId = ingameId;
 	}
 }
+
+registerDeserializer(Faction, (input: string) => Deserialize(input, Faction));
 
 export type Factions = Array<Faction>;

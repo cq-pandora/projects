@@ -1,5 +1,6 @@
-import { autoserialize, autoserializeAs } from 'cerialize';
+import { autoserialize, autoserializeAs, Deserialize } from 'cerialize';
 
+import { registerDeserializer } from '../Deserializer';
 import SigilStats from './SigilStats';
 import SigilPair from './SigilPair';
 
@@ -35,3 +36,5 @@ export class Sigil {
 		this.set = set;
 	}
 }
+
+registerDeserializer(Sigil, (input: string) => Deserialize(input, Sigil));

@@ -1,4 +1,6 @@
-import { autoserialize, autoserializeAs } from 'cerialize';
+import { autoserialize, autoserializeAs, Deserialize } from 'cerialize';
+
+import { registerDeserializer } from './Deserializer';
 
 export class Goddess {
 	@autoserialize public readonly id: string;
@@ -19,5 +21,7 @@ export class Goddess {
 		this.ingameId = ingameId;
 	}
 }
+
+registerDeserializer(Goddess, (input: string) => Deserialize(input, Goddess));
 
 export type Goddesses = Array<Goddess>;

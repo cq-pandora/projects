@@ -1,5 +1,6 @@
-import { autoserializeAs, autoserialize } from 'cerialize';
+import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
 
+import { registerDeserializer } from '../Deserializer';
 import { HeroClass } from '../hero';
 
 import SpSkillForm from './SpSkillForm';
@@ -21,3 +22,5 @@ export class SpSkill {
 		this.forms = forms;
 	}
 }
+
+registerDeserializer(SpSkill, (input: string) => Deserialize(input, SpSkill));

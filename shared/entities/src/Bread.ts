@@ -1,4 +1,6 @@
-import { autoserializeAs, autoserialize } from 'cerialize';
+import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
+
+import { registerDeserializer } from './Deserializer';
 
 export type BreadRarity = 'rare' | 'epic' | 'legendary' | 'common';
 
@@ -26,5 +28,7 @@ export class Bread {
 		this.sellCost = sellCost;
 	}
 }
+
+registerDeserializer(Bread, (input: string) => Deserialize(input, Bread));
 
 export type Breads = Array<Bread>;

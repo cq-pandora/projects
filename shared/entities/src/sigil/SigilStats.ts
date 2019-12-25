@@ -3,6 +3,7 @@ import { autoserialize, autoserializeAs } from 'cerialize';
 import { IStatsHolder } from '../interfaces';
 
 export default class SigilStats implements IStatsHolder {
+	readonly all: number = -1;
 	@autoserialize public readonly accuracy: number;
 	@autoserialize public readonly armor: number;
 	@autoserializeAs('armor_pen') public readonly armorPenetration: number;

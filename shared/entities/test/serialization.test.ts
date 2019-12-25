@@ -1,9 +1,8 @@
-import { Serialize, Deserialize } from 'cerialize';
+import { Serialize } from 'cerialize';
 
 import {
-	Champion, ChampionForm, ChampionSkill, InheritanceStats, parseInheritance,
+	Champion, ChampionForm, ChampionSkill, InheritanceStats, Deserialize, Inheritance, DeserializeSingle
 } from '..';
-
 
 describe('Champion test', (): void => {
 	it('serializes and deserializes successfully', (): void => {
@@ -35,13 +34,13 @@ describe('Champion test', (): void => {
 
 		const dc = Deserialize(pojso, Champion);
 
-		expect(dc instanceof Champion).toBe(true);
-		expect(dc.id).toEqual('test_id');
-		expect(dc.type).toEqual('util');
+		expect(dc[0] instanceof Champion).toBe(true);
+		expect(dc[0].id).toEqual('test_id');
+		expect(dc[0].type).toEqual('util');
 	});
 
 	it('deserializes and serializes complex type', (): void => {
-		const inheritance = parseInheritance(`
+		const inheritance = DeserializeSingle<Inheritance>(`
 			{
 				"archer": {
 					"1": {
@@ -61,7 +60,7 @@ describe('Champion test', (): void => {
 					}
 				}
 			}
-		`);
+		`, 'Inheritance');
 
 		expect(inheritance.archer[1] instanceof InheritanceStats).toBe(true);
 	});

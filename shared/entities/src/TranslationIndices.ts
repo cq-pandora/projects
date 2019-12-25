@@ -1,6 +1,7 @@
 import { autoserialize, Deserialize } from 'cerialize';
 
-import { TranslationKey } from './commonTypes';
+import { registerDeserializer } from './Deserializer';
+import { TranslationKey } from './common-types';
 
 export type TranslationIndexSection =
 	'heroes' | 'breads' | 'berries' | 'sigils' | 'goddesses' | 'factions' | 'champions' | 'sp_skills' | 'bosses' |
@@ -30,7 +31,7 @@ type TranslationIndicesRaw = {
 	[k in TranslationIndexSection]: Array<object>;
 };
 
-export function parseTranslationIndices(rawJson: string): TranslationIndices {
+function parseTranslationIndices(rawJson: string): TranslationIndices {
 	const json = JSON.parse(rawJson) as TranslationIndicesRaw;
 
 	return Object.entries(json).reduce<TranslationIndices>((r, [idRaw, raw]) => {
@@ -39,3 +40,5 @@ export function parseTranslationIndices(rawJson: string): TranslationIndices {
 		return r;
 	}, {} as TranslationIndices);
 }
+
+registerDeserializer<TranslationIndices>('TranslationIndices', parseTranslationIndices);

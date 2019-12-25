@@ -1,4 +1,7 @@
-export default interface IStatsHolder {
+import { Stats } from '../common-types';
+
+export default interface IStatsHolder extends Record<Stats, number>{
+	readonly all: number;
 	readonly accuracy: number;
 	readonly armor: number;
 	readonly armorPenetration: number;
