@@ -3,6 +3,7 @@ import { autoserializeAs, autoserialize } from 'cerialize';
 import { IStatsHolder } from '../interfaces';
 
 export default class HeroBerriesStats implements IStatsHolder {
+	public readonly all: number = -1;
 	@autoserialize public readonly accuracy: number;
 	@autoserialize public readonly armor: number;
 	@autoserializeAs('armor_pen') public readonly armorPenetration: number;
