@@ -37,7 +37,7 @@ export class HelpCommand extends BaseCommand {
 				};
 			}
 
-			const embed = command.instructions(payload);
+			const embed = await command.instructions(payload);
 
 			await message.channel.send({ embed });
 

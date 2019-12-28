@@ -1,5 +1,5 @@
 import {
-	Client, Message, MessageEmbed, EmbedField
+	Client, Message, EmbedField, MessageEmbedOptions
 } from 'discord.js';
 import { serialize, serializeAs } from 'cerialize';
 
@@ -56,7 +56,7 @@ export class CommandResult {
 	}
 }
 
-export type CommandInfoResult = Partial<MessageEmbed>;
+export type CommandInfoResult = MessageEmbedOptions;
 
 export type CommandInfoResultField = EmbedField;
 

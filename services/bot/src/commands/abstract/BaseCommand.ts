@@ -1,5 +1,7 @@
+import { MessageEmbedOptions } from 'discord.js';
+
 import {
-	CommandCategory, CommandPayload, CommandResult, CommandInfoResult, CommandArguments, CommandInfoResultField,
+	CommandCategory, CommandPayload, CommandResult, CommandArguments, CommandInfoResultField,
 	ICommand, CommandResultCode,
 } from '../../common-types';
 
@@ -16,7 +18,7 @@ export default abstract class BaseCommand implements ICommand {
 	abstract async run(payload: CommandPayload): Promise<Partial<CommandResult>>;
 
 	protected async sendUsageInstructions(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const embed = this.instructions(payload);
+		const embed = await this.instructions(payload);
 
 		await payload.message.channel.send({ embed });
 
@@ -25,7 +27,7 @@ export default abstract class BaseCommand implements ICommand {
 		};
 	}
 
-	async instructions({ message }: CommandPayload): Promise<CommandInfoResult> {
+	async instructions({ message }: CommandPayload): Promise<MessageEmbedOptions> {
 		const prefix = getPrefix(message);
 
 		const argsStrings: Array<string> = [];
@@ -47,9 +49,9 @@ export default abstract class BaseCommand implements ICommand {
 			} as CommandInfoResultField);
 		}
 
-		const embed: CommandInfoResult = {
+		const embed: MessageEmbedOptions = {
 			title: `${prefix}${this.commandName} ${argsStrings.join(' ')}`,
-			fields
+			fields,
 		};
 
 		if (this.argsOrderMatters) {
