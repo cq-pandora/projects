@@ -14,6 +14,7 @@
 		"eslint-config-airbnb-base": "^14.0.0",
 		"eslint-plugin-import": "^2.19.1",
 		"jest": "^24.9.0",
+		"rimraf": "^3.0.0",
 		"ts-jest": "^24.2.0",
 		"ts-node": "^8.5.4",
 		"typescript": "^3.7.3"
@@ -30,7 +31,7 @@
 		"test:eslint": "eslint --ignore-path .gitignore {services,shared}/*/src/**/*.ts",
 		"typescript:build": "tsc --build ./tsconfig.project.json",
 		"typescript:watch": "yarn run typescript:build --watch",
-		"typescript:clean": "rm -rf ./{services,shared}/*/{lib,*.tsbuildinfo}",
+		"typescript:clean": "rimraf ./{services,shared}/*/{lib,*.tsbuildinfo}",
 		"update:tsconfig": "ts-node scripts/update-package-tsconfig.ts"
 	}
 }
