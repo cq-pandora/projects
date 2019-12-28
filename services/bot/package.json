@@ -1,6 +1,6 @@
 {
 	"name": "@pandora/bot",
-	"version": "2.0.1",
+	"version": "3.0.0",
 	"description": "Crusaders Quest data bot for Discord",
 	"main": "./lib/index.js",
 	"types": "./lib/index.d.ts",
@@ -52,14 +52,16 @@
 		"node": ">=10.0"
 	},
 	"dependencies": {
+		"@pandora/entities": "^0.1.0",
 		"axios": "^0.19.0",
+		"cerialize": "^0.1.18",
 		"compare-versions": "^3.4.0",
 		"db-migrate": "^0.11.3",
 		"db-migrate-mysql": "^1.1.10",
-		"discord-paginationembed": "github:gazmull/discord-paginationembed",
-		"discord.js": "github:discordjs/discord.js",
+		"discord-paginationembed": "discord-paginationembed@beta",
+		"discord.js": "discordjs/discord.js",
 		"dotenv": "^6.0.0",
-		"fuse.js": "^3.2.1",
+		"fuse.js": "^3.4.6",
 		"jimp": "^0.5.0",
 		"js-beautify": "^1.7.5",
 		"js-yaml": "^3.13.1",
@@ -67,9 +69,18 @@
 		"manage-database": "^0.2.1",
 		"mathjs": "^5.1.1",
 		"mysql2": "^1.6.1",
+		"reflect-metadata": "^0.1.13",
+		"sequelize": "^5.21.3",
+		"sequelize-typescript": "^1.1.0",
 		"winston": "^3.1.0"
 	},
 	"devDependencies": {
+		"@types/bluebird": "^3.5.29",
+		"@types/js-beautify": "^1.8.1",
+		"@types/mathjs": "^6.0.2",
+		"@types/mysql2": "types/mysql2",
+		"@types/node": "^13.1.0",
+		"@types/validator": "^12.0.1",
 		"@types/ws": "^6.0.4"
 	},
 	"peerDependencies": {},

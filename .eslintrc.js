@@ -51,7 +51,14 @@ module.exports = {
 			}
 		],
 		indent: 'off',
-		semi: 'off'
+		semi: 'off',
+		'class-methods-use-this': 'off',
+		'no-multi-assign': 'off',
+		'import/prefer-default-export': 'off',
+		'max-classes-per-file': ['error', 3],
+		'no-plusplus': 'off',
+		'no-nested-ternary': 'off',
+		'@typescript-eslint/no-explicit-any': 'off',
 	},
 	overrides: [
 		{

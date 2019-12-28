@@ -3,13 +3,13 @@
 	"files": [],
 	"references": [
 		{
+			"path": "shared\\entities\\tsconfig.package.json"
+		},
+		{
 			"path": "services\\bot\\tsconfig.package.json"
 		},
 		{
 			"path": "services\\parser\\tsconfig.package.json"
-		},
-		{
-			"path": "shared\\entities\\tsconfig.package.json"
 		}
 	]
 }
