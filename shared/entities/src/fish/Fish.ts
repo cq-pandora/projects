@@ -12,6 +12,7 @@ export type FishRank = 'normal' | 'hero' | 'boss' | 'event' | 'eventbox';
 export class Fish {
 	@autoserialize public readonly id: string;
 	@autoserialize public readonly name: string;
+	@autoserialize public readonly description: string;
 	@autoserialize public readonly habitat: FishHabitat;
 	@autoserialize public readonly rank: FishRank;
 	@autoserialize public readonly type: FishType;
@@ -23,7 +24,7 @@ export class Fish {
 
 	constructor(
 		id: string, name: string, habitat: FishHabitat, rank: FishRank, type: FishType, grade: number,
-		startsFrom: number, image: string, exp: number, rewards: FishRewards
+		startsFrom: number, image: string, exp: number, rewards: FishRewards, description: string
 	) {
 		this.id = id;
 		this.name = name;
@@ -35,9 +36,10 @@ export class Fish {
 		this.image = image;
 		this.exp = exp;
 		this.rewards = rewards;
+		this.description = description;
 	}
 }
 
-registerDeserializer(Fish, (input: string) => Deserialize(input, Fish));
+registerDeserializer(Fish, (input: string) => Deserialize(JSON.parse(input), Fish));
 
 export type Fishes = Array<Fish>;

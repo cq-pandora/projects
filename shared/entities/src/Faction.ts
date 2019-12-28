@@ -16,6 +16,6 @@ export class Faction {
 	}
 }
 
-registerDeserializer(Faction, (input: string) => Deserialize(input, Faction));
+registerDeserializer(Faction, (input: string) => Deserialize(JSON.parse(input), Faction));
 
 export type Factions = Array<Faction>;

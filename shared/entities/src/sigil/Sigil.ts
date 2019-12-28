@@ -37,4 +37,4 @@ export class Sigil {
 	}
 }
 
-registerDeserializer(Sigil, (input: string) => Deserialize(input, Sigil));
+registerDeserializer(Sigil, (input: string) => Deserialize(JSON.parse(input), Sigil));

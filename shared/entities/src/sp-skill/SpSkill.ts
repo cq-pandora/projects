@@ -23,4 +23,4 @@ export class SpSkill {
 	}
 }
 
-registerDeserializer(SpSkill, (input: string) => Deserialize(input, SpSkill));
+registerDeserializer(SpSkill, (input: string) => Deserialize(JSON.parse(input), SpSkill));

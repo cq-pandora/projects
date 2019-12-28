@@ -28,6 +28,6 @@ export class Champion {
 	}
 }
 
-registerDeserializer(Champion, (input: string) => Deserialize(input, Champion));
+registerDeserializer(Champion, (input: string) => Deserialize(JSON.parse(input), Champion));
 
 export type Champions = Array<Champion>;

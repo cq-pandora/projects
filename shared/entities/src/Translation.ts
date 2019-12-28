@@ -5,13 +5,15 @@ import { TranslationKey } from './common-types';
 
 export class Translation {
 	@autoserialize public readonly text: string;
+	public key = '';
 	@autoserialize public readonly version: string;
 	@autoserialize public readonly original: boolean;
 
-	constructor(text: string, version: string, original: boolean) {
+	constructor(text: string, version: string, original: boolean, key: string) {
 		this.text = text;
 		this.version = version;
 		this.original = original;
+		this.key = key;
 	}
 }
 
@@ -27,7 +29,10 @@ function parseTranslations(rawJson: string): Translations {
 	const json = JSON.parse(rawJson) as TranslationsRaw;
 
 	return Object.entries(json).reduce<Translations>((r, [idRaw, raw]) => {
-		r[idRaw as TranslationKey] = Deserialize(raw, Translation) as Translation;
+		const id = idRaw as TranslationKey;
+
+		r[id] = Deserialize(raw, Translation) as Translation;
+		r[id].key = id;
 
 		return r;
 	}, {} as Translations);

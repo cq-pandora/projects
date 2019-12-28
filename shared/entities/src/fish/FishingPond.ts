@@ -1,5 +1,6 @@
-import { autoserializeAs, autoserialize } from 'cerialize';
+import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
 
+import { registerDeserializer } from '../Deserializer';
 import { FishReward } from './FishReward';
 import { FishHabitat } from './Fish';
 
@@ -33,5 +34,7 @@ export class FishingPond {
 		this.background = background;
 	}
 }
+
+registerDeserializer(FishingPond, (input: string) => Deserialize(JSON.parse(input), FishingPond));
 
 export type FishingPonds = Array<FishingPond>;

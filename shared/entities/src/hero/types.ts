@@ -10,3 +10,12 @@ export type HeroStats =
 	'evasion' | 'great' | 'hp' | 'resistance';
 
 export type WeaponType = 'bow' | 'gun' | 'hammer' | 'orb' | 'sword' | 'staff';
+
+export const HeroClassColors: Record<HeroClass, number> = {
+	archer: 0x79B21D,
+	hunter: 0xDAA628,
+	paladin: 0x24A2BF,
+	priest: 0xF163B3,
+	warrior: 0xB43026,
+	wizard: 0x985ED5
+};

@@ -7,9 +7,9 @@ export class HeroSkin {
 	@autoserialize public readonly image: string;
 	@autoserialize public readonly cost: number;
 	@autoserialize public readonly name: string;
-	@autoserialize public readonly stats: Array<[HeroStats, number]>;
+	@autoserialize public readonly stats: Record<HeroStats, number>;
 
-	constructor(id: number, image: string, cost: number, name: string, stats: Array<[HeroStats, number]>) {
+	constructor(id: number, image: string, cost: number, name: string, stats: Record<HeroStats, number>) {
 		this.id = id;
 		this.image = image;
 		this.cost = cost;

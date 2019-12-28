@@ -107,6 +107,6 @@ export class Hero {
 	}
 }
 
-registerDeserializer(Hero, (input: string) => Deserialize(input, Hero));
+registerDeserializer(Hero, (input: string) => Deserialize(JSON.parse(input), Hero));
 
 export type Heroes = Array<Hero>;

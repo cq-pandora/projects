@@ -22,6 +22,6 @@ export class Goddess {
 	}
 }
 
-registerDeserializer(Goddess, (input: string) => Deserialize(input, Goddess));
+registerDeserializer(Goddess, (input: string) => Deserialize(JSON.parse(input), Goddess));
 
 export type Goddesses = Array<Goddess>;

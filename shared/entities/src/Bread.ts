@@ -29,6 +29,6 @@ export class Bread {
 	}
 }
 
-registerDeserializer(Bread, (input: string) => Deserialize(input, Bread));
+registerDeserializer(Bread, (input: string) => Deserialize(JSON.parse(input), Bread));
 
 export type Breads = Array<Bread>;

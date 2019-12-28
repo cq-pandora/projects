@@ -1,5 +1,6 @@
-import { autoserializeAs, autoserialize } from 'cerialize';
+import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
 
+import { registerDeserializer } from '../Deserializer';
 import { FishHabitat } from './Fish';
 
 export type FishingGearType = 'item_rod' | 'item_float' | 'item_bait';
@@ -7,6 +8,7 @@ export type FishingGearType = 'item_rod' | 'item_float' | 'item_bait';
 export class FishingGear {
 	@autoserialize public readonly id: string;
 	@autoserialize public readonly name: string;
+	@autoserialize public readonly description: string;
 	@autoserialize public readonly type: FishingGearType;
 	@autoserialize public readonly grade: number;
 	@autoserialize public readonly habitat: FishHabitat;
@@ -22,7 +24,7 @@ export class FishingGear {
 	constructor(
 		id: string, name: string, type: FishingGearType, grade: number, habitat: FishHabitat, habitatBonus: number,
 		power: number, bigChance: number, biteChance: number, eventChance: number, currency: string, price: number,
-		image: string
+		image: string, description: string
 	) {
 		this.id = id;
 		this.name = name;
@@ -37,7 +39,10 @@ export class FishingGear {
 		this.currency = currency;
 		this.price = price;
 		this.image = image;
+		this.description = description;
 	}
 }
+
+registerDeserializer(FishingGear, (input: string) => Deserialize(JSON.parse(input), FishingGear));
 
 export type FishingGears = Array<FishingGear>;

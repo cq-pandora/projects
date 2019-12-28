@@ -46,6 +46,6 @@ export class Boss implements IStatsHolder {
 	}
 }
 
-registerDeserializer(Boss, (input: string) => Deserialize(input, Boss));
+registerDeserializer(Boss, (input: string) => Deserialize(JSON.parse(input), Boss));
 
 export type Bosses = Array<Boss>;
