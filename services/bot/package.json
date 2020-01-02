@@ -66,7 +66,7 @@
 		"js-beautify": "^1.7.5",
 		"js-yaml": "^3.13.1",
 		"manage-database": "^0.2.1",
-		"mathjs": "^5.1.1",
+		"mathjs": "^6.3.0",
 		"mysql2": "^2.1.0",
 		"reflect-metadata": "^0.1.13",
 		"sequelize": "^5.21.3",

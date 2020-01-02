@@ -1,4 +1,4 @@
-import math from 'mathjs';
+import { evaluate as mathjsEvaluate } from 'mathjs';
 
 import BaseCommand from './abstract/BaseCommand';
 
@@ -31,7 +31,7 @@ export class MathCommand extends BaseCommand {
 		let err = false;
 		let result: string;
 		try {
-			result = math.evaluate(problem).toString();
+			result = mathjsEvaluate(problem).toString();
 		} catch (error) {
 			result = error.toString();
 			err = true;
