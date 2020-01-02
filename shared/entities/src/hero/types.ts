@@ -1,6 +1,6 @@
 export type HeroClass = 'priest' | 'archer' | 'hunter'| 'paladin' | 'warrior' | 'wizard';
 
-export type HeroGender = 'male' | 'female';
+export type HeroGender = 'male' | 'female' | 'none';
 
 export type HeroType = 'promotable' | 'legendary' | 'contract' | 'collab' | 'support' | 'secret';
 
