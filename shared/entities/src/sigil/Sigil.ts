@@ -4,7 +4,7 @@ import { registerDeserializer } from '../Deserializer';
 import SigilStats from './SigilStats';
 import SigilPair from './SigilPair';
 
-export type SigilRarity = 'common' | 'rare' | 'epic';
+export type SigilRarity = 'common' | 'rare' | 'epic' | 'set' | 'unique';
 
 export class Sigil {
 	@autoserialize public readonly id: string;
@@ -21,7 +21,7 @@ export class Sigil {
 
 	constructor(
 		id: string, ingameId: string, name: string, description: string, image: string, grade: number,
-		rarity: SigilRarity, sellCost: number, extractCost: number, stats: SigilStats, set: SigilPair
+		rarity: SigilRarity, sellCost: number, extractCost: number, stats: SigilStats, set?: SigilPair
 	) {
 		this.id = id;
 		this.ingameId = ingameId;
