@@ -129,7 +129,7 @@ export const fishes = arraySearchable('fishes', Fish);
 export const fishingGear = arraySearchable('fish-gear', FishingGear, 'fishing_gear');
 export const fishingPonds = arraySearchable('fish-ponds', FishingPond, 'fishing_ponds');
 
-export const inheritance = DeserializeSingle<Inheritance>(loadInfo('factions'), 'Inheritance');
+export const inheritance = DeserializeSingle<Inheritance>(loadInfo('inheritance'), 'Inheritance');
 
 function objectSearchable<T extends Entities>(cxt: ContextType, ctor: string): Searchable<T, Record<string, T>> {
 	return new Searchable<T, Record<string, T>>(cxt, DeserializeSingle(loadInfo(cxt), ctor) as Record<string, T>);
