@@ -5,7 +5,7 @@ import { readFileSync } from 'fs';
 import {
 	Hero, Berry, Champion, SpSkill, Boss, Bread, Sigil, Goddess, Faction, Inheritance, Fish, FishingGear,
 	Portrait, TranslationIndexSection, TranslationIndices, Deserialize, DeserializeSingle, TranslationIndex,
-	Translations, GenericConstructor, FishingPond
+	Translations, GenericConstructor
 } from '@pandora/entities';
 
 import { ContextType } from './common-types';
@@ -49,7 +49,6 @@ function contextToSection(context: ContextType): TranslationIndexSection {
 		case 'factions': return 'factions';
 		case 'fishes': return 'fishes';
 		case 'fish-gear': return 'fishing_gear';
-		case 'fish-ponds': return 'fishing_ponds';
 		case 'portraits': return 'portraits';
 		default: throw new Error(`No translation section for context '${context}'`);
 	}
@@ -127,7 +126,6 @@ export const factions = arraySearchable('factions', Faction);
 export const spSkills = arraySearchable('sp', SpSkill, 'sp_skills');
 export const fishes = arraySearchable('fishes', Fish);
 export const fishingGear = arraySearchable('fish-gear', FishingGear, 'fishing_gear');
-export const fishingPonds = arraySearchable('fish-ponds', FishingPond, 'fishing_ponds');
 
 export const inheritance = DeserializeSingle<Inheritance>(loadInfo('inheritance'), 'Inheritance');
 
