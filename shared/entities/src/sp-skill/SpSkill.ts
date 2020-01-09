@@ -1,9 +1,12 @@
-import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
+import {
+	autoserializeAs, autoserialize, Deserialize, Serialize
+} from 'cerialize';
 
 import { registerDeserializer } from '../Deserializer';
 import { HeroClass } from '../hero';
 
 import SpSkillForm from './SpSkillForm';
+import { registerSerializer } from '../Serializer';
 
 export type SpSkillType = 'normal' | 'ultimate';
 
@@ -24,3 +27,4 @@ export class SpSkill {
 }
 
 registerDeserializer(SpSkill, (input: string) => Deserialize(JSON.parse(input), SpSkill));
+registerSerializer(SpSkill, (input: SpSkill | SpSkill[]) => Serialize(input, SpSkill));

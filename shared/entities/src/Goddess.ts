@@ -1,6 +1,9 @@
-import { autoserialize, autoserializeAs, Deserialize } from 'cerialize';
+import {
+	autoserialize, autoserializeAs, Deserialize, Serialize
+} from 'cerialize';
 
 import { registerDeserializer } from './Deserializer';
+import { registerSerializer } from './Serializer';
 
 export class Goddess {
 	@autoserialize public readonly id: string;
@@ -23,5 +26,6 @@ export class Goddess {
 }
 
 registerDeserializer(Goddess, (input: string) => Deserialize(JSON.parse(input), Goddess));
+registerSerializer(Goddess, (input: Goddess | Goddess[]) => Serialize(input, Goddess));
 
 export type Goddesses = Array<Goddess>;

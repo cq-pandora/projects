@@ -1,4 +1,6 @@
-import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
+import {
+	autoserializeAs, autoserialize, Deserialize, Serialize
+} from 'cerialize';
 
 import { registerDeserializer } from '../Deserializer';
 import { HeroClass, HeroType, HeroGender } from './types';
@@ -8,6 +10,7 @@ import { IStatsHolder } from '../interfaces';
 import { HeroSBW } from './HeroSBW';
 import { HeroSkin } from './HeroSkin';
 import HeroBerriesStats from './HeroBerriesStats';
+import { registerSerializer } from '../Serializer';
 
 export class HeroForm implements IStatsHolder {
 	readonly all: number = -1;
@@ -108,5 +111,6 @@ export class Hero {
 }
 
 registerDeserializer(Hero, (input: string) => Deserialize(JSON.parse(input), Hero));
+registerSerializer(Hero, (input: Hero | Hero[]) => Serialize(input, Hero));
 
 export type Heroes = Array<Hero>;

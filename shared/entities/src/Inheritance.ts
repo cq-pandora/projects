@@ -1,6 +1,9 @@
-import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
+import {
+	autoserializeAs, autoserialize, Deserialize, Serialize
+} from 'cerialize';
 
 import { registerDeserializer } from './Deserializer';
+import { registerSerializer } from './Serializer';
 import { IStatsHolder } from './interfaces';
 import { HeroClass } from './hero';
 
@@ -105,4 +108,29 @@ function parseInheritance(rawJson: string): Inheritance {
 	);
 }
 
+function serializeInheritance(inheritance: Inheritance | Inheritance[]): object {
+	const target = Array.isArray(inheritance) ? inheritance[0] : inheritance;
+
+	return Object.entries(target).reduce(
+		(res, current) => {
+			const [heroClass, levels] = current;
+
+			res[heroClass] = Object.entries(levels).reduce(
+				(re, curr) => {
+					const [level, stats] = curr;
+
+					res[level] = Serialize(stats, InheritanceStats);
+
+					return re;
+				},
+				{} as Record<string, object>
+			);
+
+			return res;
+		},
+		{} as Record<string, object>
+	);
+}
+
 registerDeserializer('Inheritance', parseInheritance);
+registerSerializer('Inheritance', serializeInheritance);

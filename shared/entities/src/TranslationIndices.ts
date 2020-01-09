@@ -1,11 +1,12 @@
-import { autoserialize, Deserialize } from 'cerialize';
+import { autoserialize, Deserialize, Serialize } from 'cerialize';
 
 import { registerDeserializer } from './Deserializer';
 import { TranslationKey } from './common-types';
+import { registerSerializer } from './Serializer';
 
 export type TranslationIndexSection =
 	'heroes' | 'breads' | 'berries' | 'sigils' | 'goddesses' | 'factions' | 'champions' | 'sp_skills' | 'bosses' |
-	'fishes' | 'fishing_gear' | 'fishing_ponds' | 'portraits';
+	'fishes' | 'fishing_gear' | 'portraits';
 
 export class TranslationIndex {
 	@autoserialize public readonly key: TranslationKey;
@@ -41,4 +42,20 @@ function parseTranslationIndices(rawJson: string): TranslationIndices {
 	}, {} as TranslationIndices);
 }
 
+function serializeTranslationIndices(input: TranslationIndices | TranslationIndices[]): object {
+	const indices = Array.isArray(input) ? input[0] : input;
+
+	return Object.entries(indices).reduce(
+		(res, current) => {
+			const [key, index] = current;
+
+			res[key] = Serialize(index, TranslationIndex);
+
+			return res;
+		},
+		{} as Record<string, object[]>
+	);
+}
+
 registerDeserializer<TranslationIndices>('TranslationIndices', parseTranslationIndices);
+registerSerializer('TranslationIndices', serializeTranslationIndices);

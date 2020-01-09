@@ -1,6 +1,9 @@
-import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
+import {
+	autoserializeAs, autoserialize, Deserialize, Serialize
+} from 'cerialize';
 
 import { registerDeserializer } from './Deserializer';
+import { registerSerializer } from './Serializer';
 
 export type StageId = string;
 
@@ -45,4 +48,20 @@ function parseStages(rawJson: string): Stages {
 	}, {} as Stages);
 }
 
+function serializeStages(input: Stages | Stages[]): object {
+	const stages = Array.isArray(input) ? input[0] : input;
+
+	return Object.entries(stages).reduce(
+		(res, current) => {
+			const [key, stage] = current;
+
+			res[key] = Serialize(stage, Stage);
+
+			return res;
+		},
+		{} as Record<string, object>
+	);
+}
+
 registerDeserializer<Stages>('Stages', parseStages);
+registerSerializer('Stages', serializeStages);

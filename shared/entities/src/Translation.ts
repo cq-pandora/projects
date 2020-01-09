@@ -1,7 +1,8 @@
-import { autoserialize, Deserialize } from 'cerialize';
+import { autoserialize, Deserialize, Serialize } from 'cerialize';
 
 import { registerDeserializer } from './Deserializer';
 import { TranslationKey } from './common-types';
+import { registerSerializer } from './Serializer';
 
 export class Translation {
 	@autoserialize public readonly text: string;
@@ -38,4 +39,20 @@ function parseTranslations(rawJson: string): Translations {
 	}, {} as Translations);
 }
 
+function serializeTranslation(input: Translations | Translations[]): object {
+	const translations = Array.isArray(input) ? input[0] : input;
+
+	return Object.entries(translations).reduce(
+		(res, current) => {
+			const [key, translation] = current;
+
+			res[key] = Serialize(translation, Translation);
+
+			return res;
+		},
+		{} as Record<string, object>
+	);
+}
+
 registerDeserializer<Translations>('Translations', parseTranslations);
+registerSerializer('Translations', serializeTranslation);

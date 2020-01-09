@@ -1,5 +1,8 @@
-import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
+import {
+	autoserializeAs, autoserialize, Deserialize, Serialize
+} from 'cerialize';
 
+import { registerSerializer } from '../Serializer';
 import { registerDeserializer } from '../Deserializer';
 import { FishHabitat } from './Fish';
 
@@ -43,6 +46,7 @@ export class FishingGear {
 	}
 }
 
+registerSerializer(FishingGear, (input: FishingGear | FishingGear[]) => Serialize(input, FishingGear));
 registerDeserializer(FishingGear, (input: string) => Deserialize(JSON.parse(input), FishingGear));
 
 export type FishingGears = Array<FishingGear>;

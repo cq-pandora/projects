@@ -1,6 +1,9 @@
-import { autoserialize, autoserializeAs, Deserialize } from 'cerialize';
+import {
+	autoserialize, autoserializeAs, Deserialize, Serialize
+} from 'cerialize';
 
 import { registerDeserializer } from './Deserializer';
+import { registerSerializer } from './Serializer';
 
 export class Faction {
 	@autoserialize public readonly id: string;
@@ -17,5 +20,6 @@ export class Faction {
 }
 
 registerDeserializer(Faction, (input: string) => Deserialize(JSON.parse(input), Faction));
+registerSerializer(Faction, (input: Faction | Faction[]) => Serialize(input, Faction));
 
 export type Factions = Array<Faction>;

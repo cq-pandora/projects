@@ -1,8 +1,11 @@
-import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
+import {
+	autoserializeAs, autoserialize, Deserialize, Serialize
+} from 'cerialize';
 
 import { registerDeserializer } from './Deserializer';
 
 import { HeroStats } from './hero';
+import { registerSerializer } from './Serializer';
 
 export type BerryRarity = 'rare' | 'epic' | 'legendary' | 'common';
 
@@ -42,5 +45,6 @@ export class Berry {
 }
 
 registerDeserializer(Berry, (input: string) => Deserialize(JSON.parse(input), Berry));
+registerSerializer(Berry, (input: Berry | Berry[]) => Serialize(input, Berry));
 
 export type Berries = Array<Berry>;

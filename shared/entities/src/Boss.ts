@@ -1,7 +1,10 @@
-import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
+import {
+	autoserializeAs, autoserialize, Deserialize, Serialize
+} from 'cerialize';
 
 import { registerDeserializer } from './Deserializer';
 import { IStatsHolder } from './interfaces';
+import { registerSerializer } from './Serializer';
 
 export class Boss implements IStatsHolder {
 	readonly all: number = -1;
@@ -47,5 +50,6 @@ export class Boss implements IStatsHolder {
 }
 
 registerDeserializer(Boss, (input: string) => Deserialize(JSON.parse(input), Boss));
+registerSerializer(Boss, (input: Boss | Boss[]) => Serialize(input, Boss));
 
 export type Bosses = Array<Boss>;

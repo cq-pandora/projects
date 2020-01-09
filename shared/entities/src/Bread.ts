@@ -1,6 +1,9 @@
-import { autoserializeAs, autoserialize, Deserialize } from 'cerialize';
+import {
+	autoserializeAs, autoserialize, Deserialize, Serialize
+} from 'cerialize';
 
 import { registerDeserializer } from './Deserializer';
+import { registerSerializer } from './Serializer';
 
 export type BreadRarity = 'rare' | 'epic' | 'legendary' | 'common';
 
@@ -30,5 +33,6 @@ export class Bread {
 }
 
 registerDeserializer(Bread, (input: string) => Deserialize(JSON.parse(input), Bread));
+registerSerializer(Bread, (input: Bread | Bread[]) => Serialize(input, Bread));
 
 export type Breads = Array<Bread>;

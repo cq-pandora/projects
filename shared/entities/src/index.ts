@@ -16,3 +16,4 @@ export * from './Translation';
 export * from './TranslationIndices';
 export * from './Goddess';
 export * from './Deserializer';
+export * from './Serializer';

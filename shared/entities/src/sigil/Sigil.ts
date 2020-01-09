@@ -1,8 +1,11 @@
-import { autoserialize, autoserializeAs, Deserialize } from 'cerialize';
+import {
+	autoserialize, autoserializeAs, Deserialize, Serialize
+} from 'cerialize';
 
 import { registerDeserializer } from '../Deserializer';
 import SigilStats from './SigilStats';
 import SigilPair from './SigilPair';
+import { registerSerializer } from '../Serializer';
 
 export type SigilRarity = 'common' | 'rare' | 'epic' | 'set' | 'unique';
 
@@ -38,3 +41,4 @@ export class Sigil {
 }
 
 registerDeserializer(Sigil, (input: string) => Deserialize(JSON.parse(input), Sigil));
+registerSerializer(Sigil, (input: Sigil | Sigil[]) => Serialize(input, Sigil));
