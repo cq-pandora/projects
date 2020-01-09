@@ -1,0 +1,27 @@
+{
+    "collections": {
+        "berries": ["spritecollection_alladdstatcollection"],
+        "books": ["spritecollection_allinheritbookcollection"],
+        "breads": ["spritecollection_allbreadcollection"],
+        "fish": [
+            "spritecollection_allfishcollection",
+            "spritecollection_fishinggearcollection"
+        ],
+        "heroes": ["spritecollection_allfacecollection"],
+        "rings": ["spritecollection_allringcollection"],
+        "sigils": ["spritecollection_allcarvestonecollection"],
+        "weapons": [
+            "spritecollection_bowcollection",
+            "spritecollection_guncollection",
+            "spritecollection_hammercollection",
+            "spritecollection_orbcollection",
+            "spritecollection_staffcolldection",
+            "spritecollection_swordcolldection"
+        ],
+        "skills": ["spritecollection_allskillcollection"]
+    },
+
+    "collections_split": {
+        "portraits": ["portrait_*"]
+    }
+}

@@ -1,0 +1,14 @@
+export { normalize as normalizeHeroes } from './heroes';
+export { normalize as normalizeSigils } from './sigils';
+export { normalize as normalizeTranslations } from './translations';
+export { normalize as normalizeBerries } from './berries';
+export { normalize as normalizeBreads } from './breads';
+export { normalize as normalizeGoddesses } from './goddesses';
+export { normalize as normalizeFactions } from './factions';
+export { normalize as normalizeInheritance } from './inheritance';
+export { normalize as normalizeChampions } from './champions';
+export { normalize as normalizeSpSkills } from './sp-skills';
+export { normalize as normalizeBosses } from './bosses';
+export { normalize as normalizeFish } from './fishes';
+export { normalize as normalizeFishingGear } from './fishing-gear';
+export { normalize as normalizePortraits } from './portraits';
