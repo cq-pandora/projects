@@ -1,13 +1,13 @@
 <div align="center">
   <p>
-    <img src="https://raw.githubusercontent.com/TrueLecter/pandora/master/assets/pandora_banner.png" title="Pandora" />
+    <img src="https://raw.githubusercontent.com/cq-pandora/projects/master/services/bot/assets/pandora_banner.png" title="Pandora" />
   </p>
 
   <a href="https://www.npmjs.com/package/discord.js">
     <img src="https://img.shields.io/badge/discord.js-v11.4.2-blue.svg" title="Discord.js" />
   </a>
-  <a href="https://david-dm.org/TrueLecter/pandora">
-    <img src="https://david-dm.org/TrueLecter/pandora.svg" title="Dependencies" />
+  <a href="https://david-dm.org/cq-pandora/projects">
+    <img src="https://david-dm.org/cq-pandora/projects.svg" title="Dependencies" />
   </a>
 </div>
 
