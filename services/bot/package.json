@@ -16,10 +16,10 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+ssh://git@github.com/TrueLecter/pandora.git"
+		"url": "git+ssh://git@github.com/cq-pandora/projects.git"
 	},
-	"bugs": "https://github.com/TrueLecter/pandora/issues",
-	"homepage": "https://github.com/TrueLecter/pandora",
+	"bugs": "https://github.com/cq-pandora/projects/issues",
+	"homepage": "https://github.com/cq-pandora/projects/tree/master/services/bot",
 	"author": {
 		"name": "TrueLecter",
 		"email": "gabriel@tenma.moe"
