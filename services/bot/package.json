@@ -1,6 +1,6 @@
 {
 	"name": "@pandora/bot",
-	"version": "3.0.1",
+	"version": "3.0.2",
 	"description": "Crusaders Quest data bot for Discord",
 	"main": "./lib/index.js",
 	"types": "./lib/index.d.ts",
@@ -84,10 +84,10 @@
 	},
 	"peerDependencies": {},
 	"scripts": {
-		"db:init": "node --require dotenv/config init-db.js",
 		"db:migrate": "yarn run db:migrate:up",
 		"db:migrate:up": "db-migrate up",
 		"db:migrate:down": "db-migrate down",
-		"build": "tsc --build ./tsconfig.package.json"
+		"build": "tsc --build ./tsconfig.package.json",
+		"start": "node --harmony ./lib/index.js"
 	}
 }

@@ -27,3 +27,53 @@ Invite her to your server using [this link](https://discordapp.com/oauth2/author
     <img src="https://discordapp.com/api/guilds/258167954913361930/embed.png?style=banner2" title="Irc server"/>
   </a>
 </div>
+
+## Usage
+
+### Initialization
+```
+git clone https://github.com/cq-pandora/projects.git cq-pandora
+cd cq-pandora
+yarn install
+yarn build
+```
+
+### Running
+
+#### First run
+- Create database 
+- Set required connection info in environment variables or `database.json` file 
+- Migrate database using `yarn workspaces @pandora/bot db:migrate`
+
+#### General start
+Running configuration is set through environment variables. Best to be used with pm2.
+Example ecosystem.config.js (place in root of the monorepo):
+```
+module.exports = {
+	apps: [{
+		name: 'pandora',
+		script: './services/bot/lib/index.js',
+		autorestart: true,
+		node_args: '--harmony',
+		watch: ['./services/bot/lib/', './services/bot/node_modules/', './node_modules/'],
+		env: {
+			PANDORA_TOKEN: '<bot token>',
+			PANDORA_PREFIX: '!',
+			PANDORA_CQ_NORMALIZED_DATA_PATH: '<path to the output of kaede information folder>',
+			PANDORA_LOCAL_IMAGES_PREFIX: '<path to the output of kaede images>',
+			PANDORA_URL_IMAGES_PREFIX: '<hosted output of kaede images (used for discord images references)', // Official is https://data.fenrir.moe/
+			PANDORA_IMAGES_SUFFIX: '.png',
+			PANDORA_OWNER_ID: '136069690446446592', // It's me!
+
+			PANDORA_DB_USER: 'root',
+			PANDORA_DB_PASSWORD: 'root',
+			PANDORA_DB_HOST: 'localhost',
+			PANDORA_DB_PORT: '',
+			PANDORA_DB_DATABASE: 'cqdata',
+		},
+	}],
+};
+
+```
+
+Or, you can set all required environment variables in any other way and run bot using `yarn workspaces @pandora/bot start`
