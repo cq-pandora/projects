@@ -8,7 +8,7 @@
 	</a>
 	<a href="https://github.com/cq-pandora/projects/tree/master/services/parser">
 		<p>
-			<img src="https://raw.githubusercontent.com/cq-pandora/projects/master/services/parser/assets/banner.png" title="Kaede" />
+			<img src="https://raw.githubusercontent.com/cq-pandora/projects/master/services/parser/assets/kaede_banner.png" title="Kaede" />
 		</p>
 	</a>
 </div>
