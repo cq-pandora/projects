@@ -17,21 +17,6 @@ import { CostumeStat } from './raw-types/heroes/skins';
 
 import { HeroesNormalizationInput } from './input';
 
-const factionsMapping = {
-	FREE: 'heroes_of_freedom',
-	PUMP: 'pumpkin_city',
-	NETH: 'neth_empire',
-	EAST: 'ryu',
-	HAN: 'han',
-	WEST: 'sw_alliance',
-	NOS: 'nosgard',
-	GRAN: 'grancia_empire',
-	ROMAN: 'roman_republic',
-	GODDESS: 'order_of_goddess',
-	MINO: 'tribes_confederation',
-	CHEN: 'chen',
-} as Record<string, string>;
-
 function heroClassMapping(heroClass: string): HeroClass {
 	switch (heroClass) {
 		case 'CLA_ARCHER': return 'archer';
@@ -242,7 +227,7 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 			heroClassMapping(firstForm.classid),
 			heroRarityMapping(firstForm.rarity),
 			(firstForm.gender || 'none').toLowerCase() as HeroGender,
-			factionsMapping[firstForm.domain!],
+			firstForm.domain!,
 			forms.sort((a, b) => a.star - b.star),
 			sbws,
 			skins
