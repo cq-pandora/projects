@@ -63,5 +63,3 @@ export function sumStats(stat1: IStatsHolder, stat2: IStatsHolder): IStatsHolder
 
 	return stats;
 }
-
-export { default as parseTK2D, ITK2DObject } from './parse';
