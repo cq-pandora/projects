@@ -1,53 +1,23 @@
 import * as path from 'path';
-import glob from 'glob';
 
-import splitPortraits from './split-complicated';
-import splitSprites from './split-simple';
+import split from './split-unity';
 import { images, paths } from '../config';
 import { makeLogger } from '../logger';
 
 const logger = makeLogger('sprites');
 
-export default async function split(): Promise<void> {
-	const requiredCollections = images.collections;
+export default async function (): Promise<void> {
 	const assetsDir = path.resolve(paths.gameCachePath, 'files', 'Assets');
 	const outputDir = paths.spritesOutputDir;
 
-	for (const spritesType of Object.keys(requiredCollections)) {
-		for (const pattern of requiredCollections[spritesType]) {
-			const files = glob.sync(pattern, { cwd: assetsDir });
-			const outputPath = path.resolve(outputDir, spritesType);
-
-			for (const file of files) {
-				if (file.endsWith('_cn')) continue;
-
-				const fullPath = path.resolve(assetsDir, file);
-
-				logger.verbose(`Started processing ${fullPath}`);
-
-				try {
-					await splitSprites({
-						filename: fullPath,
-						outputDir: outputPath,
-						createOwnDirectory: false,
-						logger,
-					});
-
-					logger.verbose(`Successfully processed ${fullPath}`);
-				} catch (e) {
-					logger.error(`Unable to parse ${fullPath}`, e);
-				}
-			}
-		}
-	}
-
-	for (const spritesType of Object.keys(images.collectionsSplit)) {
-		for (const pattern of images.collectionsSplit[spritesType]) {
-			await splitPortraits({
+	for (const [scale, types] of Object.entries(images)) {
+		for (const [type, patterns] of Object.entries(types)) {
+			await split({
 				filesDir: assetsDir,
-				pattern,
-				outputDir: path.resolve(outputDir, spritesType),
+				patterns,
+				outputDir: path.resolve(outputDir, type),
 				logger,
+				scale: parseFloat(scale),
 			});
 		}
 	}

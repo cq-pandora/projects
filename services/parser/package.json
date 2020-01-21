@@ -1,6 +1,6 @@
 {
 	"name": "@pandora/kaede",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"description": "CQ data decoder and normalizer",
 	"main": "./lib/index.js",
 	"types": "./lib/index.d.ts",
@@ -46,7 +46,6 @@
 		"del-cli": "^1.1.0",
 		"egoroof-blowfish": "^2.2.1",
 		"glob": "^7.1.2",
-		"jimp": "^0.9.3",
 		"lodash": "^4.17.10",
 		"mkdirp": "^0.5.1",
 		"node-gzip": "^1.1.2",

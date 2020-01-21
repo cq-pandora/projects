@@ -8,17 +8,11 @@ function readJSON(cfg: string): any {
 type Glob = string;
 type Collections = Record<string, Glob[]>;
 
-interface IImagesCollections {
-	readonly collections: Collections;
-	readonly collectionsSplit: Collections;
-}
+type ImagesCollections = Record<number, Collections>;
 
 const configRaw = readJSON('images-collections');
 
-export const images: IImagesCollections = {
-	collections: configRaw.collections,
-	collectionsSplit: configRaw.collections_split,
-};
+export const images: ImagesCollections = configRaw;
 
 interface IPaths {
 	readonly unity: string;

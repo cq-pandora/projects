@@ -1,6 +1,5 @@
 {
   "unity_executable": "/path/to/unity/executable",
-  "unity_sprite_splitter": "/path/to/cq-decompiler-project",
   "decrypt_output_dir": "/path\to/decryption/output/folder",
   "game_cache_path": "/path/to/game/cache/com.nhnent.SKQUEST",
   "sprites_output_dir": "/path/to/sprites/output/folder",

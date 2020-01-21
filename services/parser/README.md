@@ -27,8 +27,6 @@ File contains blowfish key and init vector required to decrypt json data. Not in
 
 User dependant paths. Output dirs trees will be created if they does not exist
 
-- unity_sprite_splitter - should be set to CQ decompiler path. As it uses TK2D library, it is not included as well for licensing issues. You can contact me to get this project via discord or telegram @truelecter
-
 **images-collections.json**
 
 Optionally, add supported sprites collections or portraits to parse. Format is `"folder": ["glob relative to paths.game_cache_path/files/Assets/"]`

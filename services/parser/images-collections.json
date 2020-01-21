@@ -1,5 +1,5 @@
 {
-    "collections": {
+    "2": {
         "berries": ["spritecollection_alladdstatcollection"],
         "books": ["spritecollection_allinheritbookcollection"],
         "breads": ["spritecollection_allbreadcollection"],
@@ -21,7 +21,7 @@
         "skills": ["spritecollection_allskillcollection"]
     },
 
-    "collections_split": {
+    "1": {
         "portraits": ["portrait_*"]
     }
 }
