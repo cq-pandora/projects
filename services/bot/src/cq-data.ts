@@ -89,7 +89,7 @@ class Searchable<T extends Entities, C extends Container<T>> {
 		const queryResult = this.fuse.search<TranslationIndex, false, false>(query);
 
 		return queryResult.map(({ path }: TranslationIndex): T => {
-			const [, key] = path.split('.');
+			const [key] = path.split('.');
 
 			// @ts-ignore
 			return this.entities[key];
@@ -97,8 +97,10 @@ class Searchable<T extends Entities, C extends Container<T>> {
 	}
 }
 
-export function translate(key?: string): string {
-	if (!key) return '';
+export function translate(keyRaw?: string): string {
+	if (!keyRaw) return '';
+
+	const key = keyRaw.toUpperCase();
 
 	if (key in translations) {
 		return translations[key].text.replace(/[@#$^]/g, '');
