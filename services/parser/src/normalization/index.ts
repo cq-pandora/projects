@@ -99,7 +99,7 @@ export default async function normalize(): Promise<void> {
 
 		const result = await normalizer(filenames);
 
-		await writeFileAsync(pathResolve(paths.informationOutputDir, `${type}.json`), Serialize(result, ctor));
+		await writeFileAsync(pathResolve(paths.informationOutputDir, `${type}.json`), Serialize(result.entities, ctor));
 
 		if (result.translationIndex) {
 			translationIndices[type as TranslationIndexSection] = Object.entries(result.translationIndex)
