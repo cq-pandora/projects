@@ -1,10 +1,9 @@
 import { IStatsHolder, Stats } from '@pandora/entities';
 import { promisify } from 'util';
 import { readFile } from 'fs';
-import axios from 'axios';
+import { resolve as pathResolve } from 'path';
 
-const GAME_VERSION_URL = 'https://apkpure.com/crusaders-quest/com.nhnent.SKQUEST';
-const GAME_VERSION_REGEX = /<span\s+itemprop="version">\s*(\d+\.\d+\.\d+).*<\/span>/;
+import { paths } from '../config';
 
 const readFileAsync = promisify(readFile);
 
@@ -14,10 +13,22 @@ export async function readJSON(filename: string): Promise<object> {
 
 let gameVersionCached: string | undefined;
 
+interface IGameVersion {
+	status: string;
+	version: {
+		client: string;
+		server: string;
+		data: string;
+		lastupdatetime: string;
+		id: string;
+	}[];
+}
+
 export async function gameVersion(): Promise<string> {
 	if (!gameVersionCached) {
-		const page = await axios.get(GAME_VERSION_URL);
-		[, gameVersionCached] = page.data.match(GAME_VERSION_REGEX);
+		const versionJson = await readJSON(pathResolve(paths.decryptOutputDir, 'get_versions.json')) as IGameVersion;
+
+		gameVersionCached = versionJson.version[0].data;
 	}
 
 	return gameVersionCached as string;
