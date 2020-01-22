@@ -119,7 +119,7 @@ function serializeInheritance(inheritance: Inheritance | Inheritance[]): object 
 				(re, curr) => {
 					const [level, stats] = curr;
 
-					res[level] = Serialize(stats, InheritanceStats);
+					re[level] = Serialize(stats, InheritanceStats);
 
 					return re;
 				},
