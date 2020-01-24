@@ -18,7 +18,11 @@
             "spritecollection_staffcolldection",
             "spritecollection_swordcolldection"
         ],
-        "skills": ["spritecollection_allskillcollection"]
+        "skills": ["spritecollection_allskillcollection"],
+		"common": [
+		  "buildresource_commoncollection",
+		  "spritecollection_commoncollection_opt"
+		]
     },
 
     "1": {
