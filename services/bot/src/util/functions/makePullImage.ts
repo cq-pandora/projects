@@ -1,5 +1,6 @@
 import Jimp from 'jimp';
 import { HeroForm } from '@pandora/entities';
+import { resolve as pathResolve } from 'path';
 
 import chunk from './chunk';
 import createImage from './createImage';
@@ -8,7 +9,7 @@ import localImagePath from './localImagePath';
 const WIDTH_GAP = 10;
 const HEIGHT_GAP = 5;
 
-const cacheStarImage = Jimp.read(localImagePath('common/ui_icon_star_01'));
+const cacheStarImage = Jimp.read(pathResolve(__dirname, '../../../assets', 'hero_star.png'));
 
 async function getStarsImage(count: number): Promise<Jimp> {
 	const starImage = await cacheStarImage;
