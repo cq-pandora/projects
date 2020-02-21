@@ -66,8 +66,14 @@ export type TranslationsNormalizationInput = {
 	textsRawPaths: string[];
 };
 
+export type InteractionsInput = {
+	interactionsRawPath: string;
+	characterSkinsRawPath: string;
+};
+
 export type UniversalNormalizationInput =
 	BerriesNormalizationInput & BossesNormalizationInput & BreadsNormalizationInput & ChampionsNormalizationInput
 	& FactionsNormalizationInput & FishesNormalizationInput & FishingGearNormalizationInput
 	& GoddessesNormalizationInput & HeroesNormalizationInput & InheritanceNormalizationInput
-	& PortraitsNormalizationInput & SigilsNormalizationInput & SpSkillNormalizationInput;
+	& PortraitsNormalizationInput & SigilsNormalizationInput & SpSkillNormalizationInput
+	& InteractionsInput;

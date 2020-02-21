@@ -4,7 +4,7 @@ import { promisify } from 'util';
 
 import {
 	Hero, Berry, Champion, SpSkill, Boss, Bread, Sigil, Goddess, Faction, Fish, FishingGear, TranslationIndexSection,
-	TranslationIndices, TranslationIndex, GenericConstructor, Serialize, Translations
+	TranslationIndices, TranslationIndex, GenericConstructor, Serialize, Translations, Interaction
 } from '@pandora/entities';
 
 import { resolve as pathResolve } from 'path';
@@ -40,6 +40,7 @@ const toNormalize = {
 	fishing_gear: [FishingGear, normalizations.normalizeFishingGear],
 	portraits: ['Portraits', normalizations.normalizePortraits],
 	inheritance: ['Inheritance', normalizations.normalizeInheritance],
+	interactions: [Interaction, normalizations.normalizeInteractions],
 } as Record<TranslationIndexSection, NormalizationEntry<object>>;
 
 const logger = makeLogger('normalize');
@@ -89,6 +90,7 @@ export default async function normalize(): Promise<void> {
 		sigilsStatsRawPath: absolute('carvestone_option'),
 		spSkillsRawPath: absolute('spskill'),
 		weaponsRawPath: absolute('weapon'),
+		interactionsRawPath: absolute('hero_easteregg'),
 		translation: translations,
 	};
 
