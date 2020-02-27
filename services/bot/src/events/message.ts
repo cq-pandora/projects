@@ -111,7 +111,7 @@ export default (client: Client): (msg: Message) => Promise<void> => {
 			if (!isErrorIgnored(error)) {
 				stat.statusCode = CommandResultCode.FATAL;
 
-				logger.error(`{${cmdId}} Unexpected error while executing command `, error);
+				logger.error(`{${cmdId}} Unexpected error while executing command:`, error);
 
 				await message.channel.send('Error while executing command!');
 			}

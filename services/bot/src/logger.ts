@@ -2,18 +2,31 @@ import {
 	createLogger, format, transports, Logger
 } from 'winston';
 
-const formatError = (error: Error): string => `\n${error.stack}`;
-const formatPlainExtra = (extra: any): string => JSON.stringify(extra, null, 4);
-const formatExtra = (extra: any): string => (extra instanceof Error ? formatError(extra) : formatPlainExtra(extra));
+import { SPLAT } from 'triple-beam';
 
 const loggingFormat = format.printf((info) => {
 	const {
 		timestamp, label, level, message, ...extra
 	} = info;
 
-	const splat = extra.splat || [];
+	let msg = message;
+	const splat = extra[SPLAT] || [];
 
-	return `${timestamp} [${label}:${level}] ${message} ${splat.map((s: any) => formatExtra(s)).join('\n')}`;
+	let splatText = '';
+
+	for (const spl of splat) {
+		// False trigger for whatever reason
+		// noinspection SuspiciousTypeOfGuard
+		if (spl instanceof Error) {
+			splatText += `\n${spl.stack}`;
+
+			msg = msg.replace(spl.message, '');
+		} else {
+			splatText += JSON.stringify(spl, null, 4);
+		}
+	}
+
+	return `${timestamp} [${label}:${level}] ${msg} ${splatText}`;
 });
 
 function makeLogger(label: string): Logger {
