@@ -8,12 +8,12 @@ import { registerSerializer } from './Serializer';
 export class InteractionActor {
 	@autoserialize public readonly id: string;
 	@autoserialize public readonly text: string;
-	@autoserialize public readonly skin?: string;
+	@autoserialize public readonly imageKey: string;
 
-	constructor(id: string, text: string, skin?: string) {
+	constructor(id: string, text: string, imageKey: string) {
 		this.id = id;
 		this.text = text;
-		this.skin = skin;
+		this.imageKey = imageKey;
 	}
 }
 

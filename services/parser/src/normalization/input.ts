@@ -69,6 +69,7 @@ export type TranslationsNormalizationInput = {
 export type InteractionsInput = {
 	interactionsRawPath: string;
 	characterSkinsRawPath: string;
+	charactersGeneralInfoRawPath: string;
 };
 
 export type UniversalNormalizationInput =

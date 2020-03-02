@@ -4,20 +4,28 @@ import { InteractionsInput } from './input';
 import { NormalizationResult } from './common-types';
 import { readJSON } from '../util';
 import { InteractionsRaw } from './raw-types/interactions';
-import { CharacterCostumesRaw } from './raw-types/heroes';
-import { Costume } from './raw-types/heroes/skins';
+import { CharacterCostumesRaw, CharacterVisualRaw } from './raw-types/heroes';
 
-type SkinMapping = Record<string, string>;
+type Mapping = Record<string, string>;
 
 export async function normalize(input: InteractionsInput): Promise<NormalizationResult<Interaction>> {
 	const interactionsRaw = await readJSON(input.interactionsRawPath) as InteractionsRaw;
 	const skinsRaw = await readJSON(input.characterSkinsRawPath) as CharacterCostumesRaw;
+	const characterVisualRaw = await readJSON(input.charactersGeneralInfoRawPath) as CharacterVisualRaw;
 
-	const skinToHeroIds = skinsRaw.costume.reduce((r: SkinMapping, c: Costume) => {
-		[r[c.id]] = c.wearable_charid;
+	const heroesImageKeyMapping = {} as Mapping;
 
-		return r;
-	}, {} as SkinMapping);
+	for (const c of characterVisualRaw.character_visual) {
+		heroesImageKeyMapping[c.id] = c.face_tex;
+	}
+
+	const skinImageKeysMapping = {} as Mapping;
+	const skinToHeroIdMapping = {} as Mapping;
+
+	for (const c of skinsRaw.costume) {
+		skinImageKeysMapping[c.id] = c.face_tex;
+		[skinToHeroIdMapping[c.id]] = c.wearable_charid;
+	}
 
 	const result = [] as Interaction[];
 
@@ -25,9 +33,21 @@ export async function normalize(input: InteractionsInput): Promise<Normalization
 		const actors = Object
 			.entries(raw.eastereggherotext)
 			.map(
-				([id, text]) => (skinToHeroIds[id]
-					? new InteractionActor(skinToHeroIds[id], text, id)
-					: new InteractionActor(id, text))
+				([id, text]) => {
+					if (skinImageKeysMapping[id]) {
+						return new InteractionActor(
+							skinToHeroIdMapping[id],
+							text,
+							skinImageKeysMapping[id]
+						);
+					}
+
+					return new InteractionActor(
+						id,
+						text,
+						heroesImageKeyMapping[id]
+					);
+				}
 			);
 
 		result.push(new Interaction(raw.id, actors));
