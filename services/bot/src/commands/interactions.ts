@@ -52,8 +52,6 @@ export class InteractionsCommand extends BaseCommand {
 			};
 		}
 
-		console.log(JSON.stringify(heroInteractions, null, 4));
-
 		const ints = await Promise.all(heroInteractions.map(
 			async i => {
 				const actors = i.actors.map(actor => ({
