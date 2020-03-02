@@ -59,6 +59,8 @@ module.exports = {
 		'no-plusplus': 'off',
 		'no-nested-ternary': 'off',
 		'@typescript-eslint/no-explicit-any': 'off',
+		'no-bitwise': 'off',
+		'no-case-declarations': 'off',
 	},
 	overrides: [
 		{

@@ -27,3 +27,4 @@ export { default as groupBy } from './groupBy';
 export { default as getFieldKey } from './getFieldKey';
 export { default as isErrorIgnored } from './isErrorIgnored';
 export { default as loadRootConfig } from './loadRootConfig';
+export { default as renderInteraction } from './renderInteraction';

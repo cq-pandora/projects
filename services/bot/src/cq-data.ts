@@ -5,7 +5,7 @@ import { readFileSync } from 'fs';
 import {
 	Hero, Berry, Champion, SpSkill, Boss, Bread, Sigil, Goddess, Faction, Inheritance, Fish, FishingGear,
 	Portrait, TranslationIndexSection, TranslationIndices, Deserialize, DeserializeSingle, TranslationIndex,
-	Translations, GenericConstructor
+	Translations, GenericConstructor, Interaction
 } from '@pandora/entities';
 
 import { ContextType } from './common-types';
@@ -27,14 +27,16 @@ const alias = (ctx: ContextType, key: string): string => (
 		: ''
 );
 
+type FuseOptions = Fuse.FuseOptions<TranslationIndex>;
+
 const fuzzyOptions = {
-	threshold: 0.2,
+	threshold: 0,
 	location: 0,
 	distance: 100,
 	maxPatternLength: 32,
 	minMatchCharLength: 1,
 	keys: ['text']
-} as Fuse.FuseOptions<TranslationIndex>;
+} as FuseOptions;
 
 function contextToSection(context: ContextType): TranslationIndexSection {
 	switch (context) {
@@ -56,8 +58,15 @@ function contextToSection(context: ContextType): TranslationIndexSection {
 
 type Container<T> = T[] | Record<string, T>;
 
-class Searchable<T extends Entities, C extends Container<T>> {
-	private readonly fuse: Fuse<TranslationIndex, Fuse.FuseOptions<TranslationIndex>>;
+interface ISearchable<T extends Entities, C extends Container<T>> {
+	list(): T[];
+	structure(): C;
+	search(query: string): T;
+	searchAll(query: string): T[];
+}
+
+class Searchable<T extends Entities, C extends Container<T>> implements ISearchable<T, C> {
+	private readonly fuse: Fuse<TranslationIndex, FuseOptions>;
 	private readonly entities: C;
 	private readonly section: TranslationIndexSection;
 	private readonly context: ContextType;
@@ -66,8 +75,9 @@ class Searchable<T extends Entities, C extends Container<T>> {
 	constructor(context: ContextType, entities: C) {
 		this.section = contextToSection(context);
 
-		this.fuse = new Fuse<TranslationIndex, Fuse.FuseOptions<TranslationIndex>>(
-			translationIndices[this.section], fuzzyOptions
+		this.fuse = new Fuse<TranslationIndex, FuseOptions>(
+			translationIndices[this.section],
+			fuzzyOptions
 		);
 
 		this.entities = entities;
@@ -94,6 +104,30 @@ class Searchable<T extends Entities, C extends Container<T>> {
 			// @ts-ignore
 			return this.entities[key];
 		});
+	}
+}
+
+class InteractionsSearchable implements ISearchable<Interaction, Interaction[]> {
+	private readonly entities: Interaction[];
+
+	constructor(entities: Interaction[]) {
+		this.entities = entities;
+	}
+
+	list(): Interaction[] {
+		return this.entities;
+	}
+
+	search(query: string): Interaction {
+		return this.searchAll(query)[0];
+	}
+
+	searchAll(query: string): Interaction[] {
+		return this.entities.filter(e => Boolean(e.actors.filter(a => a.id === query).length));
+	}
+
+	structure(): Interaction[] {
+		return this.entities;
 	}
 }
 
@@ -128,6 +162,9 @@ export const factions = arraySearchable('factions', Faction);
 export const spSkills = arraySearchable('sp', SpSkill, 'sp_skills');
 export const fishes = arraySearchable('fishes', Fish);
 export const fishingGear = arraySearchable('fish-gear', FishingGear, 'fishing_gear');
+export const interactions = new InteractionsSearchable(
+	Deserialize(loadInfo('interactions'), Interaction)
+);
 
 export const inheritance = DeserializeSingle<Inheritance>(loadInfo('inheritance'), 'Inheritance');
 

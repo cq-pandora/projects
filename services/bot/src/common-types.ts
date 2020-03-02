@@ -123,3 +123,8 @@ export interface IPreloadScript {
 	run(): Promise<void>;
 	readonly errorCode: number;
 }
+
+export type InteractionRendererInput = {
+	imageKey: string;
+	text: string;
+};

@@ -56,8 +56,6 @@ export default class PaginationEmbed extends EmbedsMode {
 		return this.setPageIndicator(v);
 	}
 
-
-	// eslint-disable-next-line no-underscore-dangle
 	async _checkPermissions(): Promise<boolean> {
 		const channel = this.channel as TextChannel;
 
@@ -74,7 +72,7 @@ export default class PaginationEmbed extends EmbedsMode {
 		return true;
 	}
 
-	private async onFunctionEmojiClicked(emoji: string[], user: User, clientMessage: Message): Promise<void> {
+	protected async onFunctionEmojiClicked(emoji: string[], user: User, clientMessage: Message): Promise<void> {
 		const cb = this.functionEmojis[emoji[0]] || this.functionEmojis[emoji[1]];
 
 		try {
