@@ -34,7 +34,7 @@ export class AboutCommand extends BaseCommand {
 					},
 					{
 						name: 'Git repos',
-						value: '[/cq-pandora/pandora](https://github.com/cq-pandora/pandora)\n[cq-assets](https://github.com/cq-pandora/assets/)',
+						value: '[/cq-pandora/projects](https://github.com/cq-pandora/projects)\n[/cq-pandora/cq-assets](https://github.com/cq-pandora/assets/)',
 						inline: true,
 					},
 				],
