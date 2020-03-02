@@ -59,6 +59,11 @@ export default async function normalize(): Promise<void> {
 			'text1_en_us_2',
 			'text2_en_us_0',
 			'text2_en_us_1',
+			'textdialogue1_en_us_0',
+			'textdialogue1_en_us_1',
+			'textdialogue1_en_us_2',
+			'textdialogue2_en_us_0',
+			'textdialogue2_en_us_1',
 		].map(absolute),
 	});
 

@@ -4,13 +4,12 @@ import { readJSON, gameVersion } from '../util';
 
 import { TranslationsNormalizationInput } from './input';
 
+type TranslationsKey = 'text1' | 'text2' | 'text_dialogue1' | 'text_dialogue2';
+const TranslationsValues = ['text1', 'text2', 'text_dialogue1', 'text_dialogue2'] as TranslationsKey[];
+
 type TranslationRaw = Record<string, string>;
 type TranslationDataStructure = {
-	status: 'success';
-	text1?: TranslationRaw[];
-} & {
-	status: 'success';
-	text2?: TranslationRaw[];
+	[key in TranslationsKey]?: TranslationRaw[];
 };
 
 export async function normalize(input: TranslationsNormalizationInput): Promise<Translations> {
@@ -22,10 +21,13 @@ export async function normalize(input: TranslationsNormalizationInput): Promise<
 	for (const filename of textPaths) {
 		const data = await readJSON(filename) as TranslationDataStructure;
 
-		if (data.text1) {
-			contents.push(data.text1);
-		} else {
-			contents.push(data.text2!);
+		for (const k of TranslationsValues) {
+			const d = data[k];
+
+			if (typeof d !== 'undefined') {
+				contents.push(d);
+				break;
+			}
 		}
 	}
 

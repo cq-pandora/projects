@@ -6,7 +6,7 @@ import BaseCommand from './abstract/BaseCommand';
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
 } from '../common-types';
-import { parseQuery, parseInheritance, renderInteraction } from '../util';
+import { renderInteraction } from '../util';
 import { heroes, interactions, translate } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
@@ -27,8 +27,7 @@ export class InteractionsCommand extends BaseCommand {
 	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
 		const { message, args } = payload;
 
-		const iLvl = parseInheritance(args);
-		const name = parseQuery(args, [iLvl]);
+		const name = args.join(' ');
 
 		const hero = heroes.search(name);
 
@@ -53,6 +52,8 @@ export class InteractionsCommand extends BaseCommand {
 			};
 		}
 
+		console.log(JSON.stringify(heroInteractions, null, 4));
+
 		const ints = await Promise.all(heroInteractions.map(
 			async i => {
 				const actors = i.actors.map(actor => ({
@@ -71,7 +72,7 @@ export class InteractionsCommand extends BaseCommand {
 		return {
 			statusCode: CommandResultCode.SUCCESS,
 			target: hero.id,
-			args: JSON.stringify({ name, inheritance: iLvl }),
+			args: JSON.stringify({ name }),
 		};
 	}
 }
