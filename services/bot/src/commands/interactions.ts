@@ -6,7 +6,7 @@ import BaseCommand from './abstract/BaseCommand';
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
 } from '../common-types';
-import { renderInteraction } from '../util';
+import { renderInteraction, chunk } from '../util';
 import { heroes, interactions, translate } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
@@ -52,8 +52,6 @@ export class InteractionsCommand extends BaseCommand {
 			};
 		}
 
-		console.log(JSON.stringify(heroInteractions, null, 4));
-
 		const ints = await Promise.all(heroInteractions.map(
 			async i => {
 				const actors = i.actors.map(actor => ({
@@ -67,7 +65,11 @@ export class InteractionsCommand extends BaseCommand {
 			}
 		));
 
-		await message.channel.send(ints.map((v, idx) => new MessageAttachment(v, `${idx}.png`)));
+		const msgs = chunk(ints, 10);
+
+		for (const msg of msgs) {
+			await message.channel.send(msg.map((v, idx) => new MessageAttachment(v, `${idx}.png`)));
+		}
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,
