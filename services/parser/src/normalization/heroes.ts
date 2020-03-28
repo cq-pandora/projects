@@ -149,23 +149,23 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 				formRaw.id,
 				formRaw.name!,
 				formRaw.face_tex,
-				stats.grade,
+				formRaw.grade,
 				0,
-				(1 + (stats.grade - 1) / 10) * (stats.defense + stats.growthdefense * (stats.grade * 10 - 1)),
+				(1 + (formRaw.grade - 1) / 10) * (stats.defense + stats.growthdefense * (formRaw.grade * 10 - 1)),
 				0,
-				(1 + (stats.grade - 1) / 10) * (stats.initialattdmg + stats.growthattdmg * (stats.grade * 10 - 1)),
+				(1 + (formRaw.grade - 1) / 10) * (stats.initialattdmg + stats.growthattdmg * (formRaw.grade * 10 - 1)),
 				stats.critprob,
 				0,
 				stats.critpower,
 				0,
 				0,
-				(1 + (stats.grade - 1) / 10) * (stats.initialhp + stats.growthhp * (stats.grade * 10 - 1)),
+				(1 + (formRaw.grade - 1) / 10) * (stats.initialhp + stats.growthhp * (formRaw.grade * 10 - 1)),
 				0,
-				(1 + (stats.grade - 1) / 10) * (stats.resist + stats.growthresist * (stats.grade * 10 - 1)),
+				(1 + (formRaw.grade - 1) / 10) * (stats.resist + stats.growthresist * (formRaw.grade * 10 - 1)),
 				0,
 				formRaw.desc!,
 				stats.skill_icon!,
-				stats.grade < 4 ? 1 : (stats.grade === 6 ? 3 : 2),
+				formRaw.grade < 4 ? 1 : (formRaw.grade === 6 ? 3 : 2),
 				stats.skill_subname!,
 				stats.skill_name!,
 				stats.skill_desc!,
@@ -189,16 +189,16 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 
 			sbws = sbws.concat(formSbws);
 
-			heroesTranslationsKeysIndex[formRaw.name!] = `${text[formRaw.name!].text} (${stats.grade}★) name`;
-			heroesTranslationsKeysIndex[formRaw.desc!] = `${text[formRaw.name!].text} (${stats.grade}★) lore`;
-			heroesTranslationsKeysIndex[stats.skill_name!] = `${text[formRaw.name!].text} (${stats.grade}★) block name`;
-			heroesTranslationsKeysIndex[stats.skill_desc!] = `${text[formRaw.name!].text} (${stats.grade}★) block description`;
-			heroesTranslationsKeysIndex[stats.skill_subname!] = `${text[formRaw.name!].text} (${stats.grade}★) passive name`;
-			heroesTranslationsKeysIndex[stats.skill_subdesc!] = `${text[formRaw.name!].text} (${stats.grade}★) passive description`;
+			heroesTranslationsKeysIndex[formRaw.name!] = `${text[formRaw.name!].text} (${formRaw.grade}★) name`;
+			heroesTranslationsKeysIndex[formRaw.desc!] = `${text[formRaw.name!].text} (${formRaw.grade}★) lore`;
+			heroesTranslationsKeysIndex[stats.skill_name!] = `${text[formRaw.name!].text} (${formRaw.grade}★) block name`;
+			heroesTranslationsKeysIndex[stats.skill_desc!] = `${text[formRaw.name!].text} (${formRaw.grade}★) block description`;
+			heroesTranslationsKeysIndex[stats.skill_subname!] = `${text[formRaw.name!].text} (${formRaw.grade}★) passive name`;
+			heroesTranslationsKeysIndex[stats.skill_subdesc!] = `${text[formRaw.name!].text} (${formRaw.grade}★) passive description`;
 
 			for (const sbw of formSbws) {
-				heroesTranslationsKeysIndex[sbw.name] = `${text[formRaw.name!].text} (${stats.grade}★) SBW name`;
-				heroesTranslationsKeysIndex[sbw.ability] = `${text[formRaw.name!].text} (${stats.grade}★) SBW ability`;
+				heroesTranslationsKeysIndex[sbw.name] = `${text[formRaw.name!].text} (${formRaw.grade}★) SBW name`;
+				heroesTranslationsKeysIndex[sbw.ability] = `${text[formRaw.name!].text} (${formRaw.grade}★) SBW ability`;
 			}
 		}
 
