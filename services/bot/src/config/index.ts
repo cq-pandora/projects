@@ -11,6 +11,7 @@ import AliasesConfig from './AliasesConfig';
 import DBConfig from './DBConfig';
 import EmojisConfig from './EmojisConfig';
 import PackageConfig from './PackageConfig';
+import LinksField from './LinksField';
 
 type ServerPermission = {
 	[target in PermissionTarget]: {
@@ -131,6 +132,7 @@ class Config {
 	public readonly package: PackageConfig;
 	public readonly aliases: AliasesConfig;
 	public readonly permissions: PermissionsConfig;
+	public readonly links: LinksField[];
 	public readonly commands: Commands;
 	public gameVersion = 'UNKNOWN';
 
@@ -145,11 +147,14 @@ class Config {
 		this.imageSuffix = prefixedEnv('IMAGES_SUFFIX', prefix);
 		this.ownerId = prefixedEnv('OWNER_ID', prefix);
 
-		this.db = new DBConfig(`${prefix}DB_`);
 		this.emojis = Deserialize(JSON.parse(loadRootConfig('emojis.json')), EmojisConfig);
 		this.package = Deserialize(JSON.parse(loadRootConfig('package.json')), PackageConfig);
+		this.links = Deserialize(JSON.parse(loadRootConfig('links.json')), LinksField);
+
+		this.db = new DBConfig(`${prefix}DB_`);
 		this.aliases = new AliasesConfig();
 		this.permissions = new PermissionsConfig(this);
+
 		this.commands = {};
 	}
 }
