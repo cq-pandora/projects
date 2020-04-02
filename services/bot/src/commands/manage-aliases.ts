@@ -137,7 +137,7 @@ const cmdArgs: CommandArguments = {
 	},
 	for: {
 		required: false,
-		description: '',
+		description: 'Alias target',
 	}
 };
 
