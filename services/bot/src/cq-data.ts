@@ -30,7 +30,7 @@ const alias = (ctx: ContextType, key: string): string => (
 type FuseOptions = Fuse.FuseOptions<TranslationIndex>;
 
 const fuzzyOptions = {
-	threshold: 0,
+	threshold: 0.3,
 	location: 0,
 	distance: 100,
 	maxPatternLength: 32,
