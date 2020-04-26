@@ -98,12 +98,14 @@ class Searchable<T extends Entities, C extends Container<T>> implements ISearcha
 
 		const queryResult = this.fuse.search<TranslationIndex, false, false>(query);
 
-		return queryResult.map(({ path }: TranslationIndex): T => {
-			const [key] = path.split('.');
+		return queryResult.map(({ path: paths }: TranslationIndex): T[] => (
+			paths.split(',').map(path => {
+				const [key] = path.split('.');
 
-			// @ts-ignore
-			return this.entities[key];
-		});
+				// @ts-ignore
+				return this.entities[key];
+			})
+		)).flat();
 	}
 }
 
