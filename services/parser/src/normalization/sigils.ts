@@ -1,5 +1,5 @@
 import {
-	Sigil, SigilStats, SigilRarity, SigilPair
+	Sigil, SigilStats, SigilRarity, SigilPair, IStatsHolder
 } from '@pandora/entities';
 
 import { NormalizationResult } from './common-types';
@@ -49,21 +49,22 @@ export async function normalize(input: SigilsNormalizationInput): Promise<Normal
 			.map(id => {
 				const stat = sigilsStats[id];
 
-				return new SigilStats(
-					stat.accuracyrate,
-					stat.def,
-					stat.penetratedef,
-					stat.atkpower,
-					stat.critrate,
-					stat.critdodgerate,
-					stat.critpowerrate,
-					stat.receivedmgrate,
-					stat.dodgerate,
-					stat.maxhp,
-					stat.vamprate,
-					stat.rst,
-					stat.penetraterst,
-				);
+				return {
+					all: 0,
+					accuracy: stat.accuracyrate,
+					armor: stat.def,
+					armorPenetration: stat.penetratedef,
+					atkPower: stat.atkpower,
+					critChance: stat.critrate,
+					critChanceReduction: stat.critdodgerate,
+					critDmg: stat.critpowerrate,
+					dmgReduction: stat.receivedmgrate,
+					evasion: stat.dodgerate,
+					hp: stat.maxhp,
+					lifesteal: stat.vamprate,
+					resistance: stat.rst,
+					resistancePenetration: stat.penetraterst,
+				} as IStatsHolder;
 			})
 			.reduce((res, el) => sumStats(res, el));
 
@@ -79,7 +80,7 @@ export async function normalize(input: SigilsNormalizationInput): Promise<Normal
 			rarityMapper(raw.raritytype),
 			raw.sell_reward_amount,
 			raw.unequip_cost_amount,
-			stats,
+			new SigilStats(stats),
 			set,
 		);
 	});

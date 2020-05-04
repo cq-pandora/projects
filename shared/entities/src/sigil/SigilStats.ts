@@ -18,23 +18,19 @@ export default class SigilStats implements IStatsHolder {
 	@autoserialize public readonly resistance: number;
 	@autoserializeAs('resistance_pen') public readonly resistancePenetration: number;
 
-	constructor(
-		accuracy: number, armor: number, armorPenetration: number, atkPower: number, critChance: number,
-		critChanceReduction: number, critDmg: number, dmgReduction: number, evasion: number, hp: number,
-		lifesteal: number, resistance: number, resistancePenetration: number
-	) {
-		this.accuracy = accuracy;
-		this.armor = armor;
-		this.armorPenetration = armorPenetration;
-		this.atkPower = atkPower;
-		this.critChance = critChance;
-		this.critChanceReduction = critChanceReduction;
-		this.critDmg = critDmg;
-		this.dmgReduction = dmgReduction;
-		this.evasion = evasion;
-		this.hp = hp;
-		this.lifesteal = lifesteal;
-		this.resistance = resistance;
-		this.resistancePenetration = resistancePenetration;
+	constructor(stats: IStatsHolder) {
+		this.accuracy = stats.accuracy;
+		this.armor = stats.armor;
+		this.armorPenetration = stats.armorPenetration;
+		this.atkPower = stats.atkPower;
+		this.critChance = stats.critChance;
+		this.critChanceReduction = stats.critChanceReduction;
+		this.critDmg = stats.critDmg;
+		this.dmgReduction = stats.dmgReduction;
+		this.evasion = stats.evasion;
+		this.hp = stats.hp;
+		this.lifesteal = stats.lifesteal;
+		this.resistance = stats.resistance;
+		this.resistancePenetration = stats.resistancePenetration;
 	}
 }
