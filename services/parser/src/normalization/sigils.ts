@@ -65,11 +65,7 @@ export async function normalize(input: SigilsNormalizationInput): Promise<Normal
 					stat.penetraterst,
 				);
 			})
-			.reduce((res, el) => {
-				if (!res) return el;
-
-				return sumStats(res, el);
-			}, null as SigilStats | null) as SigilStats;
+			.reduce((res, el) => sumStats(res, el));
 
 		sigilsTranslationsIndex[raw.name] = idx;
 
