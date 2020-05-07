@@ -24,8 +24,7 @@ export async function normalize(input: SpSkillNormalizationInput): Promise<Norma
 	const spSkillsRaw = await readJSON(input.spSkillsRawPath) as SPSkillsRaw;
 
 	const spMax = spSkillsRaw.sp_skill.filter(s => s.unlockcond.next_id === 'MAX'
-		&& s.class !== Class.Kof
-		&& s.class !== Class.ClaObject);
+		&& ![Class.Kof, Class.ClaObject, Class.LimitedEr05].includes(s.class));
 
 	const spSkillsTranslationIndex = {} as Record<string, number>;
 
