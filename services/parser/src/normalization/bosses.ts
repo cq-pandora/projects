@@ -4,7 +4,7 @@ import {
 
 import { NormalizationResult } from './common-types';
 
-import { arrayToId, readJSON } from '../util';
+import { arrayToId, readJSON, growStats } from '../util';
 
 import { CharacterVisualRaw, Type } from './raw-types/heroes/character-visual';
 import { CharacterStatsRaw } from './raw-types/heroes';
@@ -32,24 +32,24 @@ export async function normalize(input: BossesNormalizationInput): Promise<Normal
 				bossesTranslationIndices[name].push(idx);
 			}
 
-			return new Boss(
-				c.id,
+			return new Boss({
+				id: c.id,
 				name,
-				c.face_tex,
-				stats.hitrate,
-				(1 + (c.grade - 1) / 10) * (stats.defense + stats.growthdefense * (c.grade * 10 - 1)),
-				stats.penetratedef,
-				(1 + (c.grade - 1) / 10) * (stats.initialattdmg + stats.growthattdmg * (c.grade * 10 - 1)),
-				stats.critprob,
-				0,
-				stats.critpower,
-				stats.dmgreduce,
-				stats.dodgerate,
-				(1 + (c.grade - 1) / 10) * (stats.initialhp + stats.growthhp * (c.grade * 10 - 1)),
-				stats.vamp,
-				(1 + (c.grade - 1) / 10) * (stats.resist + stats.growthresist * (c.grade * 10 - 1)),
-				stats.penetraterst,
-			);
+				image: c.face_tex,
+				accuracy: stats.hitrate,
+				armor: growStats(stats.defense, stats.growthdefense, c.grade),
+				armorPenetration: stats.penetratedef,
+				atkPower: growStats(stats.initialattdmg, stats.growthattdmg, c.grade),
+				critChance: stats.critprob,
+				critChanceReduction: 0,
+				critDmg: stats.critpower,
+				dmgReduction: stats.dmgreduce,
+				evasion: stats.dodgerate,
+				hp: growStats(stats.initialhp, stats.growthhp, c.grade),
+				lifesteal: stats.vamp,
+				resistance: growStats(stats.resist, stats.growthresist, c.grade),
+				resistancePenetration: stats.penetraterst
+			});
 		});
 
 	const translationIndex = Object.entries(bossesTranslationIndices).reduce((r, v) => {

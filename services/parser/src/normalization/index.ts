@@ -117,13 +117,13 @@ export default async function normalize(): Promise<void> {
 						logger.warn(`No translation available for ${e[0]}`);
 					}
 
-					return new TranslationIndex(
-						e[0],
-						e[1].toString(),
-						text ?? e[0],
+					return new TranslationIndex({
+						key: e[0],
+						path: e[1].toString(),
+						text: text ?? e[0],
 						version,
-						true
-					);
+						original: true
+					});
 				});
 		}
 

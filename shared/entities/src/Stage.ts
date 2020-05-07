@@ -7,6 +7,16 @@ import { registerSerializer } from './Serializer';
 
 export type StageId = string;
 
+export interface IStageOptions {
+	id: StageId;
+	name: string;
+	chapter: string;
+	bigImage: string;
+	num: number;
+	entryCost: number;
+	entryCurrency: string;
+}
+
 export class Stage {
 	@autoserialize public readonly id: StageId;
 	@autoserialize public readonly name: string;
@@ -16,17 +26,14 @@ export class Stage {
 	@autoserializeAs('entry_cost') public readonly entryCost: number;
 	@autoserializeAs('entry_currency') public readonly entryCurrency: string;
 
-	constructor(
-		id: StageId, name: string, chapter: string, bigImage: string, num: number, entryCost: number,
-		entryCurrency: string
-	) {
-		this.id = id;
-		this.name = name;
-		this.chapter = chapter;
-		this.bigImage = bigImage;
-		this.num = num;
-		this.entryCost = entryCost;
-		this.entryCurrency = entryCurrency;
+	constructor(options: IStageOptions) {
+		this.id = options.id;
+		this.name = options.name;
+		this.chapter = options.chapter;
+		this.bigImage = options.bigImage;
+		this.num = options.num;
+		this.entryCost = options.entryCost;
+		this.entryCurrency = options.entryCurrency;
 	}
 }
 

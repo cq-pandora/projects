@@ -16,14 +16,14 @@ export async function normalize(input: GoddessesNormalizationInput): Promise<Nor
 	const goddesses = goddessesRaw.sister.map((raw, idx) => {
 		goddessTranslationIndex[raw.name] = idx;
 
-		return new Goddess(
-			raw.id,
-			raw.name,
-			raw.dsp_tex,
-			raw.skillname,
-			raw.skilldesc,
-			raw.id
-		);
+		return new Goddess({
+			id: raw.id,
+			name: raw.name,
+			image: raw.dsp_tex,
+			skillName: raw.skillname,
+			skillDescription: raw.skilldesc,
+			ingameId: raw.id,
+		});
 	});
 
 	return {

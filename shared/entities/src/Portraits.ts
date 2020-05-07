@@ -2,11 +2,15 @@ import { TranslationKey } from './common-types';
 import { registerDeserializer } from './Deserializer';
 import { registerSerializer } from './Serializer';
 
+export interface IPortraitOptions {
+	keys: string[];
+}
+
 export class Portrait {
 	public readonly keys: string[];
 
-	constructor(keys: string[]) {
-		this.keys = keys;
+	constructor(options: IPortraitOptions) {
+		this.keys = options.keys;
 	}
 }
 
@@ -21,8 +25,8 @@ type PortraitsRaw = {
 function parsePortraits(rawJson: string): Portraits {
 	const json = JSON.parse(rawJson) as PortraitsRaw;
 	return Object.entries(json).reduce<Portraits>(
-		(r, [translationKey, portraitKeys]) => {
-			r[translationKey] = new Portrait(portraitKeys);
+		(r, [translationKey, keys]) => {
+			r[translationKey] = new Portrait({ keys });
 
 			return r;
 		},

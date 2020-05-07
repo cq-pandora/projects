@@ -37,12 +37,12 @@ export async function normalize(input: TranslationsNormalizationInput): Promise<
 			const translationKey = Object.keys(v)[0];
 
 			if (!r[translationKey] || r[translationKey].text !== v[translationKey]) {
-				r[translationKey] = new Translation(
-					v[translationKey],
+				r[translationKey] = new Translation({
+					text: v[translationKey],
 					version,
-					true,
-					translationKey
-				);
+					original: true,
+					key: translationKey,
+				});
 			}
 
 			return r;

@@ -5,10 +5,18 @@ import {
 import { registerDeserializer } from '../Deserializer';
 import { HeroClass } from '../hero';
 
-import SpSkillForm from './SpSkillForm';
+import { SpSkillForm } from './SpSkillForm';
 import { registerSerializer } from '../Serializer';
 
 export type SpSkillType = 'normal' | 'ultimate';
+
+export interface ISpSkillOptions {
+	id: string;
+	name: string;
+	clazz: HeroClass;
+	type: SpSkillType;
+	forms: Array<SpSkillForm>;
+}
 
 export class SpSkill {
 	@autoserialize public readonly id: string;
@@ -17,12 +25,12 @@ export class SpSkill {
 	@autoserialize public readonly type: SpSkillType;
 	@autoserializeAs(SpSkillForm) public readonly forms: Array<SpSkillForm>;
 
-	constructor(id: string, name: string, clazz: HeroClass, type: SpSkillType, forms: Array<SpSkillForm>) {
-		this.id = id;
-		this.name = name;
-		this.clazz = clazz;
-		this.type = type;
-		this.forms = forms;
+	constructor(options: ISpSkillOptions) {
+		this.id = options.id;
+		this.name = options.name;
+		this.clazz = options.clazz;
+		this.type = options.type;
+		this.forms = options.forms;
 	}
 }
 

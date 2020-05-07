@@ -36,21 +36,26 @@ export async function normalize(input: InteractionsInput): Promise<Normalization
 				([id, text]) => {
 					if (skinImageKeysMapping[id]) {
 						return new InteractionActor(
-							skinToHeroIdMapping[id],
-							text,
-							skinImageKeysMapping[id]
+							{
+								id: skinToHeroIdMapping[id],
+								text,
+								imageKey: skinImageKeysMapping[id],
+							}
 						);
 					}
 
-					return new InteractionActor(
+					return new InteractionActor({
 						id,
 						text,
-						heroesImageKeyMapping[id]
-					);
+						imageKey: heroesImageKeyMapping[id],
+					});
 				}
 			);
 
-		result.push(new Interaction(raw.id, actors));
+		result.push(new Interaction({
+			id: raw.id,
+			actors,
+		}));
 	}
 
 	return {

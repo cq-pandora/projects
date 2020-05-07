@@ -70,19 +70,19 @@ export async function normalize(input: SigilsNormalizationInput): Promise<Normal
 
 		sigilsTranslationsIndex[raw.name] = idx;
 
-		return new Sigil(
-			raw.id,
-			raw.id,
-			raw.name,
-			raw.desc,
-			raw.image,
-			raw.grade,
-			rarityMapper(raw.raritytype),
-			raw.sell_reward_amount,
-			raw.unequip_cost_amount,
-			new SigilStats(stats),
-			set,
-		);
+		return new Sigil({
+			id: raw.id,
+			ingameId: raw.id,
+			name: raw.name,
+			description: raw.desc,
+			image: raw.image,
+			grade: raw.grade,
+			rarity: rarityMapper(raw.raritytype),
+			sellCost: raw.sell_reward_amount,
+			extractCost: raw.unequip_cost_amount,
+			stats: new SigilStats(stats),
+			set
+		});
 	});
 
 	return {

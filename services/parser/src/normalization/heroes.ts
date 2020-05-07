@@ -4,7 +4,9 @@ import {
 
 import { NormalizationResult } from './common-types';
 
-import { readJSON, groupBy, arrayToId } from '../util';
+import {
+	readJSON, groupBy, arrayToId, growStats
+} from '../util';
 
 import {
 	CharacterBerriesRaw, CharacterStatsRaw, CharacterVisualRaw, WeaponsRaw, CharacterCostumesRaw
@@ -70,6 +72,10 @@ function costumeStatMapping(stats: CostumeStat): HeroStats {
 	}
 }
 
+function growBreadStats(base: number, growth: number, grade: number): number {
+	return (1 + (grade - 1) / 10) * growStats(base, growth, grade * 10);
+}
+
 export async function normalize(input: HeroesNormalizationInput): Promise<NormalizationResult<Hero>> {
 	const text = input.translation;
 	const characterBerriedStatsRaw = await readJSON(input.characterBerriesStatsRawPath) as CharacterBerriesRaw;
@@ -93,16 +99,16 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 
 	const maxBerriesStats = characterBerriedStatsRaw.character_add_stat_max.reduce(
 		(res, bms) => {
-			res[bms.id] = new HeroBerriesStats(
-				bms.accuracy,
-				bms.armor,
-				bms.attackpower,
-				bms.criticalchance,
-				bms.criticaldamage,
-				bms.dodge,
-				bms.hp,
-				bms.resistance
-			);
+			res[bms.id] = new HeroBerriesStats({
+				accuracy: bms.accuracy,
+				armor: bms.armor,
+				atkPower: bms.attackpower,
+				critChance: bms.criticalchance,
+				critDmg: bms.criticaldamage,
+				evasion: bms.dodge,
+				hp: bms.hp,
+				resistance: bms.resistance
+			});
 
 			return res;
 		},
@@ -145,47 +151,47 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 		for (const formRaw of heroesFormsRaw) {
 			const { stats } = formRaw;
 
-			forms.push(new HeroForm(
-				formRaw.id,
-				formRaw.name!,
-				formRaw.face_tex,
-				formRaw.grade,
-				0,
-				(1 + (formRaw.grade - 1) / 10) * (stats.defense + stats.growthdefense * (formRaw.grade * 10 - 1)),
-				0,
-				(1 + (formRaw.grade - 1) / 10) * (stats.initialattdmg + stats.growthattdmg * (formRaw.grade * 10 - 1)),
-				stats.critprob,
-				0,
-				stats.critpower,
-				0,
-				0,
-				(1 + (formRaw.grade - 1) / 10) * (stats.initialhp + stats.growthhp * (formRaw.grade * 10 - 1)),
-				0,
-				(1 + (formRaw.grade - 1) / 10) * (stats.resist + stats.growthresist * (formRaw.grade * 10 - 1)),
-				0,
-				formRaw.desc!,
-				stats.skill_icon!,
-				formRaw.grade < 4 ? 1 : (formRaw.grade === 6 ? 3 : 2),
-				stats.skill_subname!,
-				stats.skill_name!,
-				stats.skill_desc!,
-				stats.skill_subdesc!,
-				maxBerriesStats[stats.addstatmaxid!]
-			));
+			forms.push(new HeroForm({
+				id: formRaw.id,
+				name: formRaw.name!,
+				image: formRaw.face_tex,
+				star: formRaw.grade,
+				accuracy: 0,
+				armor: growBreadStats(stats.defense, stats.growthdefense, formRaw.grade),
+				armorPenetration: 0,
+				atkPower: growBreadStats(stats.initialattdmg, stats.growthattdmg, formRaw.grade),
+				critChance: stats.critprob,
+				critChanceReduction: 0,
+				critDmg: stats.critpower,
+				dmgReduction: 0,
+				evasion: 0,
+				hp: growBreadStats(stats.initialhp, stats.growthhp, formRaw.grade),
+				lifesteal: 0,
+				resistance: growBreadStats(stats.resist, stats.growthresist, formRaw.grade),
+				resistancePenetration: 0,
+				lore: formRaw.desc!,
+				blockImage: stats.skill_icon!,
+				skillLvl: formRaw.grade < 4 ? 1 : (formRaw.grade === 6 ? 3 : 2),
+				passiveName: stats.skill_subname!,
+				blockName: stats.skill_name!,
+				blockDescription: stats.skill_desc!,
+				passiveDescription: stats.skill_subdesc!,
+				maxBerries: maxBerriesStats[stats.addstatmaxid!]
+			}));
 
 			const possibleSkinIds = heroToSkinsIds[formRaw.id];
 
 			skinsIds = [...new Set(skinsIds.concat(possibleSkinIds))];
-			const formSbws = (soulbounds[formRaw.id] || []).map(weapon => new HeroSBW(
-				weapon.id,
-				weapon.name ?? 'KEY_EMPTY',
-				weapon.image ?? 'KEY_EMPTY',
-				weapon.desc ?? 'KEY_EMPTY',
-				weapon.grade,
-				weapon.attdmg,
-				weapon.attspd,
-				weaponClassMapping(weapon.classid),
-			));
+			const formSbws = (soulbounds[formRaw.id] || []).map(weapon => new HeroSBW({
+				id: weapon.id,
+				name: weapon.name ?? 'KEY_EMPTY',
+				image: weapon.image ?? 'KEY_EMPTY',
+				ability: weapon.desc ?? 'KEY_EMPTY',
+				star: weapon.grade,
+				atkPower: weapon.attdmg,
+				atkSpeed: weapon.attspd,
+				clazz: weaponClassMapping(weapon.classid)
+			}));
 
 			sbws = sbws.concat(formSbws);
 
@@ -205,12 +211,12 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 		const skins = skinsIds.filter(Boolean).map(i => {
 			const raw = costumesRaw.costume[i];
 
-			return new HeroSkin(
-				i,
-				raw.face_tex,
-				raw.sellprice,
-				raw.costumename,
-				raw.addstatjson.reduce(
+			return new HeroSkin({
+				id: i,
+				image: raw.face_tex,
+				cost: raw.sellprice,
+				name: raw.costumename,
+				stats: raw.addstatjson.reduce(
 					(res, el) => {
 						res[costumeStatMapping(el.Type)] = el.Value;
 
@@ -218,20 +224,20 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 					},
 					{} as Record<HeroStats, number>
 				)
-			);
+			});
 		});
 
-		return new Hero(
+		return new Hero({
 			id,
-			id,
-			heroClassMapping(firstForm.classid),
-			heroRarityMapping(firstForm.rarity),
-			(firstForm.gender || 'none').toLowerCase() as HeroGender,
-			firstForm.domain!,
-			forms.sort((a, b) => a.star - b.star),
+			readableId: id,
+			clazz: heroClassMapping(firstForm.classid),
+			type: heroRarityMapping(firstForm.rarity),
+			gender: (firstForm.gender || 'none').toLowerCase() as HeroGender,
+			domain: firstForm.domain!,
+			forms: forms.sort((a, b) => a.star - b.star),
 			sbws,
 			skins
-		);
+		});
 	};
 
 	const heroesSorted = Object.entries(

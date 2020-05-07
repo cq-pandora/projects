@@ -24,13 +24,13 @@ function typeMapper(type: Type): ChampionType {
 function mapSkill(raw: ChampionSkillRaw | undefined): ChampionSkill | undefined {
 	if (!raw) return undefined;
 
-	return new ChampionSkill(
-		raw.id,
-		raw.name,
-		raw.desc,
-		raw.skillicon,
-		raw.level
-	);
+	return new ChampionSkill({
+		id: raw.id,
+		name: raw.name,
+		description: raw.desc,
+		image: raw.skillicon,
+		grade: raw.level
+	});
 }
 
 export async function normalize(input: ChampionsNormalizationInput): Promise<NormalizationResult<Champion>> {
@@ -55,23 +55,23 @@ export async function normalize(input: ChampionsNormalizationInput): Promise<Nor
 					championsSkills[form.slot_3 ?? '$$_DOES_NOT_EXIST_$$']
 				].filter(el => !!el);
 
-				return new ChampionForm(
-					mapSkill(skills.filter(s => s.type.toLowerCase() === 'active')[0])!,
-					mapSkill(skills.filter(s => s.type.toLowerCase() === 'passive')[0]),
-					mapSkill(skills.filter(s => s.type.toLowerCase() === 'exclusive')[0]),
-					form.level,
-				);
+				return new ChampionForm({
+					active: mapSkill(skills.filter(s => s.type.toLowerCase() === 'active')[0])!,
+					passive: mapSkill(skills.filter(s => s.type.toLowerCase() === 'passive')[0]),
+					exclusive: mapSkill(skills.filter(s => s.type.toLowerCase() === 'exclusive')[0]),
+					grade: form.level,
+				});
 			});
 
-			res.push(new Champion(
-				key,
-				champ.name,
-				champ.illust,
-				champ.faceimage,
-				champ.background_textid,
-				typeMapper(champ.type),
+			res.push(new Champion({
+				id: key,
+				name: champ.name,
+				illustration: champ.illust,
+				image: champ.faceimage,
+				lore: champ.background_textid,
+				type: typeMapper(champ.type),
 				forms
-			));
+			}));
 
 			return res;
 		}, [] as Champion[]);

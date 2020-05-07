@@ -8,6 +8,14 @@ export type TranslationIndexSection =
 	'heroes' | 'breads' | 'berries' | 'sigils' | 'goddesses' | 'factions' | 'champions' | 'sp_skills' | 'bosses' |
 	'fishes' | 'fishing_gear' | 'portraits';
 
+export interface ITranslationIndicesOptions {
+	key: string;
+	path: string;
+	text: string;
+	version: string;
+	original: boolean;
+}
+
 export class TranslationIndex {
 	@autoserialize public readonly key: TranslationKey;
 	@autoserialize public readonly path: string;
@@ -15,12 +23,12 @@ export class TranslationIndex {
 	@autoserialize public readonly version: string;
 	@autoserialize public readonly original: boolean;
 
-	constructor(key: string, path: string, text: string, version: string, original: boolean) {
-		this.key = key;
-		this.path = path;
-		this.text = text;
-		this.version = version;
-		this.original = original;
+	constructor(options: ITranslationIndicesOptions) {
+		this.key = options.key;
+		this.path = options.path;
+		this.text = options.text;
+		this.version = options.version;
+		this.original = options.original;
 	}
 }
 

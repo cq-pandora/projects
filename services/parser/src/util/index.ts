@@ -74,3 +74,7 @@ export function sumStats(stat1: IStatsHolder, stat2: IStatsHolder): IStatsHolder
 
 	return stats;
 }
+
+export function growStats(base: number, growth: number, level: number): number {
+	return base + growth * (level - 1);
+}

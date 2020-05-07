@@ -4,17 +4,24 @@ import { registerDeserializer } from './Deserializer';
 import { TranslationKey } from './common-types';
 import { registerSerializer } from './Serializer';
 
+export interface ITranslationOptions {
+	text: string;
+	version: string;
+	original: boolean;
+	key: string;
+}
+
 export class Translation {
 	@autoserialize public readonly text: string;
 	public key = '';
 	@autoserialize public readonly version: string;
 	@autoserialize public readonly original: boolean;
 
-	constructor(text: string, version: string, original: boolean, key: string) {
-		this.text = text;
-		this.version = version;
-		this.original = original;
-		this.key = key;
+	constructor(options: ITranslationOptions) {
+		this.text = options.text;
+		this.version = options.version;
+		this.original = options.original;
+		this.key = options.key;
 	}
 }
 

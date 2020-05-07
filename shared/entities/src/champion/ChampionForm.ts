@@ -1,20 +1,24 @@
 import { autoserializeAs, autoserialize } from 'cerialize';
 
-import ChampionSkill from './ChampionSkill';
+import { ChampionSkill } from './ChampionSkill';
 
-export default class ChampionForm {
+export interface IChampionFormOptions {
+	active: ChampionSkill;
+	grade: number;
+	passive?: ChampionSkill | null;
+	exclusive?: ChampionSkill | null;
+}
+
+export class ChampionForm {
 	@autoserializeAs(ChampionSkill) public readonly active: ChampionSkill;
 	@autoserializeAs(ChampionSkill) public readonly passive: ChampionSkill | null | undefined;
 	@autoserializeAs(ChampionSkill) public readonly exclusive: ChampionSkill | null | undefined;
 	@autoserialize public readonly grade: number;
 
-	constructor(
-		active: ChampionSkill, passive: ChampionSkill | null | undefined, exclusive: ChampionSkill | null | undefined,
-		grade: number
-	) {
-		this.active = active;
-		this.passive = passive;
-		this.exclusive = exclusive;
-		this.grade = grade;
+	constructor(options: IChampionFormOptions) {
+		this.active = options.active;
+		this.passive = options.passive;
+		this.exclusive = options.exclusive;
+		this.grade = options.grade;
 	}
 }

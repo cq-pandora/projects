@@ -16,12 +16,12 @@ export async function normalize(input: FactionsNormalizationInput): Promise<Norm
 	const breads = factionsRaw.champion_domain.map((raw, idx) => {
 		factionsTranslationIndex[raw.name] = idx;
 
-		return new Faction(
-			raw.id,
-			raw.name,
-			raw.emblem_image,
-			raw.id
-		);
+		return new Faction({
+			id: raw.id,
+			name: raw.name,
+			image: raw.emblem_image,
+			ingameId: raw.id,
+		});
 	});
 
 	return {

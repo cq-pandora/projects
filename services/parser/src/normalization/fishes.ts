@@ -52,32 +52,32 @@ export async function normalize(input: FishesNormalizationInput): Promise<Normal
 		const rewards = [] as FishReward[];
 
 		if (f.sellvalue) {
-			rewards.push(new FishReward(
-				f.sellvalue,
-				f.sellamount,
-			));
+			rewards.push(new FishReward({
+				type: f.sellvalue,
+				amount: f.sellamount,
+			}));
 		}
 
 		if (f.sellvalue_2nd) {
-			rewards.push(new FishReward(
-				f.sellvalue_2nd,
-				f.sellamount_2nd!,
-			));
+			rewards.push(new FishReward({
+				type: f.sellvalue_2nd,
+				amount: f.sellamount_2nd!,
+			}));
 		}
 
-		return new Fish(
-			f.id,
-			f.name,
-			habitatMapper(f.habitat),
-			rankMapper(f.rank),
-			typeMapper(f.type),
-			f.rarity,
-			f.minlength,
-			f.texture,
-			f.exp,
+		return new Fish({
+			id: f.id,
+			name: f.name,
+			habitat: habitatMapper(f.habitat),
+			rank: rankMapper(f.rank),
+			type: typeMapper(f.type),
+			grade: f.rarity,
+			startsFrom: f.minlength,
+			image: f.texture,
+			exp: f.exp,
 			rewards,
-			f.desc
-		);
+			description: f.desc
+		});
 	});
 
 	return {

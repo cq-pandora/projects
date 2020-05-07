@@ -28,16 +28,16 @@ export async function normalize(input: BreadsNormalizationInput): Promise<Normal
 	const breads = breadsRaw.bread.map((raw, idx) => {
 		breadsTranslationsIndex[raw.name] = idx;
 
-		return new Bread(
-			raw.id,
-			raw.name,
-			rarityMapper(raw.rarity),
-			raw.trainpoint,
-			raw.critprob,
-			raw.grade,
-			raw.image,
-			raw.sellprice,
-		);
+		return new Bread({
+			id: raw.id,
+			name: raw.name,
+			rarity: rarityMapper(raw.rarity),
+			value: raw.trainpoint,
+			greatChance: raw.critprob,
+			grade: raw.grade,
+			image: raw.image,
+			sellCost: raw.sellprice
+		});
 	});
 
 	return {

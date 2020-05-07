@@ -7,6 +7,17 @@ import { registerSerializer } from './Serializer';
 
 export type BreadRarity = 'rare' | 'epic' | 'legendary' | 'common';
 
+export interface IBreadOptions {
+	id: string;
+	name: string;
+	rarity: BreadRarity;
+	value: number;
+	greatChance: number;
+	grade: number;
+	image: string;
+	sellCost: number;
+}
+
 export class Bread {
 	@autoserialize public readonly id: string;
 	@autoserialize public readonly name: string;
@@ -17,18 +28,15 @@ export class Bread {
 	@autoserialize public readonly image: string;
 	@autoserializeAs('sell_cost') public readonly sellCost: number;
 
-	constructor(
-		id: string, name: string, rarity: BreadRarity, value: number, greatChance: number, grade: number,
-		image: string, sellCost: number
-	) {
-		this.id = id;
-		this.name = name;
-		this.rarity = rarity;
-		this.value = value;
-		this.greatChance = greatChance;
-		this.grade = grade;
-		this.image = image;
-		this.sellCost = sellCost;
+	constructor(options: IBreadOptions) {
+		this.id = options.id;
+		this.name = options.name;
+		this.rarity = options.rarity;
+		this.value = options.value;
+		this.greatChance = options.greatChance;
+		this.grade = options.grade;
+		this.image = options.image;
+		this.sellCost = options.sellCost;
 	}
 }
 

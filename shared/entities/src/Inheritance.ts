@@ -17,6 +17,22 @@ export function isInheritanceLevel(inp: number | string): inp is InheritanceLeve
 	return res >= 1 && res <= 30;
 }
 
+export interface IInheritanceStatsOptions {
+	accuracy: number;
+	armor: number;
+	armorPenetration: number;
+	atkPower: number;
+	critChance: number;
+	critChanceReduction: number;
+	critDmg: number;
+	dmgReduction: number;
+	evasion: number;
+	hp: number;
+	lifesteal: number;
+	resistance: number;
+	resistancePenetration: number;
+}
+
 export class InheritanceStats implements IStatsHolder {
 	readonly all: number = -1;
 	@autoserialize public readonly accuracy: number;
@@ -33,24 +49,20 @@ export class InheritanceStats implements IStatsHolder {
 	@autoserialize public readonly resistance: number;
 	@autoserializeAs('resistance_pen') public readonly resistancePenetration: number;
 
-	constructor(
-		accuracy: number, armor: number, armorPenetration: number, atkPower: number, critChance: number,
-		critChanceReduction: number, critDmg: number, dmgReduction: number, evasion: number, hp: number,
-		lifesteal: number, resistance: number, resistancePenetration: number
-	) {
-		this.accuracy = accuracy;
-		this.armor = armor;
-		this.armorPenetration = armorPenetration;
-		this.atkPower = atkPower;
-		this.critChance = critChance;
-		this.critChanceReduction = critChanceReduction;
-		this.critDmg = critDmg;
-		this.dmgReduction = dmgReduction;
-		this.evasion = evasion;
-		this.hp = hp;
-		this.lifesteal = lifesteal;
-		this.resistance = resistance;
-		this.resistancePenetration = resistancePenetration;
+	constructor(options: IInheritanceStatsOptions) {
+		this.accuracy = options.accuracy;
+		this.armor = options.armor;
+		this.armorPenetration = options.armorPenetration;
+		this.atkPower = options.atkPower;
+		this.critChance = options.critChance;
+		this.critChanceReduction = options.critChanceReduction;
+		this.critDmg = options.critDmg;
+		this.dmgReduction = options.dmgReduction;
+		this.evasion = options.evasion;
+		this.hp = options.hp;
+		this.lifesteal = options.lifesteal;
+		this.resistance = options.resistance;
+		this.resistancePenetration = options.resistancePenetration;
 	}
 }
 

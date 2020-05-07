@@ -41,19 +41,18 @@ export async function normalize(input: SpSkillNormalizationInput): Promise<Norma
 		}
 
 		const forms = spTree.reverse().map(sk => new SpSkillForm(
-			sk.level,
-			sk.desc,
-			sk.simpledesc,
-			sk.icon
+			{
+				level: sk.level, description: sk.desc, shortDescription: sk.simpledesc, image: sk.icon
+			}
 		));
 
-		return new SpSkill(
-			(s.name || '').toLowerCase(),
-			s.name,
-			classMapper(s.class),
-			s.type === SPSkillType.Normal ? 'normal' : 'ultimate',
+		return new SpSkill({
+			id: (s.name || '').toLowerCase(),
+			name: s.name,
+			clazz: classMapper(s.class),
+			type: s.type === SPSkillType.Normal ? 'normal' : 'ultimate',
 			forms
-		);
+		});
 	});
 
 	spSkills.forEach((skill, idx) => { spSkillsTranslationIndex[skill.name] = idx; });

@@ -5,25 +5,36 @@ import {
 import { registerDeserializer } from './Deserializer';
 import { registerSerializer } from './Serializer';
 
+export interface IInteractionActorOptions {
+	id: string;
+	text: string;
+	imageKey: string;
+}
+
 export class InteractionActor {
 	@autoserialize public readonly id: string;
 	@autoserialize public readonly text: string;
 	@autoserialize public readonly imageKey: string;
 
-	constructor(id: string, text: string, imageKey: string) {
-		this.id = id;
-		this.text = text;
-		this.imageKey = imageKey;
+	constructor(options: IInteractionActorOptions) {
+		this.id = options.id;
+		this.text = options.text;
+		this.imageKey = options.imageKey;
 	}
+}
+
+interface IInteractionOptions {
+	id: string;
+	actors: InteractionActor[];
 }
 
 export class Interaction {
 	@autoserialize public readonly id: string;
 	@autoserializeAs(InteractionActor) public readonly actors: InteractionActor[];
 
-	constructor(id: string, actors: InteractionActor[]) {
-		this.id = id;
-		this.actors = actors;
+	constructor(options: IInteractionOptions) {
+		this.id = options.id;
+		this.actors = options.actors;
 	}
 }
 

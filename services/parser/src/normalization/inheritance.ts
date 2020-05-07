@@ -39,21 +39,21 @@ export async function normalize(input: InheritanceNormalizationInput): Promise<N
 			throw new Error(`Bad inheritance level ${statsRaw.epiclevel}. It seems that new levels were added.`);
 		}
 
-		inheritance[classMapper(statsRaw.class)][statsRaw.epiclevel] = new InheritanceStats(
-			statsRaw.accuracyrate,
-			statsRaw.def,
-			statsRaw.penetratedef,
-			statsRaw.atkpower,
-			statsRaw.critrate,
-			statsRaw.critdodgerate,
-			statsRaw.critpowerrate,
-			statsRaw.receivedmgrate,
-			statsRaw.dodgerate,
-			statsRaw.maxhp,
-			statsRaw.vamprate,
-			statsRaw.rst,
-			statsRaw.penetraterst
-		);
+		inheritance[classMapper(statsRaw.class)][statsRaw.epiclevel] = new InheritanceStats({
+			accuracy: statsRaw.accuracyrate,
+			armor: statsRaw.def,
+			armorPenetration: statsRaw.penetratedef,
+			atkPower: statsRaw.atkpower,
+			critChance: statsRaw.critrate,
+			critChanceReduction: statsRaw.critdodgerate,
+			critDmg: statsRaw.critpowerrate,
+			dmgReduction: statsRaw.receivedmgrate,
+			evasion: statsRaw.dodgerate,
+			hp: statsRaw.maxhp,
+			lifesteal: statsRaw.vamprate,
+			resistance: statsRaw.rst,
+			resistancePenetration: statsRaw.penetraterst
+		});
 	}
 
 	return {

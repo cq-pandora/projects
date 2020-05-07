@@ -1,13 +1,19 @@
 import { autoserialize } from 'cerialize';
 
-export default class SigilPair {
+export interface ISigilPairOptions {
+	name: string;
+	effect: string;
+	pair: string;
+}
+
+export class SigilPair {
 	@autoserialize public readonly name: string;
 	@autoserialize public readonly effect: string;
 	@autoserialize public readonly pair: string;
 
-	constructor(name: string, effect: string, pair: string) {
-		this.name = name;
-		this.effect = effect;
-		this.pair = pair;
+	constructor(options: ISigilPairOptions) {
+		this.name = options.name;
+		this.effect = options.effect;
+		this.pair = options.pair;
 	}
 }

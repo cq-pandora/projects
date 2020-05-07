@@ -3,11 +3,25 @@ import {
 } from 'cerialize';
 
 import { registerDeserializer } from '../Deserializer';
-import SigilStats from './SigilStats';
-import SigilPair from './SigilPair';
+import { SigilStats } from './SigilStats';
+import { SigilPair } from './SigilPair';
 import { registerSerializer } from '../Serializer';
 
 export type SigilRarity = 'common' | 'rare' | 'epic' | 'set' | 'unique';
+
+export interface ISigilOptions {
+	id: string;
+	ingameId: string;
+	name: string;
+	description: string;
+	image: string;
+	grade: number;
+	rarity: SigilRarity;
+	sellCost: number;
+	extractCost: number;
+	stats: SigilStats;
+	set?: SigilPair;
+}
 
 export class Sigil {
 	@autoserialize public readonly id: string;
@@ -22,21 +36,18 @@ export class Sigil {
 	@autoserializeAs(SigilStats) public readonly stats: SigilStats;
 	@autoserializeAs(SigilPair) public readonly set?: SigilPair;
 
-	constructor(
-		id: string, ingameId: string, name: string, description: string, image: string, grade: number,
-		rarity: SigilRarity, sellCost: number, extractCost: number, stats: SigilStats, set?: SigilPair
-	) {
-		this.id = id;
-		this.ingameId = ingameId;
-		this.name = name;
-		this.description = description;
-		this.image = image;
-		this.grade = grade;
-		this.rarity = rarity;
-		this.sellCost = sellCost;
-		this.extractCost = extractCost;
-		this.stats = stats;
-		this.set = set;
+	constructor(options: ISigilOptions) {
+		this.id = options.id;
+		this.ingameId = options.ingameId;
+		this.name = options.name;
+		this.description = options.description;
+		this.image = options.image;
+		this.grade = options.grade;
+		this.rarity = options.rarity;
+		this.sellCost = options.sellCost;
+		this.extractCost = options.extractCost;
+		this.stats = options.stats;
+		this.set = options.set;
 	}
 }
 

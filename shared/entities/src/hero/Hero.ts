@@ -9,8 +9,36 @@ import { IStatsHolder } from '../interfaces';
 
 import { HeroSBW } from './HeroSBW';
 import { HeroSkin } from './HeroSkin';
-import HeroBerriesStats from './HeroBerriesStats';
+import { HeroBerriesStats } from './HeroBerriesStats';
 import { registerSerializer } from '../Serializer';
+
+export interface IHeroFormOptions {
+	id: string;
+	name: string;
+	image: string;
+	star: number;
+	accuracy: number;
+	armor: number;
+	armorPenetration: number;
+	atkPower: number;
+	critChance: number;
+	critChanceReduction: number;
+	critDmg: number;
+	dmgReduction: number;
+	evasion: number;
+	hp: number;
+	lifesteal: number;
+	resistance: number;
+	resistancePenetration: number;
+	lore: string;
+	blockImage: string;
+	skillLvl: number;
+	passiveName: string;
+	blockName: string;
+	blockDescription: string;
+	passiveDescription: string;
+	maxBerries: HeroBerriesStats;
+}
 
 export class HeroForm implements IStatsHolder {
 	readonly all: number = -1;
@@ -42,39 +70,45 @@ export class HeroForm implements IStatsHolder {
 	// @ts-ignore
 	public hero: Hero = null;
 
-	constructor(
-		id: string, name: string, image: string, star: number, accuracy: number, armor: number,
-		armorPenetration: number, atkPower: number, critChance: number, critChanceReduction: number, critDmg: number,
-		dmgReduction: number, evasion: number, hp: number, lifesteal: number, resistance: number,
-		resistancePenetration: number, lore: string, blockImage: string, skillLvl: number, passiveName: string,
-		blockName: string, blockDescription: string, passiveDescription: string, maxBerries: HeroBerriesStats
-	) {
-		this.id = id;
-		this.name = name;
-		this.image = image;
-		this.star = star;
-		this.accuracy = accuracy;
-		this.armor = armor;
-		this.armorPenetration = armorPenetration;
-		this.atkPower = atkPower;
-		this.critChance = critChance;
-		this.critChanceReduction = critChanceReduction;
-		this.critDmg = critDmg;
-		this.dmgReduction = dmgReduction;
-		this.evasion = evasion;
-		this.hp = hp;
-		this.lifesteal = lifesteal;
-		this.resistance = resistance;
-		this.resistancePenetration = resistancePenetration;
-		this.lore = lore;
-		this.blockImage = blockImage;
-		this.skillLvl = skillLvl;
-		this.passiveName = passiveName;
-		this.blockName = blockName;
-		this.blockDescription = blockDescription;
-		this.passiveDescription = passiveDescription;
-		this.maxBerries = maxBerries;
+	constructor(options: IHeroFormOptions) {
+		this.id = options.id;
+		this.name = options.name;
+		this.image = options.image;
+		this.star = options.star;
+		this.accuracy = options.accuracy;
+		this.armor = options.armor;
+		this.armorPenetration = options.armorPenetration;
+		this.atkPower = options.atkPower;
+		this.critChance = options.critChance;
+		this.critChanceReduction = options.critChanceReduction;
+		this.critDmg = options.critDmg;
+		this.dmgReduction = options.dmgReduction;
+		this.evasion = options.evasion;
+		this.hp = options.hp;
+		this.lifesteal = options.lifesteal;
+		this.resistance = options.resistance;
+		this.resistancePenetration = options.resistancePenetration;
+		this.lore = options.lore;
+		this.blockImage = options.blockImage;
+		this.skillLvl = options.skillLvl;
+		this.passiveName = options.passiveName;
+		this.blockName = options.blockName;
+		this.blockDescription = options.blockDescription;
+		this.passiveDescription = options.passiveDescription;
+		this.maxBerries = options.maxBerries;
 	}
+}
+
+export interface IHeroOptions {
+	id: string;
+	readableId: string;
+	clazz: HeroClass;
+	type: HeroType;
+	gender: HeroGender;
+	domain: string;
+	forms: Array<HeroForm>;
+	sbws: Array<HeroSBW>;
+	skins: Array<HeroSkin>;
 }
 
 export class Hero {
@@ -94,19 +128,16 @@ export class Hero {
 		}
 	}
 
-	constructor(
-		id: string, readableId: string, clazz: HeroClass, type: HeroType, gender: HeroGender, domain: string,
-		forms: Array<HeroForm>, sbws: Array<HeroSBW>, skins: Array<HeroSkin>
-	) {
-		this.id = id;
-		this.readableId = readableId;
-		this.clazz = clazz;
-		this.type = type;
-		this.gender = gender;
-		this.domain = domain;
-		this.forms = forms;
-		this.sbws = sbws;
-		this.skins = skins;
+	constructor(options: IHeroOptions) {
+		this.id = options.id;
+		this.readableId = options.readableId;
+		this.clazz = options.clazz;
+		this.type = options.type;
+		this.gender = options.gender;
+		this.domain = options.domain;
+		this.forms = options.forms;
+		this.sbws = options.sbws;
+		this.skins = options.skins;
 	}
 }
 

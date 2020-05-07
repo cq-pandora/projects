@@ -1,6 +1,6 @@
 {
 	"name": "@pandora/entities",
-	"version": "0.3.0",
+	"version": "1.0.0",
 	"description": "Shared entities for @pandora services",
 	"main": "./lib/index.js",
 	"types": "./lib/index.d.ts",

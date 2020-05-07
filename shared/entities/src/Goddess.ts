@@ -5,6 +5,15 @@ import {
 import { registerDeserializer } from './Deserializer';
 import { registerSerializer } from './Serializer';
 
+export interface IGoddessOptions {
+	id: string;
+	name: string;
+	image: string;
+	skillName: string;
+	skillDescription: string;
+	ingameId: string;
+}
+
 export class Goddess {
 	@autoserialize public readonly id: string;
 	@autoserialize public readonly name: string;
@@ -13,15 +22,13 @@ export class Goddess {
 	@autoserializeAs('skill_description') public readonly skillDescription: string;
 	@autoserializeAs('ingame_id') public readonly ingameId: string;
 
-	constructor(
-		id: string, name: string, image: string, skillName: string, skillDescription: string, ingameId: string
-	) {
-		this.id = id;
-		this.name = name;
-		this.image = image;
-		this.skillName = skillName;
-		this.skillDescription = skillDescription;
-		this.ingameId = ingameId;
+	constructor(options: IGoddessOptions) {
+		this.id = options.id;
+		this.name = options.name;
+		this.image = options.image;
+		this.skillName = options.skillName;
+		this.skillDescription = options.skillDescription;
+		this.ingameId = options.ingameId;
 	}
 }
 

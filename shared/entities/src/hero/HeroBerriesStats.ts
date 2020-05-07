@@ -2,7 +2,18 @@ import { autoserializeAs, autoserialize } from 'cerialize';
 
 import { IStatsHolder } from '../interfaces';
 
-export default class HeroBerriesStats implements IStatsHolder {
+export interface IHeroBerriesStats {
+	accuracy: number;
+	armor: number;
+	atkPower: number;
+	critChance: number;
+	critDmg: number;
+	evasion: number;
+	hp: number;
+	resistance: number;
+}
+
+export class HeroBerriesStats implements IStatsHolder {
 	@autoserialize public readonly accuracy: number;
 	@autoserialize public readonly armor: number;
 	@autoserializeAs('atk_power') public readonly atkPower: number;
@@ -18,17 +29,14 @@ export default class HeroBerriesStats implements IStatsHolder {
 	public readonly all = 0;
 	public readonly dmgReduction = 0;
 
-	constructor(
-		accuracy: number, armor: number, atkPower: number, critChance: number, critDmg: number, evasion: number,
-		hp: number, resistance: number
-	) {
-		this.accuracy = accuracy;
-		this.armor = armor;
-		this.atkPower = atkPower;
-		this.critChance = critChance;
-		this.critDmg = critDmg;
-		this.evasion = evasion;
-		this.hp = hp;
-		this.resistance = resistance;
+	constructor(options: IHeroBerriesStats) {
+		this.accuracy = options.accuracy;
+		this.armor = options.armor;
+		this.atkPower = options.atkPower;
+		this.critChance = options.critChance;
+		this.critDmg = options.critDmg;
+		this.evasion = options.evasion;
+		this.hp = options.hp;
+		this.resistance = options.resistance;
 	}
 }

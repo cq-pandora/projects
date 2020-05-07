@@ -2,7 +2,9 @@ import { autoserialize, autoserializeAs } from 'cerialize';
 
 import { IStatsHolder } from '../interfaces';
 
-export default class SigilStats implements IStatsHolder {
+export type ISigilStatsOptions = IStatsHolder;
+
+export class SigilStats implements IStatsHolder {
 	readonly all: number = -1;
 	@autoserialize public readonly accuracy: number;
 	@autoserialize public readonly armor: number;
@@ -18,7 +20,7 @@ export default class SigilStats implements IStatsHolder {
 	@autoserialize public readonly resistance: number;
 	@autoserializeAs('resistance_pen') public readonly resistancePenetration: number;
 
-	constructor(stats: IStatsHolder) {
+	constructor(stats: ISigilStatsOptions) {
 		this.accuracy = stats.accuracy;
 		this.armor = stats.armor;
 		this.armorPenetration = stats.armorPenetration;

@@ -11,6 +11,21 @@ export type BerryRarity = 'rare' | 'epic' | 'legendary' | 'common';
 
 export type BerryCategory = 'util' | 'all' | 'def' | 'atk';
 
+export interface IBerryOptions {
+	id: string;
+	name: string;
+	rarity: BerryRarity;
+	targetStat: HeroStats;
+	isPercentage: boolean;
+	value: number;
+	greatChance: number;
+	grade: number;
+	image: string;
+	category: BerryCategory;
+	sellCost: number;
+	eatCost: number;
+}
+
 export class Berry {
 	@autoserialize public readonly id: string;
 	@autoserialize public readonly name: string;
@@ -25,22 +40,19 @@ export class Berry {
 	@autoserializeAs('sell_cost') public readonly sellCost: number;
 	@autoserializeAs('eat_cost') public readonly eatCost: number;
 
-	constructor(
-		id: string, name: string, rarity: BerryRarity, targetStat: HeroStats, isPercentage: boolean, value: number,
-		greatChance: number, grade: number, image: string, category: BerryCategory, sellCost: number, eatCost: number
-	) {
-		this.id = id;
-		this.name = name;
-		this.rarity = rarity;
-		this.targetStat = targetStat;
-		this.isPercentage = isPercentage;
-		this.value = value;
-		this.greatChance = greatChance;
-		this.grade = grade;
-		this.image = image;
-		this.category = category;
-		this.sellCost = sellCost;
-		this.eatCost = eatCost;
+	constructor(options: IBerryOptions) {
+		this.id = options.id;
+		this.name = options.name;
+		this.rarity = options.rarity;
+		this.targetStat = options.targetStat;
+		this.isPercentage = options.isPercentage;
+		this.value = options.value;
+		this.greatChance = options.greatChance;
+		this.grade = options.grade;
+		this.image = options.image;
+		this.category = options.category;
+		this.sellCost = options.sellCost;
+		this.eatCost = options.eatCost;
 	}
 }
 

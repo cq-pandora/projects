@@ -12,6 +12,20 @@ export type FishType = 'fish' | 'junk' | 'event';
 
 export type FishRank = 'normal' | 'hero' | 'boss' | 'event' | 'eventbox';
 
+export interface IFishOptions {
+	id: string;
+	name: string;
+	description: string;
+	habitat: FishHabitat;
+	rank: FishRank;
+	type: FishType;
+	grade: number;
+	startsFrom: number;
+	image: string;
+	exp: number;
+	rewards: FishRewards;
+}
+
 export class Fish {
 	@autoserialize public readonly id: string;
 	@autoserialize public readonly name: string;
@@ -25,21 +39,18 @@ export class Fish {
 	@autoserialize public readonly exp: number;
 	@autoserializeAs(FishReward) public readonly rewards: FishRewards;
 
-	constructor(
-		id: string, name: string, habitat: FishHabitat, rank: FishRank, type: FishType, grade: number,
-		startsFrom: number, image: string, exp: number, rewards: FishRewards, description: string
-	) {
-		this.id = id;
-		this.name = name;
-		this.habitat = habitat;
-		this.rank = rank;
-		this.type = type;
-		this.grade = grade;
-		this.startsFrom = startsFrom;
-		this.image = image;
-		this.exp = exp;
-		this.rewards = rewards;
-		this.description = description;
+	constructor(options: IFishOptions) {
+		this.id = options.id;
+		this.name = options.name;
+		this.habitat = options.habitat;
+		this.rank = options.rank;
+		this.type = options.type;
+		this.grade = options.grade;
+		this.startsFrom = options.startsFrom;
+		this.image = options.image;
+		this.exp = options.exp;
+		this.rewards = options.rewards;
+		this.description = options.description;
 	}
 }
 

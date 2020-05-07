@@ -8,6 +8,23 @@ import { FishHabitat } from './Fish';
 
 export type FishingGearType = 'item_rod' | 'item_float' | 'item_bait';
 
+export interface IFishingGearOptions {
+	id: string;
+	name: string;
+	description: string;
+	type: FishingGearType;
+	grade: number;
+	habitat: FishHabitat;
+	habitatBonus: number;
+	power: number;
+	bigChance: number;
+	biteChance: number;
+	eventChance: number;
+	currency: string;
+	price: number;
+	image: string;
+}
+
 export class FishingGear {
 	@autoserialize public readonly id: string;
 	@autoserialize public readonly name: string;
@@ -24,25 +41,21 @@ export class FishingGear {
 	@autoserialize public readonly price: number;
 	@autoserialize public readonly image: string;
 
-	constructor(
-		id: string, name: string, type: FishingGearType, grade: number, habitat: FishHabitat, habitatBonus: number,
-		power: number, bigChance: number, biteChance: number, eventChance: number, currency: string, price: number,
-		image: string, description: string
-	) {
-		this.id = id;
-		this.name = name;
-		this.type = type;
-		this.grade = grade;
-		this.habitat = habitat;
-		this.habitatBonus = habitatBonus;
-		this.power = power;
-		this.bigChance = bigChance;
-		this.biteChance = biteChance;
-		this.eventChance = eventChance;
-		this.currency = currency;
-		this.price = price;
-		this.image = image;
-		this.description = description;
+	constructor(options: IFishingGearOptions) {
+		this.id = options.id;
+		this.name = options.name;
+		this.type = options.type;
+		this.grade = options.grade;
+		this.habitat = options.habitat;
+		this.habitatBonus = options.habitatBonus;
+		this.power = options.power;
+		this.bigChance = options.bigChance;
+		this.biteChance = options.biteChance;
+		this.eventChance = options.eventChance;
+		this.currency = options.currency;
+		this.price = options.price;
+		this.image = options.image;
+		this.description = options.description;
 	}
 }
 

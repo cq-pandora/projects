@@ -4,9 +4,19 @@ import {
 
 import { registerDeserializer } from '../Deserializer';
 import { registerSerializer } from '../Serializer';
-import ChampionForm from './ChampionForm';
+import { ChampionForm } from './ChampionForm';
 
 export type ChampionType = 'util' | 'def' | 'atk';
+
+export interface IChampionOptions {
+	id: string;
+	name: string;
+	illustration: string;
+	image: string;
+	lore: string;
+	type: ChampionType;
+	forms: Array<ChampionForm>;
+}
 
 export class Champion {
 	@autoserialize public readonly id: string;
@@ -17,17 +27,14 @@ export class Champion {
 	@autoserialize public readonly type: ChampionType;
 	@autoserializeAs(ChampionForm) public readonly forms: Array<ChampionForm>;
 
-	constructor(
-		id: string, name: string, illustration: string, image: string, lore: string, type: ChampionType,
-		forms: Array<ChampionForm>
-	) {
-		this.id = id;
-		this.name = name;
-		this.illustration = illustration;
-		this.image = image;
-		this.lore = lore;
-		this.type = type;
-		this.forms = forms;
+	constructor(options: IChampionOptions) {
+		this.id = options.id;
+		this.name = options.name;
+		this.illustration = options.illustration;
+		this.image = options.image;
+		this.lore = options.lore;
+		this.type = options.type;
+		this.forms = options.forms;
 	}
 }
 

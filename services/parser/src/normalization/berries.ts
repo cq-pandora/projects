@@ -57,18 +57,20 @@ export async function normalize(input: BerriesNormalizationInput): Promise<Norma
 		berriesTranslationsIndex[raw.name] = idx;
 
 		return new Berry(
-			raw.id,
-			raw.name,
-			rarityMapper(raw.rarity),
-			statMapper(raw.type),
-			raw.type.includes('Ratio') || raw.type === 'Great' || raw.type === 'All',
-			raw.addstatpoint,
-			raw.greatprob,
-			raw.grade,
-			raw.image,
-			categoryMapper(raw.category),
-			raw.sellprice,
-			raw.eatprice
+			{
+				id: raw.id,
+				name: raw.name,
+				rarity: rarityMapper(raw.rarity),
+				targetStat: statMapper(raw.type),
+				isPercentage: raw.type.includes('Ratio') || raw.type === 'Great' || raw.type === 'All',
+				value: raw.addstatpoint,
+				greatChance: raw.greatprob,
+				grade: raw.grade,
+				image: raw.image,
+				category: categoryMapper(raw.category),
+				sellCost: raw.sellprice,
+				eatCost: raw.eatprice
+			}
 		);
 	});
 
