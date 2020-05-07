@@ -114,15 +114,15 @@ export interface IHeroOptions {
 }
 
 export class Hero {
-	@autoserialize public readonly id: string;
-	@autoserializeAs('readable_id') public readonly readableId: string;
-	@autoserializeAs('class') public readonly clazz: HeroClass;
-	@autoserialize public readonly type: HeroType;
-	@autoserialize public readonly gender: HeroGender;
-	@autoserialize public readonly domain: string;
-	@autoserializeAs(HeroForm) public readonly forms: Array<HeroForm>;
-	@autoserializeAs(HeroSBW) public readonly sbws: Array<HeroSBW>;
-	@autoserializeAs(HeroSkin) public readonly skins: Array<HeroSkin>;
+	@autoserialize public readonly id!: string;
+	@autoserializeAs('readable_id') public readonly readableId!: string;
+	@autoserializeAs('class') public readonly clazz!: HeroClass;
+	@autoserialize public readonly type!: HeroType;
+	@autoserialize public readonly gender!: HeroGender;
+	@autoserialize public readonly domain!: string;
+	@autoserializeAs(HeroForm) public readonly forms!: Array<HeroForm>;
+	@autoserializeAs(HeroSBW) public readonly sbws!: Array<HeroSBW>;
+	@autoserializeAs(HeroSkin) public readonly skins!: Array<HeroSkin>;
 
 	public static OnDeserialized(instance: Hero): void {
 		for (const form of instance.forms) {
@@ -131,6 +131,8 @@ export class Hero {
 	}
 
 	constructor(options: IHeroOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.readableId = options.readableId;
 		this.clazz = options.clazz;
