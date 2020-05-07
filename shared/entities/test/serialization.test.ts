@@ -6,33 +6,30 @@ import {
 
 describe('Champion test', (): void => {
 	it('serializes and deserializes successfully', (): void => {
-		const c = new Champion(
-			'test_id',
-			'test',
-			'test',
-			'test',
-			'test',
-			'util',
-			[
-				new ChampionForm(
-					new ChampionSkill(
-						'test_id',
-						'test',
-						'test',
-						'test',
-						1
-					),
-					undefined,
-					undefined,
-					2,
-				),
+		const c = new Champion({
+			id: 'test_id',
+			name: 'test',
+			illustration: 'test',
+			image: 'test',
+			lore: 'test',
+			type: 'util',
+			forms: [
+				new ChampionForm({
+					active: new ChampionSkill({
+						id: 'test_id',
+						name: 'test',
+						description: 'test',
+						image: 'test',
+						grade: 1
+					}),
+					grade: 2,
+				}),
 			],
-		);
+		});
 
 		const string = JSON.stringify(Serialize(c));
-		const pojso = JSON.parse(string);
 
-		const dc = Deserialize(pojso, Champion);
+		const dc = Deserialize(string, Champion);
 
 		expect(dc[0] instanceof Champion).toBe(true);
 		expect(dc[0].id).toEqual('test_id');

@@ -27,20 +27,22 @@ export interface IBerryOptions {
 }
 
 export class Berry {
-	@autoserialize public readonly id: string;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly rarity: BerryRarity;
-	@autoserialize public readonly targetStat: HeroStats;
-	@autoserializeAs('is_percentage') public readonly isPercentage: boolean;
-	@autoserialize public readonly value: number;
-	@autoserializeAs('great_chance') public readonly greatChance: number;
-	@autoserialize public readonly grade: number;
-	@autoserialize public readonly image: string;
-	@autoserialize public readonly category: BerryCategory;
-	@autoserializeAs('sell_cost') public readonly sellCost: number;
-	@autoserializeAs('eat_cost') public readonly eatCost: number;
+	@autoserialize public readonly id!: string;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly rarity!: BerryRarity;
+	@autoserialize public readonly targetStat!: HeroStats;
+	@autoserializeAs('is_percentage') public readonly isPercentage!: boolean;
+	@autoserialize public readonly value!: number;
+	@autoserializeAs('great_chance') public readonly greatChance!: number;
+	@autoserialize public readonly grade!: number;
+	@autoserialize public readonly image!: string;
+	@autoserialize public readonly category!: BerryCategory;
+	@autoserializeAs('sell_cost') public readonly sellCost!: number;
+	@autoserializeAs('eat_cost') public readonly eatCost!: number;
 
 	constructor(options: IBerryOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.name = options.name;
 		this.rarity = options.rarity;

@@ -15,14 +15,16 @@ export interface IGoddessOptions {
 }
 
 export class Goddess {
-	@autoserialize public readonly id: string;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly image: string;
-	@autoserializeAs('skill_name') public readonly skillName: string;
-	@autoserializeAs('skill_description') public readonly skillDescription: string;
-	@autoserializeAs('ingame_id') public readonly ingameId: string;
+	@autoserialize public readonly id!: string;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly image!: string;
+	@autoserializeAs('skill_name') public readonly skillName!: string;
+	@autoserializeAs('skill_description') public readonly skillDescription!: string;
+	@autoserializeAs('ingame_id') public readonly ingameId!: string;
 
 	constructor(options: IGoddessOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.name = options.name;
 		this.image = options.image;

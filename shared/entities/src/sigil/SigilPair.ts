@@ -7,11 +7,13 @@ export interface ISigilPairOptions {
 }
 
 export class SigilPair {
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly effect: string;
-	@autoserialize public readonly pair: string;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly effect!: string;
+	@autoserialize public readonly pair!: string;
 
 	constructor(options: ISigilPairOptions) {
+		if (!options) return; // only for tests
+
 		this.name = options.name;
 		this.effect = options.effect;
 		this.pair = options.pair;

@@ -27,19 +27,21 @@ export interface IFishOptions {
 }
 
 export class Fish {
-	@autoserialize public readonly id: string;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly description: string;
-	@autoserialize public readonly habitat: FishHabitat;
-	@autoserialize public readonly rank: FishRank;
-	@autoserialize public readonly type: FishType;
-	@autoserialize public readonly grade: number;
-	@autoserializeAs('starts_from') public readonly startsFrom: number;
-	@autoserialize public readonly image: string;
-	@autoserialize public readonly exp: number;
-	@autoserializeAs(FishReward) public readonly rewards: FishRewards;
+	@autoserialize public readonly id!: string;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly description!: string;
+	@autoserialize public readonly habitat!: FishHabitat;
+	@autoserialize public readonly rank!: FishRank;
+	@autoserialize public readonly type!: FishType;
+	@autoserialize public readonly grade!: number;
+	@autoserializeAs('starts_from') public readonly startsFrom!: number;
+	@autoserialize public readonly image!: string;
+	@autoserialize public readonly exp!: number;
+	@autoserializeAs(FishReward) public readonly rewards!: FishRewards;
 
 	constructor(options: IFishOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.name = options.name;
 		this.habitat = options.habitat;

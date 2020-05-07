@@ -19,15 +19,17 @@ export interface IChampionOptions {
 }
 
 export class Champion {
-	@autoserialize public readonly id: string;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly illustration: string;
-	@autoserialize public readonly image: string;
-	@autoserialize public readonly lore: string;
-	@autoserialize public readonly type: ChampionType;
-	@autoserializeAs(ChampionForm) public readonly forms: Array<ChampionForm>;
+	@autoserialize public readonly id!: string;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly illustration!: string;
+	@autoserialize public readonly image!: string;
+	@autoserialize public readonly lore!: string;
+	@autoserialize public readonly type!: ChampionType;
+	@autoserializeAs(ChampionForm) public readonly forms!: Array<ChampionForm>;
 
 	constructor(options: IChampionOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.name = options.name;
 		this.illustration = options.illustration;

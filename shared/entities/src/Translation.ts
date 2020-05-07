@@ -12,12 +12,14 @@ export interface ITranslationOptions {
 }
 
 export class Translation {
-	@autoserialize public readonly text: string;
+	@autoserialize public readonly text!: string;
 	public key = '';
-	@autoserialize public readonly version: string;
-	@autoserialize public readonly original: boolean;
+	@autoserialize public readonly version!: string;
+	@autoserialize public readonly original!: boolean;
 
 	constructor(options: ITranslationOptions) {
+		if (!options) return; // only for tests
+
 		this.text = options.text;
 		this.version = options.version;
 		this.original = options.original;

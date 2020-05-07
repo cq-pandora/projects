@@ -17,13 +17,15 @@ export interface ITranslationIndicesOptions {
 }
 
 export class TranslationIndex {
-	@autoserialize public readonly key: TranslationKey;
-	@autoserialize public readonly path: string;
-	@autoserialize public readonly text: string;
-	@autoserialize public readonly version: string;
-	@autoserialize public readonly original: boolean;
+	@autoserialize public readonly key!: TranslationKey;
+	@autoserialize public readonly path!: string;
+	@autoserialize public readonly text!: string;
+	@autoserialize public readonly version!: string;
+	@autoserialize public readonly original!: boolean;
 
 	constructor(options: ITranslationIndicesOptions) {
+		if (!options) return; // only for tests
+
 		this.key = options.key;
 		this.path = options.path;
 		this.text = options.text;

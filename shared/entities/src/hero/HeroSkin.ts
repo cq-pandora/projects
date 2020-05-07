@@ -11,13 +11,15 @@ export interface IHeroSkinOptions {
 }
 
 export class HeroSkin {
-	@autoserialize public readonly id: number;
-	@autoserialize public readonly image: string;
-	@autoserialize public readonly cost: number;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly stats: Record<HeroStats, number>;
+	@autoserialize public readonly id!: number;
+	@autoserialize public readonly image!: string;
+	@autoserialize public readonly cost!: number;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly stats!: Record<HeroStats, number>;
 
 	constructor(options: IHeroSkinOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.image = options.image;
 		this.cost = options.cost;

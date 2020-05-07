@@ -42,35 +42,37 @@ export interface IHeroFormOptions {
 
 export class HeroForm implements IStatsHolder {
 	readonly all: number = -1;
-	@autoserialize public readonly id: string;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly image: string;
-	@autoserialize public readonly star: number;
-	@autoserialize public readonly accuracy: number;
-	@autoserialize public readonly armor: number;
-	@autoserializeAs('armor_pen') public readonly armorPenetration: number;
-	@autoserializeAs('atk_power') public readonly atkPower: number;
-	@autoserializeAs('crit_chance') public readonly critChance: number;
-	@autoserializeAs('crit_chance_reduction') public readonly critChanceReduction: number;
-	@autoserializeAs('crit_dmg') public readonly critDmg: number;
-	@autoserializeAs('dmg_reduction') public readonly dmgReduction: number;
-	@autoserialize public readonly evasion: number;
-	@autoserialize public readonly hp: number;
-	@autoserialize public readonly lifesteal: number;
-	@autoserialize public readonly resistance: number;
-	@autoserializeAs('resistance_pen') public readonly resistancePenetration: number;
-	@autoserialize public readonly lore: string;
-	@autoserializeAs('block_image') public readonly blockImage: string;
-	@autoserializeAs('skill_lvl') public readonly skillLvl: number;
-	@autoserializeAs('passive_name') public readonly passiveName: string;
-	@autoserializeAs('block_name') public readonly blockName: string;
-	@autoserializeAs('block_description') public readonly blockDescription: string;
-	@autoserializeAs('passive_description') public readonly passiveDescription: string;
-	@autoserializeAs(HeroBerriesStats, 'max_berries') public readonly maxBerries: HeroBerriesStats;
+	@autoserialize public readonly id!: string;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly image!: string;
+	@autoserialize public readonly star!: number;
+	@autoserialize public readonly accuracy!: number;
+	@autoserialize public readonly armor!: number;
+	@autoserializeAs('armor_pen') public readonly armorPenetration!: number;
+	@autoserializeAs('atk_power') public readonly atkPower!: number;
+	@autoserializeAs('crit_chance') public readonly critChance!: number;
+	@autoserializeAs('crit_chance_reduction') public readonly critChanceReduction!: number;
+	@autoserializeAs('crit_dmg') public readonly critDmg!: number;
+	@autoserializeAs('dmg_reduction') public readonly dmgReduction!: number;
+	@autoserialize public readonly evasion!: number;
+	@autoserialize public readonly hp!: number;
+	@autoserialize public readonly lifesteal!: number;
+	@autoserialize public readonly resistance!: number;
+	@autoserializeAs('resistance_pen') public readonly resistancePenetration!: number;
+	@autoserialize public readonly lore!: string;
+	@autoserializeAs('block_image') public readonly blockImage!: string;
+	@autoserializeAs('skill_lvl') public readonly skillLvl!: number;
+	@autoserializeAs('passive_name') public readonly passiveName!: string;
+	@autoserializeAs('block_name') public readonly blockName!: string;
+	@autoserializeAs('block_description') public readonly blockDescription!: string;
+	@autoserializeAs('passive_description') public readonly passiveDescription!: string;
+	@autoserializeAs(HeroBerriesStats, 'max_berries') public readonly maxBerries!: HeroBerriesStats;
 	// @ts-ignore
 	public hero: Hero = null;
 
 	constructor(options: IHeroFormOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.name = options.name;
 		this.image = options.image;

@@ -24,19 +24,21 @@ export interface ISigilOptions {
 }
 
 export class Sigil {
-	@autoserialize public readonly id: string;
-	@autoserializeAs('ingame_id') public readonly ingameId: string;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly description: string;
-	@autoserialize public readonly image: string;
-	@autoserialize public readonly grade: number;
-	@autoserialize public readonly rarity: SigilRarity;
-	@autoserializeAs('sell_cost') public readonly sellCost: number;
-	@autoserializeAs('extract_cost') public readonly extractCost: number;
-	@autoserializeAs(SigilStats) public readonly stats: SigilStats;
+	@autoserialize public readonly id!: string;
+	@autoserializeAs('ingame_id') public readonly ingameId!: string;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly description!: string;
+	@autoserialize public readonly image!: string;
+	@autoserialize public readonly grade!: number;
+	@autoserialize public readonly rarity!: SigilRarity;
+	@autoserializeAs('sell_cost') public readonly sellCost!: number;
+	@autoserializeAs('extract_cost') public readonly extractCost!: number;
+	@autoserializeAs(SigilStats) public readonly stats!: SigilStats;
 	@autoserializeAs(SigilPair) public readonly set?: SigilPair;
 
 	constructor(options: ISigilOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.ingameId = options.ingameId;
 		this.name = options.name;

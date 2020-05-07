@@ -13,12 +13,14 @@ export interface IFactionOptions {
 }
 
 export class Faction {
-	@autoserialize public readonly id: string;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly image: string;
-	@autoserializeAs('ingame_id') public readonly ingameId: string;
+	@autoserialize public readonly id!: string;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly image!: string;
+	@autoserializeAs('ingame_id') public readonly ingameId!: string;
 
 	constructor(options: IFactionOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.name = options.name;
 		this.image = options.image;

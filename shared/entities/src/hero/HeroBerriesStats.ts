@@ -14,14 +14,14 @@ export interface IHeroBerriesStats {
 }
 
 export class HeroBerriesStats implements IStatsHolder {
-	@autoserialize public readonly accuracy: number;
-	@autoserialize public readonly armor: number;
-	@autoserializeAs('atk_power') public readonly atkPower: number;
-	@autoserializeAs('crit_chance') public readonly critChance: number;
-	@autoserializeAs('crit_dmg') public readonly critDmg: number;
-	@autoserialize public readonly evasion: number;
-	@autoserialize public readonly hp: number;
-	@autoserialize public readonly resistance: number;
+	@autoserialize public readonly accuracy!: number;
+	@autoserialize public readonly armor!: number;
+	@autoserializeAs('atk_power') public readonly atkPower!: number;
+	@autoserializeAs('crit_chance') public readonly critChance!: number;
+	@autoserializeAs('crit_dmg') public readonly critDmg!: number;
+	@autoserialize public readonly evasion!: number;
+	@autoserialize public readonly hp!: number;
+	@autoserialize public readonly resistance!: number;
 	public readonly armorPenetration = 0;
 	public readonly critChanceReduction = 0;
 	public readonly lifesteal = 0;
@@ -30,6 +30,8 @@ export class HeroBerriesStats implements IStatsHolder {
 	public readonly dmgReduction = 0;
 
 	constructor(options: IHeroBerriesStats) {
+		if (!options) return; // only for tests
+
 		this.accuracy = options.accuracy;
 		this.armor = options.armor;
 		this.atkPower = options.atkPower;

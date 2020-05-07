@@ -14,16 +14,18 @@ export interface IHeroSBWOptions {
 }
 
 export class HeroSBW {
-	@autoserialize public readonly id: string;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly image: string;
-	@autoserialize public readonly ability: string;
-	@autoserialize public readonly star: number;
-	@autoserializeAs('atk_power') public readonly atkPower: number;
-	@autoserializeAs('atk_speed') public readonly atkSpeed: number;
-	@autoserializeAs('class') public readonly clazz: WeaponType;
+	@autoserialize public readonly id!: string;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly image!: string;
+	@autoserialize public readonly ability!: string;
+	@autoserialize public readonly star!: number;
+	@autoserializeAs('atk_power') public readonly atkPower!: number;
+	@autoserializeAs('atk_speed') public readonly atkSpeed!: number;
+	@autoserializeAs('class') public readonly clazz!: WeaponType;
 
 	constructor(options: IHeroSBWOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.name = options.name;
 		this.image = options.image;

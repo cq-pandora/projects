@@ -19,16 +19,18 @@ export interface IBreadOptions {
 }
 
 export class Bread {
-	@autoserialize public readonly id: string;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly rarity: BreadRarity;
-	@autoserialize public readonly value: number;
-	@autoserializeAs('great_chance') public readonly greatChance: number;
-	@autoserialize public readonly grade: number;
-	@autoserialize public readonly image: string;
-	@autoserializeAs('sell_cost') public readonly sellCost: number;
+	@autoserialize public readonly id!: string;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly rarity!: BreadRarity;
+	@autoserialize public readonly value!: number;
+	@autoserializeAs('great_chance') public readonly greatChance!: number;
+	@autoserialize public readonly grade!: number;
+	@autoserialize public readonly image!: string;
+	@autoserializeAs('sell_cost') public readonly sellCost!: number;
 
 	constructor(options: IBreadOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.name = options.name;
 		this.rarity = options.rarity;

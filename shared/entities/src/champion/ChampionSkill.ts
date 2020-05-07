@@ -9,13 +9,15 @@ export interface IChampionSkillOptions {
 }
 
 export class ChampionSkill {
-	@autoserialize public readonly id: string;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly description: string;
-	@autoserialize public readonly image: string;
-	@autoserialize public readonly grade: number;
+	@autoserialize public readonly id!: string;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly description!: string;
+	@autoserialize public readonly image!: string;
+	@autoserialize public readonly grade!: number;
 
 	constructor(options: IChampionSkillOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.name = options.name;
 		this.description = options.description;

@@ -27,24 +27,26 @@ export interface IBossOptions {
 
 export class Boss implements IStatsHolder {
 	readonly all: number = -1;
-	@autoserialize public readonly id: string;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly image: string;
-	@autoserialize public readonly accuracy: number;
-	@autoserialize public readonly armor: number;
-	@autoserializeAs('armor_pen') public readonly armorPenetration: number;
-	@autoserializeAs('atk_power') public readonly atkPower: number;
-	@autoserializeAs('crit_chance') public readonly critChance: number;
-	@autoserializeAs('crit_chance_reduction') public readonly critChanceReduction: number;
-	@autoserializeAs('crit_dmg') public readonly critDmg: number;
-	@autoserializeAs('dmg_reduction') public readonly dmgReduction: number;
-	@autoserialize public readonly evasion: number;
-	@autoserialize public readonly hp: number;
-	@autoserialize public readonly lifesteal: number;
-	@autoserialize public readonly resistance: number;
-	@autoserializeAs('resistance_pen') public readonly resistancePenetration: number;
+	@autoserialize public readonly id!: string;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly image!: string;
+	@autoserialize public readonly accuracy!: number;
+	@autoserialize public readonly armor!: number;
+	@autoserializeAs('armor_pen') public readonly armorPenetration!: number;
+	@autoserializeAs('atk_power') public readonly atkPower!: number;
+	@autoserializeAs('crit_chance') public readonly critChance!: number;
+	@autoserializeAs('crit_chance_reduction') public readonly critChanceReduction!: number;
+	@autoserializeAs('crit_dmg') public readonly critDmg!: number;
+	@autoserializeAs('dmg_reduction') public readonly dmgReduction!: number;
+	@autoserialize public readonly evasion!: number;
+	@autoserialize public readonly hp!: number;
+	@autoserialize public readonly lifesteal!: number;
+	@autoserialize public readonly resistance!: number;
+	@autoserializeAs('resistance_pen') public readonly resistancePenetration!: number;
 
 	constructor(options: IBossOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.name = options.name;
 		this.image = options.image;

@@ -19,13 +19,15 @@ export interface ISpSkillOptions {
 }
 
 export class SpSkill {
-	@autoserialize public readonly id: string;
-	@autoserialize public readonly name: string;
-	@autoserializeAs('class') public readonly clazz: HeroClass;
-	@autoserialize public readonly type: SpSkillType;
-	@autoserializeAs(SpSkillForm) public readonly forms: Array<SpSkillForm>;
+	@autoserialize public readonly id!: string;
+	@autoserialize public readonly name!: string;
+	@autoserializeAs('class') public readonly clazz!: HeroClass;
+	@autoserialize public readonly type!: SpSkillType;
+	@autoserializeAs(SpSkillForm) public readonly forms!: Array<SpSkillForm>;
 
 	constructor(options: ISpSkillOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.name = options.name;
 		this.clazz = options.clazz;

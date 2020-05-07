@@ -35,21 +35,23 @@ export interface IInheritanceStatsOptions {
 
 export class InheritanceStats implements IStatsHolder {
 	readonly all: number = -1;
-	@autoserialize public readonly accuracy: number;
-	@autoserialize public readonly armor: number;
-	@autoserializeAs('armor_pen') public readonly armorPenetration: number;
-	@autoserializeAs('atk_power') public readonly atkPower: number;
-	@autoserializeAs('crit_chance') public readonly critChance: number;
-	@autoserializeAs('crit_chance_reduction') public readonly critChanceReduction: number;
-	@autoserializeAs('crit_dmg') public readonly critDmg: number;
-	@autoserializeAs('dmg_reduction') public readonly dmgReduction: number;
-	@autoserialize public readonly evasion: number;
-	@autoserialize public readonly hp: number;
-	@autoserialize public readonly lifesteal: number;
-	@autoserialize public readonly resistance: number;
-	@autoserializeAs('resistance_pen') public readonly resistancePenetration: number;
+	@autoserialize public readonly accuracy!: number;
+	@autoserialize public readonly armor!: number;
+	@autoserializeAs('armor_pen') public readonly armorPenetration!: number;
+	@autoserializeAs('atk_power') public readonly atkPower!: number;
+	@autoserializeAs('crit_chance') public readonly critChance!: number;
+	@autoserializeAs('crit_chance_reduction') public readonly critChanceReduction!: number;
+	@autoserializeAs('crit_dmg') public readonly critDmg!: number;
+	@autoserializeAs('dmg_reduction') public readonly dmgReduction!: number;
+	@autoserialize public readonly evasion!: number;
+	@autoserialize public readonly hp!: number;
+	@autoserialize public readonly lifesteal!: number;
+	@autoserialize public readonly resistance!: number;
+	@autoserializeAs('resistance_pen') public readonly resistancePenetration!: number;
 
 	constructor(options: IInheritanceStatsOptions) {
+		if (!options) return; // only for tests
+
 		this.accuracy = options.accuracy;
 		this.armor = options.armor;
 		this.armorPenetration = options.armorPenetration;

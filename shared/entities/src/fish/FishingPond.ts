@@ -19,19 +19,21 @@ export interface IFishingPondOptions {
 }
 
 export class FishingPond {
-	@autoserialize public readonly id: string;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly description: string;
-	@autoserializeAs('min_fr') public readonly minFR: number;
-	@autoserialize public readonly fish: Array<string>;
-	@autoserialize public readonly junk: Array<string>;
-	@autoserialize public readonly hero: Array<string>;
-	@autoserialize public readonly habitat: FishHabitat;
-	@autoserialize public readonly boss: string;
-	@autoserializeAs(FishReward) public readonly reward: FishReward;
-	@autoserialize public readonly background: string;
+	@autoserialize public readonly id!: string;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly description!: string;
+	@autoserializeAs('min_fr') public readonly minFR!: number;
+	@autoserialize public readonly fish!: Array<string>;
+	@autoserialize public readonly junk!: Array<string>;
+	@autoserialize public readonly hero!: Array<string>;
+	@autoserialize public readonly habitat!: FishHabitat;
+	@autoserialize public readonly boss!: string;
+	@autoserializeAs(FishReward) public readonly reward!: FishReward;
+	@autoserialize public readonly background!: string;
 
 	constructor(options: IFishingPondOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.name = options.name;
 		this.description = options.description;

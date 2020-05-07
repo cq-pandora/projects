@@ -18,15 +18,17 @@ export interface IStageOptions {
 }
 
 export class Stage {
-	@autoserialize public readonly id: StageId;
-	@autoserialize public readonly name: string;
-	@autoserialize public readonly chapter: string;
-	@autoserializeAs('big_image') public readonly bigImage: string;
-	@autoserializeAs('number') public readonly num: number;
-	@autoserializeAs('entry_cost') public readonly entryCost: number;
-	@autoserializeAs('entry_currency') public readonly entryCurrency: string;
+	@autoserialize public readonly id!: StageId;
+	@autoserialize public readonly name!: string;
+	@autoserialize public readonly chapter!: string;
+	@autoserializeAs('big_image') public readonly bigImage!: string;
+	@autoserializeAs('number') public readonly num!: number;
+	@autoserializeAs('entry_cost') public readonly entryCost!: number;
+	@autoserializeAs('entry_currency') public readonly entryCurrency!: string;
 
 	constructor(options: IStageOptions) {
+		if (!options) return; // only for tests
+
 		this.id = options.id;
 		this.name = options.name;
 		this.chapter = options.chapter;
