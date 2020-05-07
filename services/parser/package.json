@@ -1,6 +1,6 @@
 {
 	"name": "@pandora/kaede",
-	"version": "2.1.1",
+	"version": "2.1.2",
 	"description": "CQ data decoder and normalizer",
 	"main": "./lib/index.js",
 	"types": "./lib/index.d.ts",
@@ -42,6 +42,8 @@
 	],
 	"dependencies": {
 		"@pandora/entities": "^1.0.0",
+		"axios": "^0.19.2",
+		"crc": "^3.8.0",
 		"egoroof-blowfish": "^2.2.1",
 		"glob": "^7.1.2",
 		"mkdirp": "^0.5.1",
@@ -50,6 +52,7 @@
 		"winston": "^3.2.1"
 	},
 	"devDependencies": {
+		"@types/crc": "^3.4.0",
 		"@types/glob": "^7.1.1",
 		"@types/mkdirp": "^0.5.2",
 		"@types/node-gzip": "^1.1.0",

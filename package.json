@@ -17,10 +17,10 @@
 		"rimraf": "^3.0.0",
 		"ts-jest": "^24.2.0",
 		"ts-node": "^8.5.4",
-		"typescript": "^3.7.3"
+		"typescript": "^3.8.3"
 	},
 	"resolutions": {
-		"typescript": "^3.7.3"
+		"typescript": "^3.8.3"
 	},
 	"scripts": {
 		"build": "yarn run typescript:build",
