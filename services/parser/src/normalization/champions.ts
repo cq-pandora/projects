@@ -58,7 +58,7 @@ export async function normalize(input: ChampionsNormalizationInput): Promise<Nor
 				return new ChampionForm({
 					active: mapSkill(skills.filter(s => s.type.toLowerCase() === 'active')[0])!,
 					passive: mapSkill(skills.filter(s => s.type.toLowerCase() === 'passive')[0]),
-					exclusive: mapSkill(skills.filter(s => s.type.toLowerCase() === 'exclusive')[0]),
+					exclusive: mapSkill(skills.filter(s => s.type.toLowerCase() === 'exclusive_passive')[0]),
 					grade: form.level,
 				});
 			});
