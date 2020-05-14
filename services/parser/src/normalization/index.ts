@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/camelcase */
+import { sync as mkdirp } from 'mkdirp';
+
 import { writeFile } from 'fs';
 import { promisify } from 'util';
 
 import {
 	Hero, Berry, Champion, SpSkill, Boss, Bread, Sigil, Goddess, Faction, Fish, FishingGear, TranslationIndexSection,
-	TranslationIndices, TranslationIndex, GenericConstructor, Serialize, Translations, Interaction
+	TranslationIndices, TranslationIndex, GenericConstructor, Serialize, Translations, Interaction, TranslationsMeta
 } from '@pandora/entities';
 
 import { resolve as pathResolve } from 'path';
@@ -14,7 +16,7 @@ import { gameVersion } from '../util';
 import { makeLogger } from '../logger';
 
 import * as normalizations from './normalizations';
-import { UniversalNormalizationInput } from './input';
+import { UniversalNormalizationInput, Localizations, locales } from './input';
 import { NormalizationResult } from './common-types';
 
 const writeFileAsync = promisify(writeFile);
@@ -52,24 +54,43 @@ export default async function normalize(): Promise<void> {
 
 	logger.verbose('Started translations normalization');
 
-	const translations = await normalizations.normalizeTranslations({
-		textsRawPaths: [
-			'text1_en_us_0',
-			'text1_en_us_1',
-			'text1_en_us_2',
-			'text2_en_us_0',
-			'text2_en_us_1',
-			'textdialogue1_en_us_0',
-			'textdialogue1_en_us_1',
-			'textdialogue1_en_us_2',
-			'textdialogue2_en_us_0',
-			'textdialogue2_en_us_1',
-		].map(absolute),
+	mkdirp(pathResolve(paths.informationOutputDir, 'translations'));
+
+	const localizations = { default: 'en_us' } as Localizations;
+
+	for (const locale of locales) {
+		const translations = await normalizations.normalizeTranslations({
+			textsRawPaths: [
+				`text1_${locale}_0`,
+				`text1_${locale}_1`,
+				`text1_${locale}_2`,
+				`text2_${locale}_0`,
+				`text2_${locale}_1`,
+				`textdialogue1_${locale}_0`,
+				`textdialogue1_${locale}_1`,
+				`textdialogue1_${locale}_2`,
+				`textdialogue2_${locale}_0`,
+				`textdialogue2_${locale}_1`,
+			].map(absolute),
+		});
+
+		localizations[locale] = translations;
+
+		await writeFileAsync(
+			pathResolve(paths.informationOutputDir, 'translations', `${locale}.json`),
+			Serialize<Translations>(translations, 'Translations')
+		);
+
+		logger.verbose(`Normalized ${locale} locale`);
+	}
+
+	const translationsMeta = new TranslationsMeta({
+		locales
 	});
 
 	await writeFileAsync(
-		pathResolve(paths.informationOutputDir, 'translations.json'),
-		Serialize<Translations>(translations, 'Translations')
+		pathResolve(paths.informationOutputDir, 'translations', 'meta.json'),
+		Serialize(translationsMeta, TranslationsMeta)
 	);
 
 	logger.verbose('Normalized translations');
@@ -96,7 +117,7 @@ export default async function normalize(): Promise<void> {
 		spSkillsRawPath: absolute('spskill'),
 		weaponsRawPath: absolute('weapon'),
 		interactionsRawPath: absolute('hero_easteregg'),
-		translation: translations,
+		localizations,
 	};
 
 	const translationIndices = {} as TranslationIndices;
@@ -111,20 +132,56 @@ export default async function normalize(): Promise<void> {
 		if (result.translationIndex) {
 			translationIndices[type as TranslationIndexSection] = Object.entries(result.translationIndex)
 				.map(e => {
-					const text = translations[e[0]]?.text;
+					const indices = [];
 
-					if (!text) {
-						logger.warn(`No translation available for ${e[0]}`);
+					const defaultLocale = localizations[localizations.default];
+					const defaultText = defaultLocale[e[0]]?.text;
+
+					if (!defaultText) {
+						logger.warn(`No default translation available for ${e[0]}`);
 					}
 
-					return new TranslationIndex({
+					const defaultIndex = new TranslationIndex({
+						locale: localizations.default,
 						key: e[0],
 						path: e[1].toString(),
-						text: text ?? e[0],
+						text: defaultText ?? e[0],
 						version,
 						original: true
 					});
-				});
+
+					for (const locale of locales) {
+						if (locale === localizations.default) continue;
+
+						const translation = localizations[locale];
+						const text = translation[e[0]]?.text;
+
+						if (!text) {
+							logger.warn(`No translation available for ${e[0]}`);
+						}
+
+						if (text === defaultText) {
+							logger.warn(`${locale} text is the same as default text for key ${e[0]}. Skipping...`);
+							continue;
+						}
+
+						indices.push(
+							new TranslationIndex({
+								key: e[0],
+								path: e[1].toString(),
+								text: text ?? e[0],
+								version,
+								original: true,
+								locale,
+							})
+						);
+					}
+
+					indices.push(defaultIndex);
+
+					return indices;
+				})
+				.flat();
 		}
 
 		if (result.translationsKeys) {

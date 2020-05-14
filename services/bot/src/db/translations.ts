@@ -1,7 +1,7 @@
 import { FindOptions } from 'sequelize';
 
 import sequelize, { Translation } from './models';
-import { translations } from '../cq-data';
+import { localizations } from '../cq-data';
 import config from '../config';
 import { db as logger } from '../logger';
 
@@ -43,7 +43,7 @@ export async function accept(id: string): Promise<void> {
 			where: { id }
 		}) as Translation;
 
-		translations[one.key] = one;
+		localizations[one.locale][one.key] = one;
 	} catch (err) {
 		logger.error(`Error accepting translation: ${id}`);
 

@@ -1,8 +1,8 @@
 import { autoserialize, Deserialize, Serialize } from 'cerialize';
 
-import { registerDeserializer } from './Deserializer';
-import { TranslationKey } from './common-types';
-import { registerSerializer } from './Serializer';
+import { registerDeserializer } from '../Deserializer';
+import { TranslationKey } from '../common-types';
+import { registerSerializer } from '../Serializer';
 
 export type TranslationIndexSection =
 	'heroes' | 'breads' | 'berries' | 'sigils' | 'goddesses' | 'factions' | 'champions' | 'sp_skills' | 'bosses' |
@@ -14,12 +14,14 @@ export interface ITranslationIndicesOptions {
 	text: string;
 	version: string;
 	original: boolean;
+	locale: string;
 }
 
 export class TranslationIndex {
 	@autoserialize public readonly key!: TranslationKey;
 	@autoserialize public readonly path!: string;
 	@autoserialize public readonly text!: string;
+	@autoserialize public readonly locale!: string;
 	@autoserialize public readonly version!: string;
 	@autoserialize public readonly original!: boolean;
 
@@ -31,6 +33,7 @@ export class TranslationIndex {
 		this.text = options.text;
 		this.version = options.version;
 		this.original = options.original;
+		this.locale = options.locale;
 	}
 }
 

@@ -1,3 +1,5 @@
+export type Locale = string;
+
 export type TranslationKey = string;
 
 export type Stats =

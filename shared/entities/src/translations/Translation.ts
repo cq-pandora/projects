@@ -1,8 +1,8 @@
 import { autoserialize, Deserialize, Serialize } from 'cerialize';
 
-import { registerDeserializer } from './Deserializer';
-import { TranslationKey } from './common-types';
-import { registerSerializer } from './Serializer';
+import { registerDeserializer } from '../Deserializer';
+import { TranslationKey } from '../common-types';
+import { registerSerializer } from '../Serializer';
 
 export interface ITranslationOptions {
 	text: string;

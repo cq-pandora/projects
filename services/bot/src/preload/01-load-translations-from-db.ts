@@ -1,7 +1,7 @@
 import compare from 'compare-versions';
 
 import logger from '../logger';
-import { translations } from '../cq-data';
+import { localizations } from '../cq-data';
 import { get as getTranslation } from '../db/translations';
 import { IPreloadScript } from '../common-types';
 
@@ -12,7 +12,10 @@ export default {
 		let validTranslations = 0;
 
 		for (const translation of dbTranslations) {
-			const { key, version } = translation;
+			const { key, version, locale } = translation;
+
+			const translations = localizations[locale];
+
 			const { version: accumulatorVersion } = translations[key];
 
 			if (compare(version, accumulatorVersion) >= 0) {

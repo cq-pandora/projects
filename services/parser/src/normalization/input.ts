@@ -35,8 +35,23 @@ export type GoddessesNormalizationInput = {
 	goddessesRawPath: string;
 };
 
+function stringTuple<T extends [string] | string[]>(...data: T): T {
+	return data;
+}
+
+export const locales = stringTuple(
+	'bh_id', 'de_de', 'en_us', 'es_es', 'fr_fr', 'it_it', 'ja_jp', 'ko_kr',
+	'pt_br', 'ru_ru', 'th_th', 'zh_cn', 'zh_tw'
+);
+
+export type Locale = typeof locales[number];
+
+export type Localizations = {
+	default: Locale;
+} & Record<Locale, Translations>;
+
 export type HeroesNormalizationInput = {
-	translation: Translations;
+	localizations: Localizations;
 	characterBerriesStatsRawPath: string;
 	charactersGeneralInfoRawPath: string;
 	charactersStatsRawPath: string;

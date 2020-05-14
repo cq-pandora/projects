@@ -33,5 +33,9 @@ export default class Translation extends Model<Translation> implements Translati
 	@Column(DataType.STRING)
 	version!: ContextType;
 
+	@AllowNull(false)
+	@Column(DataType.STRING)
+	locale!: string;
+
 	original = false;
 }
