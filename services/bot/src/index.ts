@@ -35,7 +35,7 @@ process.on('unhandledRejection', unhandledRejection);
 	logger.verbose('Loading events...');
 
 	client.on('message', message(client));
-	client.on('reconnection', () => logger.warn('Connection to Discord interrupted. Reconnecting...'));
+	client.on('shardReconnecting', () => logger.warn('Connection to Discord interrupted. Reconnecting...'));
 	client.on('ready', () => {
 		logger.info(`Logged in as ${client.user!.tag}`);
 		client.user!.setActivity('with TypeScript', { type: 'PLAYING' });

@@ -5,7 +5,7 @@ import {
 } from '../common-types';
 import BerriesListEmbed from '../embeds/BerriesEmbed';
 import { parseQuery } from '../util';
-import { berries } from '../cq-data';
+import { berries, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {
@@ -28,7 +28,7 @@ class BerryCommand extends BaseCommand {
 		if (!args.length) return this.sendUsageInstructions(payload);
 
 		const name = parseQuery(args);
-		const candidates = berries.searchAll(name);
+		const { results: candidates, locales } = extractResult(berries.searchAll(name));
 
 		if (!candidates.length) {
 			await message.channel.send('Berry not found!');
@@ -39,7 +39,11 @@ class BerryCommand extends BaseCommand {
 			};
 		}
 
-		const embed = new BerriesListEmbed(message, candidates);
+		const embed = new BerriesListEmbed({
+			initialMessage: message,
+			entities: candidates,
+			locales,
+		});
 
 		await embed.send();
 

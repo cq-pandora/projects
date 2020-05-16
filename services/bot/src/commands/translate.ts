@@ -6,7 +6,7 @@ import {
 } from '../common-types';
 import * as translations from '../db/translations';
 import { getFieldKey } from '../util';
-import { heroes } from '../cq-data';
+import { heroes, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	field: {
@@ -43,7 +43,7 @@ export class TranslateCommand extends BaseCommand {
 		const [field, name, gradeStr, ...rest] = args;
 		const grade = Number(gradeStr);
 
-		const hero = heroes.search(name);
+		const { result: hero } = extractResult(heroes.search(name));
 
 		if (!hero) {
 			await message.channel.send('Hero not found!');

@@ -4,17 +4,57 @@ import { TranslationIndex, TranslationIndexSection } from '@pandora/entities';
 
 import { ContextType } from '../../common-types';
 
+import { Locale } from '../translations';
+
 export type Entities = any;
 
 export type Container<T> = T[] | Record<string, T>;
 
 export type HeroKeysDescription = Record<string, string>;
 
+export interface ISearchResult<T> {
+	result: T;
+	locale: Locale;
+}
+
 export interface ISearchable<T extends Entities, C extends Container<T>> {
 	list(): T[];
 	structure(): C;
-	search(query: string): T;
-	searchAll(query: string): T[];
+	search(query: string): ISearchResult<T>;
+	searchAll(query: string): ISearchResult<T>[];
+}
+
+export interface IExtractedResult<T> {
+	results: T[];
+	locales: Locale[];
+}
+
+export interface IExtractedSingleResult<T> {
+	result: T;
+	locale: Locale;
+}
+
+export function extractResult<T>(result: ISearchResult<T>[]): IExtractedResult<T>;
+export function extractResult<T>(result: ISearchResult<T>): IExtractedSingleResult<T>;
+export function extractResult<T>(
+	result: ISearchResult<T> | ISearchResult<T>[]
+): IExtractedResult<T> | IExtractedSingleResult<T> {
+	if (Array.isArray(result)) {
+		return result.reduce(
+			(r, e) => {
+				r.locales.push(e.locale);
+				r.results.push(e.result);
+
+				return r;
+			},
+			{
+				results: [],
+				locales: []
+			} as IExtractedResult<T>
+		);
+	}
+
+	return result;
 }
 
 export type FuseOptions = Fuse.FuseOptions<TranslationIndex>;

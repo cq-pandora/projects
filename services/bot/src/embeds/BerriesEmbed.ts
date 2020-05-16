@@ -1,21 +1,31 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { Message } from 'discord.js';
 import { Berry } from '@pandora/entities';
 
-import PaginationEmbed from './PaginationEmbed';
 import config from '../config';
 import {
 	capitalizeFirstLetter, imageUrl, toClearNumber, arraify
 } from '../util';
-import { translate } from '../cq-data';
+
+import PaginationEmbed from './PaginationEmbed';
+import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
+
+export interface IBerriesEmbedOptions {
+	initialMessage: Message;
+	entities: Berry | Berry[];
+	locales: string[];
+}
 
 export default class BerriesEmbed extends PaginationEmbed {
-	constructor(initialMessage: Message, berriesRaw: Berry | Berry[]) {
-		super(initialMessage);
+	constructor(options: IBerriesEmbedOptions) {
+		super({
+			initialMessage: options.initialMessage,
+			locale: options.locales[0],
+		});
 
-		const berries = arraify(berriesRaw);
+		const berries = arraify(options.entities);
 
-		const embeds = berries.map(berry => new MessageEmbed()
-			.setTitle(`${translate(berry.name)} (${berry.grade}★)`)
+		const embeds = berries.map(berry => new LocalizableMessageEmbed()
+			.setTitle(l`${berry.name} (${berry.grade}★)`)
 			.setThumbnail(imageUrl(`berries/${berry.image}`))
 			.addField('Rarity', capitalizeFirstLetter(berry.rarity), true)
 			.addField('Stat', capitalizeFirstLetter(berry.targetStat), true)

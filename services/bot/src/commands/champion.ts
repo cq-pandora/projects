@@ -7,7 +7,7 @@ import {
 } from '../common-types';
 import { ChampionEmbed } from '../embeds';
 import { parseQuery, parseGrade } from '../util';
-import { champions } from '../cq-data';
+import { champions, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {
@@ -36,7 +36,7 @@ export class ChampionCommand extends BaseCommand {
 		const grade = parseGrade(args);
 		const name = parseQuery(args, [`${grade}`]);
 
-		const champion = champions.search(name);
+		const { result: champion, locale } = extractResult(champions.search(name));
 
 		if (!champion) {
 			await message.channel.send('Champion not found!');
@@ -63,7 +63,9 @@ export class ChampionCommand extends BaseCommand {
 
 		const page = champion.forms.indexOf(form) + 1;
 
-		const embed = new ChampionEmbed(message, champion, page);
+		const embed = new ChampionEmbed({
+			initialMessage: message, champion, page, locale
+		});
 
 		await embed.send();
 

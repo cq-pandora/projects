@@ -4,7 +4,7 @@ import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
 } from '../common-types';
 import { GoddessesEmbed } from '../embeds';
-import { goddesses } from '../cq-data';
+import { goddesses, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {
@@ -28,7 +28,7 @@ export class GoddessCommand extends BaseCommand {
 
 		const name = args.join(' ');
 
-		const candidates = goddesses.searchAll(name);
+		const { results: candidates, locales } = extractResult(goddesses.searchAll(name));
 
 		if (!candidates.length) {
 			await message.channel.send('Goddess not found!');
@@ -38,7 +38,11 @@ export class GoddessCommand extends BaseCommand {
 			};
 		}
 
-		const embed = new GoddessesEmbed(message, candidates);
+		const embed = new GoddessesEmbed({
+			initialMessage: message,
+			goddesses: candidates,
+			locales,
+		});
 
 		await embed.send();
 

@@ -1,16 +1,26 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { Message } from 'discord.js';
 import { Boss } from '@pandora/entities';
 
-import PaginationEmbed from './PaginationEmbed';
 import { statsToString, imageUrl, arraify } from '../util/functions';
-import { translate } from '../cq-data';
+
+import PaginationEmbed from './PaginationEmbed';
+import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
+
+interface IBossesEmbedOptions {
+	initialMessage: Message;
+	bosses: Boss | Boss[];
+	locales: string[];
+}
 
 export default class BossesEmbed extends PaginationEmbed {
-	constructor(initialMessage: Message, bosses: Boss | Boss[]) {
-		super(initialMessage);
+	constructor(options: IBossesEmbedOptions) {
+		super({
+			initialMessage: options.initialMessage,
+			locale: options.locales[0],
+		});
 
-		const embeds = arraify(bosses).map(boss => new MessageEmbed()
-			.setTitle(`${translate(boss.name)}`)
+		const embeds = arraify(options.bosses).map(boss => new LocalizableMessageEmbed()
+			.setTitle(l`${boss.name}`)
 			.setDescription(statsToString(boss))
 			.setThumbnail(imageUrl(`heroes/${boss.image}`)));
 

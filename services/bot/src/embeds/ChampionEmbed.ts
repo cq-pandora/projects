@@ -1,37 +1,50 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { Message } from 'discord.js';
 import { Champion } from '@pandora/entities';
 
-import PaginationEmbed from './PaginationEmbed';
 import { imageUrl } from '../util/functions';
-import { translate } from '../cq-data';
 
-export default class BerriesListEmbed extends PaginationEmbed {
-	constructor(initialMessage: Message, champion: Champion, page: number | undefined) {
-		super(initialMessage);
+import PaginationEmbed from './PaginationEmbed';
+import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
 
-		const embeds = champion.forms.map((form) => {
-			const embed = new MessageEmbed()
-				.setTitle(`${translate(champion.name)} (Lvl. ${form.grade})`);
+interface IChampionEmbedOptions {
+	initialMessage: Message;
+	champion: Champion;
+	page?: number;
+	locale: string;
+}
+
+export default class ChampionEmbed extends PaginationEmbed {
+	constructor(options: IChampionEmbedOptions) {
+		super({
+			initialMessage: options.initialMessage,
+			locale: options.locale,
+		});
+
+		const { champion, page } = options;
+
+		const embeds = options.champion.forms.map((form) => {
+			const embed = new LocalizableMessageEmbed()
+				.setTitle(l`${options.champion.name} (Lvl. ${form.grade})`)
+				.setThumbnail(imageUrl(`heroes/${champion.image}`))
+				.setDescription(`${champion.lore}`);
 
 			if (form.active) {
-				embed.addField(`${translate(form.active.name)} (Active)`, translate(form.active.description));
+				embed.addField(l`${form.active.name} (Active)`, l`${form.active.description}`);
 			}
 
 			if (form.passive) {
-				embed.addField(`${translate(form.passive.name)} (Passive)`, translate(form.passive.description));
+				embed.addField(l`${form.passive.name} (Passive)`, l`${form.passive.description}`);
 			}
 
 			if (form.exclusive) {
-				embed.addField(`${translate(form.exclusive.name)} (Exclusive)`, translate(form.exclusive.description));
+				embed.addField(l`${form.exclusive.name} (Exclusive)`, l`${form.exclusive.description}`);
 			}
 
 			return embed;
 		});
 
 		this.setArray(embeds)
-			.showPageIndicator(false)
-			.setThumbnail(imageUrl(`heroes/${champion.image}`))
-			.setDescription(translate(champion.lore));
+			.showPageIndicator(false);
 
 		if (page) {
 			this.setPage(page);

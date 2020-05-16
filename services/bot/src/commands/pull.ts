@@ -145,6 +145,8 @@ const cmdArgs: CommandArguments = {
 	}
 };
 
+// FIXME pull translations
+
 export class PullCommand extends BaseCommand {
 	readonly args = cmdArgs;
 	readonly argsOrderMatters = true;

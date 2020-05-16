@@ -1,6 +1,4 @@
-import {
-	random, imageUrl
-} from '../util/functions';
+import { random, imageUrl } from '../util/functions';
 
 import { heroes } from '../cq-data';
 

@@ -1,6 +1,5 @@
 import {
-	Deserialize, DeserializeSingle,
-	Berry, Boss, Bread, Champion, Faction, Fish, FishingGear, Goddess,
+	Deserialize, DeserializeSingle, Berry, Boss, Bread, Champion, Faction, Fish, FishingGear, Goddess,
 	Hero, Inheritance, Interaction, Portrait, Sigil, SpSkill,
 } from '@pandora/entities';
 
@@ -9,6 +8,8 @@ import { loadInfo } from '../utils';
 import { InteractionsSearchable } from './InteractionsSearchable';
 import { arraySearchable, objectSearchable } from './instantiators';
 import { HeroKeysDescription } from './common';
+
+export { extractResult } from './common';
 
 export const berries = arraySearchable('berries', Berry);
 export const bosses = arraySearchable('bosses', Boss);

@@ -4,7 +4,7 @@ import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
 } from '../common-types';
 import { FactionsEmbed } from '../embeds';
-import { factions } from '../cq-data';
+import { factions, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {
@@ -28,7 +28,7 @@ export class FactionCommand extends BaseCommand {
 
 		const name = args.join(' ');
 
-		const candidates = factions.searchAll(name);
+		const { results: candidates, locales } = extractResult(factions.searchAll(name));
 
 		if (!candidates.length) {
 			await message.channel.send('Faction not found!');
@@ -38,7 +38,7 @@ export class FactionCommand extends BaseCommand {
 			};
 		}
 
-		const embed = new FactionsEmbed(message, candidates);
+		const embed = new FactionsEmbed({ initialMessage: message, factions: candidates, locales });
 
 		await embed.send();
 

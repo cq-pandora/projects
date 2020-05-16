@@ -1,11 +1,12 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { Message } from 'discord.js';
 import { FishingGear } from '@pandora/entities';
 
 import PaginationEmbed from './PaginationEmbed';
+import { LocalizableMessageEmbed, l } from './LocalizableMessageEmbed';
+
 import {
 	capitalizeFirstLetter, imageUrl, toClearNumber, arraify
 } from '../util/functions';
-import { translate } from '../cq-data';
 import config from '../config';
 
 const currencies: Record<string, string> = {
@@ -15,14 +16,23 @@ const currencies: Record<string, string> = {
 	ITEM_JEWEL: config.emojis.gem,
 };
 
-export default class FishingGearsEmbed extends PaginationEmbed {
-	constructor(initialMessage: Message, gears: FishingGear | FishingGear[]) {
-		super(initialMessage);
+export interface IFishingGearsEmbedOptions {
+	initialMessage: Message;
+	gears: FishingGear | FishingGear[];
+	locales: string[];
+}
 
-		const embeds = arraify(gears).map((gear) => {
-			const embed = new MessageEmbed()
-				.setTitle(`${translate(gear.name)} (${gear.grade}★)`)
-				.setDescription(translate(gear.description))
+export default class FishingGearsEmbed extends PaginationEmbed {
+	constructor(options: IFishingGearsEmbedOptions) {
+		super({
+			initialMessage: options.initialMessage,
+			locale: options.locales[0],
+		});
+
+		const embeds = arraify(options.gears).map((gear) => {
+			const embed = new LocalizableMessageEmbed()
+				.setTitle(l`${gear.name} (${gear.grade}★)`)
+				.setDescription(l`${gear.description}`)
 				.addField(`${capitalizeFirstLetter(gear.habitat)} bonus`, gear.habitatBonus, true)
 				.addField('Bite chance', gear.biteChance, true)
 				.addField('Big fish chance', gear.bigChance, true)

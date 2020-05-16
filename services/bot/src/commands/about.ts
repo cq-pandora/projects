@@ -15,7 +15,7 @@ export class AboutCommand extends BaseCommand {
 	public readonly protected = false;
 
 	async run({ client, message }: CommandPayload): Promise<Partial<CommandResult>> {
-		const owner = client.users.get(config.ownerId) as User;
+		const owner = await client.users.fetch(config.ownerId) as User;
 
 		await message.channel.send({
 			embed: {

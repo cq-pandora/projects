@@ -1,17 +1,27 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { Message } from 'discord.js';
 import { Goddess } from '@pandora/entities';
 
-import PaginationEmbed from './PaginationEmbed';
 import { imageUrl, arraify } from '../util/functions';
-import { translate } from '../cq-data';
+
+import PaginationEmbed from './PaginationEmbed';
+import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
+
+interface IGoddessesEmbedOptions {
+	initialMessage: Message;
+	goddesses: Goddess | Goddess[];
+	locales: string[];
+}
 
 export default class GoddessesEmbed extends PaginationEmbed {
-	constructor(initialMessage: Message, goddesses: Goddess | Goddess[]) {
-		super(initialMessage);
+	constructor({ initialMessage, goddesses, locales }: IGoddessesEmbedOptions) {
+		super({
+			initialMessage,
+			locale: locales[0],
+		});
 
-		const embeds = arraify(goddesses).map(goddess => new MessageEmbed()
-			.setTitle(translate(goddess.name))
-			.addField(translate(goddess.skillName), translate(goddess.skillDescription))
+		const embeds = arraify(goddesses).map(goddess => new LocalizableMessageEmbed()
+			.setTitle(l(goddess.name))
+			.addField(l(goddess.skillName), l(goddess.skillDescription))
 			.setThumbnail(imageUrl(`heroes/${goddess.image}`)));
 
 		this.setArray(embeds).showPageIndicator(false);

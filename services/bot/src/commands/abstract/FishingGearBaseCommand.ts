@@ -7,7 +7,7 @@ import {
 } from '../../common-types';
 import { FishingGearsEmbed } from '../../embeds';
 import { parseQuery, capitalizeFirstLetter } from '../../util';
-import { fishingGear } from '../../cq-data';
+import { extractResult, fishingGear } from '../../cq-data';
 
 export default abstract class FishingGearBaseCommand extends BaseCommand {
 	public readonly args: CommandArguments;
@@ -48,7 +48,7 @@ export default abstract class FishingGearBaseCommand extends BaseCommand {
 		const name = parseQuery(args);
 
 		const candidates = fishingGear.searchAll(name);
-		const fishingGears = candidates.filter(b => b.type === this.type);
+		const { results: fishingGears, locales } = extractResult(candidates.filter(b => b.result.type === this.type));
 
 		if (!fishingGears.length) {
 			await message.channel.send(`${capitalizeFirstLetter(this.commandName)} not found!`);
@@ -59,7 +59,7 @@ export default abstract class FishingGearBaseCommand extends BaseCommand {
 			};
 		}
 
-		const embed = new FishingGearsEmbed(message, fishingGears);
+		const embed = new FishingGearsEmbed({ initialMessage: message, gears: fishingGears, locales });
 
 		await embed.send();
 

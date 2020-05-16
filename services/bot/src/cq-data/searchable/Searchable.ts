@@ -6,7 +6,7 @@ import { ContextType } from '../../common-types';
 import config from '../../config';
 
 import {
-	Entities, Container, ISearchable, FuseOptions, fuzzyOptions
+	Entities, Container, ISearchable, FuseOptions, fuzzyOptions, ISearchResult
 } from './common';
 
 const alias = (ctx: ContextType, key: string): string => (
@@ -42,22 +42,27 @@ export class Searchable<T extends Entities, C extends Container<T>> implements I
 
 	structure(): C { return this.entities; }
 
-	search(query: string): T {
+	search(query: string): ISearchResult<T> {
 		return this.searchAll(query)[0];
 	}
 
-	searchAll(rawQuery: string): T[] {
+	searchAll(rawQuery: string): ISearchResult<T>[] {
 		const query = alias(this.context, rawQuery);
 
 		const queryResult = this.fuse.search<TranslationIndex, false, false>(query);
 
-		return queryResult.map(({ path: paths }: TranslationIndex): T[] => (
-			paths.split(',').map(path => {
-				const [key] = path.split('.');
+		return queryResult
+			.map(({ path: paths, locale }: TranslationIndex): ISearchResult<T>[] => (
+				paths.split(',').map(path => {
+					const [key] = path.split('.');
 
-				// @ts-ignore
-				return this.entities[key];
-			})
-		)).flat();
+					return {
+						// @ts-ignore
+						result: this.entities[key],
+						locale,
+					};
+				})
+			))
+			.flat(1);
 	}
 }

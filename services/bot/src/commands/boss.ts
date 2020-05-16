@@ -5,7 +5,7 @@ import {
 } from '../common-types';
 import { BossesEmbed } from '../embeds';
 import { parseQuery } from '../util';
-import { bosses } from '../cq-data';
+import { bosses, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {
@@ -29,7 +29,7 @@ export class BossCommand extends BaseCommand {
 
 		const name = parseQuery(args);
 
-		const entities = bosses.searchAll(name);
+		const { results: entities, locales } = extractResult(bosses.searchAll(name));
 
 		if (!entities.length) {
 			await message.channel.send('Boss not found!');
@@ -39,7 +39,11 @@ export class BossCommand extends BaseCommand {
 			};
 		}
 
-		const embed = new BossesEmbed(message, entities);
+		const embed = new BossesEmbed({
+			initialMessage: message,
+			bosses: entities,
+			locales,
+		});
 
 		await embed.send();
 

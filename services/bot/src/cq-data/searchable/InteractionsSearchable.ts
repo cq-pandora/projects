@@ -1,6 +1,6 @@
 import { Interaction } from '@pandora/entities';
 
-import { ISearchable } from './common';
+import { ISearchable, ISearchResult } from './common';
 
 export class InteractionsSearchable implements ISearchable<Interaction, Interaction[]> {
 	private readonly entities: Interaction[];
@@ -13,12 +13,17 @@ export class InteractionsSearchable implements ISearchable<Interaction, Interact
 		return this.entities;
 	}
 
-	search(query: string): Interaction {
+	search(query: string): ISearchResult<Interaction> {
 		return this.searchAll(query)[0];
 	}
 
-	searchAll(query: string): Interaction[] {
-		return this.entities.filter(e => Boolean(e.actors.filter(a => a.id === query).length));
+	searchAll(query: string): ISearchResult<Interaction>[] {
+		return this.entities
+			.filter(e => Boolean(e.actors.filter(a => a.id === query).length))
+			.map(e => ({
+				locale: 'generic',
+				result: e,
+			}));
 	}
 
 	structure(): Interaction[] {

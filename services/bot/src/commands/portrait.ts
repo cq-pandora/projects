@@ -5,7 +5,7 @@ import {
 } from '../common-types';
 import { PortraitsEmbed } from '../embeds';
 import { parseQuery } from '../util';
-import { portraits } from '../cq-data';
+import { portraits, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {
@@ -28,7 +28,7 @@ export class PortraitCommand extends BaseCommand {
 		if (!args.length) return this.sendUsageInstructions(payload);
 
 		const name = parseQuery(args);
-		const portrait = portraits.search(name);
+		const { result: portrait } = extractResult(portraits.search(name));
 
 		if (!portrait) {
 			await message.channel.send('Portrait not found!');
@@ -39,7 +39,7 @@ export class PortraitCommand extends BaseCommand {
 			};
 		}
 
-		const embed = new PortraitsEmbed(message, portrait.keys);
+		const embed = new PortraitsEmbed({ initialMessage: message, portraits: portrait.keys });
 
 		await embed.send();
 

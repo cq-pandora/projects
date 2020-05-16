@@ -1,6 +1,5 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { Message } from 'discord.js';
 
-import BaseCommand from './abstract/BaseCommand';
 import { splitText } from '../util';
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ContextType
@@ -8,15 +7,18 @@ import {
 import * as aliases from '../db/aliases';
 import { Alias } from '../db/models';
 import { PaginationEmbed } from '../embeds';
+import { LocalizableMessageEmbed } from '../embeds/LocalizableMessageEmbed';
 
-const aliasesToEmbeds = (ts: Alias[]): MessageEmbed[] => {
+import BaseCommand from './abstract/BaseCommand';
+
+const aliasesToEmbeds = (ts: Alias[]): LocalizableMessageEmbed[] => {
 	const strings = ts
 		.sort((a, b) => `${a.context}`.localeCompare(b.context))
 		.map(({ context, alias, for: fogh }) => `${context}: ${alias} => ${fogh}`)
 		.join('\n');
 
 	return splitText(strings, 1024, '\n').map((text: string, idx: number, total: string[]) => (
-		new MessageEmbed()
+		new LocalizableMessageEmbed()
 			.setTitle('Aliases list')
 			.setFooter(`Page ${idx}/${total}`)
 			.addField('<context>: <alias> => <targer>', text)
@@ -45,7 +47,7 @@ const actions: Record<string, Action> = {
 				return;
 			}
 
-			const embed = new PaginationEmbed(message)
+			const embed = new PaginationEmbed({ initialMessage: message })
 				.setArray(aliasesToEmbeds(list))
 				.setAuthorizedUsers([message.author.id])
 				.setChannel(message.channel)
@@ -68,7 +70,7 @@ const actions: Record<string, Action> = {
 				return;
 			}
 
-			const embed = new PaginationEmbed(message)
+			const embed = new PaginationEmbed({ initialMessage: message })
 				.setArray(aliasesToEmbeds(list))
 				.setAuthorizedUsers([message.author.id])
 				.setChannel(message.channel)

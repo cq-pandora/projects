@@ -11,7 +11,7 @@ import {
 } from '../../embeds';
 
 import { parseQuery, parseGrade } from '../../util';
-import { heroes } from '../../cq-data';
+import { heroes, extractResult } from '../../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {
@@ -54,15 +54,17 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand {
 		const grade = parseGrade(args);
 		const name = parseQuery(args, [`${grade}`]);
 
-		const hero = heroes.search(name);
+		const result = heroes.search(name);
 
-		if (!hero) {
+		if (!result) {
 			await message.channel.send('Hero not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
 			};
 		}
+
+		const { result: hero, locale } = extractResult(result);
 
 		if (this.checkSBW && !hero.sbws.length) {
 			await message.channel.send('Soulbound weapon not found for hero!');
@@ -97,7 +99,12 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand {
 		}
 
 		// eslint-disable-next-line new-cap
-		const embed = new this.embed(message, hero, page);
+		const embed = new this.embed({
+			initialMessage: message,
+			hero,
+			page,
+			locale,
+		});
 
 		await embed.send();
 

@@ -7,7 +7,9 @@ import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
 } from '../common-types';
 import { renderInteraction, chunk } from '../util';
-import { heroes, interactions, translate } from '../cq-data';
+import {
+	heroes, interactions, translate, extractResult
+} from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {
@@ -29,7 +31,7 @@ export class InteractionsCommand extends BaseCommand {
 
 		const name = args.join(' ');
 
-		const hero = heroes.search(name);
+		const { result: hero, locale } = extractResult(heroes.search(name));
 
 		if (!hero) {
 			await message.channel.send('Hero not found!');
@@ -40,7 +42,7 @@ export class InteractionsCommand extends BaseCommand {
 		}
 
 		const heroInteractions = hero.forms.reduce(
-			(r, v) => r.concat(interactions.searchAll(v.id)),
+			(r, v) => r.concat(extractResult(interactions.searchAll(v.id)).results),
 			[] as Interaction[]
 		);
 
@@ -55,7 +57,7 @@ export class InteractionsCommand extends BaseCommand {
 		const ints = await Promise.all(heroInteractions.map(
 			async i => {
 				const actors = i.actors.map(actor => ({
-					text: translate(actor.text).replace('\n', ' '),
+					text: translate(actor.text, locale).replace('\n', ' '),
 					imageKey: actor.imageKey,
 				}));
 

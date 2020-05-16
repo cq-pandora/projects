@@ -1,21 +1,32 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { Message } from 'discord.js';
 import { Sigil } from '@pandora/entities';
 
 import PaginationEmbed from './PaginationEmbed';
+import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
+
 import {
 	statsToString, imageUrl, capitalizeFirstLetter, toClearNumber, arraify
 } from '../util/functions';
-import { translate, sigils } from '../cq-data';
+import { sigils } from '../cq-data';
 import config from '../config';
 
+interface ISigilsEmbedOptions {
+	initialMessage: Message;
+	sigs: Sigil | Sigil[];
+	locales: string[];
+}
+
 export default class SigilsEmbed extends PaginationEmbed {
-	constructor(initialMessage: Message, sigs: Sigil | Sigil[]) {
-		super(initialMessage);
+	constructor({ initialMessage, sigs, locales }: ISigilsEmbedOptions) {
+		super({
+			initialMessage,
+			locale: locales[0],
+		});
 
 		const embeds = arraify(sigs).map((sigil) => {
-			const embed = new MessageEmbed()
-				.setDescription(translate(sigil.description))
-				.setTitle(`${translate(sigil.name)} (${sigil.grade}★)`)
+			const embed = new LocalizableMessageEmbed()
+				.setDescription(l(sigil.description))
+				.setTitle(l`${sigil.name} (${sigil.grade}★)`)
 				.setThumbnail(imageUrl(`sigils/${sigil.image}`));
 
 			embed.addField('Stats', statsToString(sigil.stats), true);
@@ -24,10 +35,10 @@ export default class SigilsEmbed extends PaginationEmbed {
 				const otherPiece = sigils.list().find(s => s.ingameId === sigil.set?.pair) as Sigil;
 
 				embed
-					.addField('Set effect', translate(sigil.set.effect), true)
-					.addField('Other piece', translate(otherPiece?.name), true)
+					.addField('Set effect', l(sigil.set.effect), true)
+					.addField('Other piece', l(otherPiece?.name), true)
 					.addField('Other piece stats', statsToString(otherPiece.stats), true)
-					.setFooter(`Set: ${translate(sigil.set.name)}`);
+					.setFooter(l`Set: ${sigil.set.name}`);
 			}
 
 			return embed.addBlankField()

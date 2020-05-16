@@ -1,29 +1,37 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { Message } from 'discord.js';
 import { Faction } from '@pandora/entities';
 
-import PaginationEmbed from './PaginationEmbed';
-import { splitText, imageUrl, arraify } from '../util/functions';
+import { imageUrl, arraify } from '../util/functions';
 import { translate, heroes } from '../cq-data';
 
+import PaginationEmbed from './PaginationEmbed';
+import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
+
+interface IFactionsEmbedOptions {
+	initialMessage: Message;
+	factions: Faction | Faction[];
+	locales: string[];
+}
+
 export default class FactionsEmbed extends PaginationEmbed {
-	constructor(initialMessage: Message, factions: Faction | Faction[]) {
-		super(initialMessage);
+	constructor({ initialMessage, factions, locales }: IFactionsEmbedOptions) {
+		super({
+			initialMessage,
+			locale: locales[0],
+		});
 
 		const embeds = arraify(factions).map((faction) => {
-			const description = heroes
+			const heroesKeys = heroes
 				.list()
 				.filter(h => h.domain === faction.ingameId)
-				.map(h => translate(h.forms[0].name));
+				.map(h => h.forms[0].name);
 
-			const embed = new MessageEmbed()
+			const a = new Array<string>(heroesKeys.length).fill('\n');
+
+			return new LocalizableMessageEmbed()
 				.setTitle(translate(faction.name))
-				.setThumbnail(imageUrl(`common/${faction.image}`));
-
-			for (const chunk of splitText(description.join('\n'))) {
-				embed.addField('\u200b', chunk);
-			}
-
-			return embed;
+				.setThumbnail(imageUrl(`common/${faction.image}`))
+				.addField('\u200b', l(a, heroesKeys));
 		});
 
 		this.setArray(embeds)

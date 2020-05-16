@@ -13,7 +13,7 @@ export default (message: Message): string[] => {
 
 	const userList = user[message.member?.id || '0'];
 	const channelList = channel[message.channel.id];
-	const rolesLists = message.member?.roles.map(r => role[r.id]) || [];
+	const rolesLists = message.member?.roles.cache.map(r => role[r.id]) || [];
 
 	const sortedLists = [userList, channelList, ...rolesLists].filter(Boolean).sort(list => list.priority);
 

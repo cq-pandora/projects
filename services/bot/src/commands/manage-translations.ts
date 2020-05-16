@@ -1,7 +1,7 @@
 import { HeroSBW, HeroForm } from '@pandora/entities';
-import { MessageEmbed, Message } from 'discord.js';
+import { Message } from 'discord.js';
 
-import BaseCommand from './abstract/BaseCommand';
+import { LocalizableMessageEmbed } from '../embeds/LocalizableMessageEmbed';
 import {
 	splitText, chunk, parseGrade, getFieldKey
 } from '../util';
@@ -11,14 +11,16 @@ import {
 import * as translations from '../db/translations';
 import { Translation } from '../db/models';
 import { PaginationEmbed } from '../embeds';
-import { heroes, heroKeysDescription } from '../cq-data';
+import { heroes, heroKeysDescription, extractResult } from '../cq-data';
 
-function translationsToEmbeds(ts: Translation[]): MessageEmbed[] {
-	const embeds: MessageEmbed[] = [];
+import BaseCommand from './abstract/BaseCommand';
+
+function translationsToEmbeds(ts: Translation[]): LocalizableMessageEmbed[] {
+	const embeds: LocalizableMessageEmbed[] = [];
 
 	let i = 0;
 	for (const translationsChunk of chunk(ts, 10)) {
-		const embed = new MessageEmbed()
+		const embed = new LocalizableMessageEmbed()
 			.setFooter(`Translations ${i * 10 + 1}-${i * 10 + translationsChunk.length}/${ts.length}`);
 
 		for (const translation of translationsChunk) {
@@ -63,7 +65,7 @@ const actions: Record<string, Action> = {
 				return;
 			}
 
-			const embed = new PaginationEmbed(message)
+			const embed = new PaginationEmbed({ initialMessage: message })
 				.setArray(list)
 				.setAuthorizedUsers([message.author.id])
 				.setChannel(message.channel)
@@ -187,7 +189,7 @@ export class ManageTranslationsCommand extends BaseCommand {
 			};
 		}
 
-		const hero = heroes.search(heroName);
+		const { result: hero } = extractResult(heroes.search(heroName));
 
 		if (!hero) {
 			return {

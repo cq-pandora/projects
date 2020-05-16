@@ -1,14 +1,37 @@
 /* eslint-disable no-underscore-dangle */ // Because private methods in discord-paginationembed are underscored
 import {
-	Message, MessageEmbed, TextChannel, MessageReaction, User
+	Message, MessageEmbed, TextChannel, MessageReaction, User, NewsChannel, DMChannel
 } from 'discord.js';
-import { Embeds, Embeds as EmbedsMode, FieldsEmbed } from 'discord-paginationembed';
+import { PaginationEmbed as PaginationEmbedOriginal } from 'discord-paginationembed';
 
 import logger from '../logger';
+import { translate, locales } from '../cq-data';
 
-export default class PaginationEmbed extends EmbedsMode {
-	constructor(initialMessage?: Message) {
+import { LocalizableMessageEmbed } from './LocalizableMessageEmbed';
+
+export interface IPaginationEmbedOptions {
+	initialMessage?: Message;
+	locale?: string;
+	showLocales?: boolean;
+}
+
+function localeToEmoji(locale: string): string {
+	return `:flag_${locale.split('_')[1]}:`;
+}
+
+export default class PaginationEmbed extends PaginationEmbedOriginal<LocalizableMessageEmbed> {
+	protected locale: string;
+
+	constructor(options: IPaginationEmbedOptions) {
 		super();
+
+		const {
+			initialMessage,
+			locale = 'en_us',
+			showLocales = true,
+		} = options;
+
+		this.locale = locale;
 
 		this.setNavigationEmojis({
 			back: '◀',
@@ -34,28 +57,51 @@ export default class PaginationEmbed extends EmbedsMode {
 			}
 		});
 
+		if (showLocales) {
+			// for (const l of locales) {
+			// this.addFunctionEmoji(localeToEmoji(l), (_, self) => {
+			//
+			// });
+			// }
+		}
+
 		if (initialMessage) {
 			this.setAuthorizedUsers([initialMessage.author.id]);
 			this.setChannel(initialMessage.channel);
 		}
 	}
 
-	setArray(arr: MessageEmbed[]): this {
+	setChannel(channel: TextChannel | DMChannel | NewsChannel): this {
+		if (channel instanceof NewsChannel) {
+			throw new TypeError('NewsChannel is not supported!');
+		}
+
+		return super.setChannel(channel);
+	}
+
+	setArray(arr: LocalizableMessageEmbed[]): this {
 		if (arr.length > 1) {
-			return super.setArray(arr.map((e: MessageEmbed, idx: number) => e.setFooter(`Page ${idx + 1}/${arr.length}`)));
+			return super.setArray(arr.map((e: LocalizableMessageEmbed, idx: number) => e.setFooter(`Page ${idx + 1}/${arr.length}`)));
 		}
 
 		return super.setArray(arr);
 	}
 
 	send(): Promise<void> {
-		return this.build();
+		this.pages = this.array.length;
+
+		return this._loadList();
 	}
 
 	showPageIndicator(v: boolean): this {
 		return this.setPageIndicator(v);
 	}
 
+	translate(key: string): string {
+		return translate(key, this.locale);
+	}
+
+	// region PaginationEmbed overrides
 	async _checkPermissions(): Promise<boolean> {
 		const channel = this.channel as TextChannel;
 
@@ -72,11 +118,28 @@ export default class PaginationEmbed extends EmbedsMode {
 		return true;
 	}
 
+	protected _buildEmbed(): MessageEmbed {
+		const embed = this.array[this.page - 1];
+
+		return embed.toEmbed(this.locale);
+	}
+
+	async _loadList(callNavigation = true): Promise<void> {
+		if (this.clientAssets.message) {
+			await this.clientAssets.message.edit({ embed: this._buildEmbed() });
+		} else {
+			this.clientAssets.message = await this.channel.send({ embed: this._buildEmbed() }) as Message;
+		}
+
+		return super._loadList(callNavigation);
+	}
+
 	protected async onFunctionEmojiClicked(emoji: string[], user: User, clientMessage: Message): Promise<void> {
 		const cb = this.functionEmojis[emoji[0]] || this.functionEmojis[emoji[1]];
 
 		try {
-			await cb(user, this as unknown as Embeds | FieldsEmbed<MessageEmbed>);
+			// @ts-ignore
+			await cb(user, this);
 		} catch (err) {
 			return this._cleanUp(err, clientMessage, false, user);
 		}
@@ -106,7 +169,8 @@ export default class PaginationEmbed extends EmbedsMode {
 		try {
 			const responses = await clientMessage.awaitReactions(filter, { max: 1, time: this.timeout, errors: ['time'] });
 			const response = responses.first() as MessageReaction;
-			const user = response.users.last();
+			const users = await response.users.fetch(); // FIXME wrong user selection
+			const user = users.last();
 			const emoji = [response.emoji.name, response.emoji.id];
 			const channel = clientMessage.channel as TextChannel;
 
@@ -134,4 +198,5 @@ export default class PaginationEmbed extends EmbedsMode {
 			return this._cleanUp(err, clientMessage);
 		}
 	}
+	// endregion
 }

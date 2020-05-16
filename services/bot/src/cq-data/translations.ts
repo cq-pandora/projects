@@ -8,7 +8,9 @@ export type Locale = string;
 
 export const translationIndices = DeserializeSingle<TranslationIndices>(loadInfo('translations_indices'), 'TranslationIndices');
 
-export const translationMeta = DeserializeSingle(loadInfo('translations', 'meta'), TranslationsMeta);
+const translationMeta = DeserializeSingle(loadInfo('translations', 'meta'), TranslationsMeta);
+
+export const { locales } = translationMeta;
 
 export const localizations = {} as Record<Locale, Translations>;
 
@@ -17,7 +19,7 @@ for (const locale of translationMeta.locales) {
 }
 
 export function translate(keyRaw?: string, locale: Locale = 'en_us'): string {
-	if (!keyRaw) return '';
+	if (typeof keyRaw === 'undefined') return '';
 
 	const key = keyRaw.toUpperCase();
 

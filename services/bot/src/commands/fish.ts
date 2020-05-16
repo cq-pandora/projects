@@ -5,7 +5,7 @@ import {
 } from '../common-types';
 import { FishesEmbed } from '../embeds';
 import { parseQuery } from '../util';
-import { fishes } from '../cq-data';
+import { fishes, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {
@@ -28,7 +28,7 @@ export class FishCommand extends BaseCommand {
 		if (!args.length) return this.sendUsageInstructions(payload);
 
 		const name = parseQuery(args);
-		const candidates = fishes.searchAll(name);
+		const { results: candidates, locales } = extractResult(fishes.searchAll(name));
 
 		if (!candidates.length) {
 			await message.channel.send('Fish not found!');
@@ -39,7 +39,11 @@ export class FishCommand extends BaseCommand {
 			};
 		}
 
-		const embed = new FishesEmbed(message, candidates);
+		const embed = new FishesEmbed({
+			initialMessage: message,
+			fishes: candidates,
+			locales,
+		});
 
 		await embed.send();
 

@@ -7,7 +7,7 @@ import {
 } from '../common-types';
 import { parseQuery, parseInheritance } from '../util';
 import { HeroInheritanceEmbed } from '../embeds';
-import { heroes } from '../cq-data';
+import { heroes, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {
@@ -36,7 +36,7 @@ export class InheritCommand extends BaseCommand {
 		const iLvl = parseInheritance(args);
 		const name = parseQuery(args, [iLvl]);
 
-		const hero = heroes.search(name);
+		const { result: hero, locale } = extractResult(heroes.search(name));
 
 		if (!hero) {
 			await message.channel.send('Hero not found!');
@@ -60,7 +60,12 @@ export class InheritCommand extends BaseCommand {
 			? [iLvl]
 			: [0, 5, 10, 15, 20, 25, 30] as InheritanceLevel[];
 
-		const embed = new HeroInheritanceEmbed(message, hero, levels);
+		const embed = new HeroInheritanceEmbed({
+			initialMessage: message,
+			hero,
+			inherits: levels,
+			locale
+		});
 
 		await embed.send();
 

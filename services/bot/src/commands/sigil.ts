@@ -5,7 +5,7 @@ import {
 } from '../common-types';
 import { SigilsEmbed } from '../embeds';
 import { parseQuery } from '../util';
-import { sigils } from '../cq-data';
+import { sigils, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {
@@ -28,7 +28,7 @@ export class SigilCommand extends BaseCommand {
 		if (!args.length) return this.sendUsageInstructions(payload);
 
 		const name = parseQuery(args);
-		const candidates = sigils.searchAll(name);
+		const { results: candidates, locales } = extractResult(sigils.searchAll(name));
 
 		if (!candidates.length) {
 			await message.channel.send('Sigil not found!');
@@ -39,7 +39,11 @@ export class SigilCommand extends BaseCommand {
 			};
 		}
 
-		const embed = new SigilsEmbed(message, candidates);
+		const embed = new SigilsEmbed({
+			initialMessage: message,
+			sigs: candidates,
+			locales,
+		});
 
 		await embed.send();
 
