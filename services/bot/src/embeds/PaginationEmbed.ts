@@ -169,8 +169,7 @@ export default class PaginationEmbed extends PaginationEmbedOriginal<Localizable
 		try {
 			const responses = await clientMessage.awaitReactions(filter, { max: 1, time: this.timeout, errors: ['time'] });
 			const response = responses.first() as MessageReaction;
-			const users = await response.users.fetch(); // FIXME wrong user selection
-			const user = users.last();
+			const user = await response.users.cache.last();
 			const emoji = [response.emoji.name, response.emoji.id];
 			const channel = clientMessage.channel as TextChannel;
 
