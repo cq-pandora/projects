@@ -9,8 +9,8 @@ import { l, LocalizableMessageEmbed } from '../LocalizableMessageEmbed';
 import IHeroEmbedConstructorOptions from './IHeroEmbedConstructorOptions';
 
 export default class HeroSkinsEmbed extends PaginationEmbed {
-	constructor({ initialMessage, hero, locale }: IHeroEmbedConstructorOptions) {
-		super({ initialMessage, locale });
+	constructor({ initialMessage, hero, locales }: IHeroEmbedConstructorOptions) {
+		super({ initialMessage, locales });
 
 		const embeds = hero.skins.map(skin => (
 			new LocalizableMessageEmbed()

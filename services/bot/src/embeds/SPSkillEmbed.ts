@@ -22,7 +22,7 @@ export default class SPSkillEmbed extends PaginationEmbed {
 	}: ISPSkillEmbedOptions) {
 		super({
 			initialMessage,
-			locale,
+			locales: [locale],
 		});
 
 		const embeds = skill.forms.map(form => (

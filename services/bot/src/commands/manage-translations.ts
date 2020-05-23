@@ -67,10 +67,9 @@ const actions: Record<string, Action> = {
 
 			const embed = new PaginationEmbed({ initialMessage: message })
 				.setArray(list)
-				.setAuthorizedUsers([message.author.id])
 				.setChannel(message.channel)
 				.showPageIndicator(false)
-				.build();
+				.send();
 
 			await embed;
 		} catch (error) {

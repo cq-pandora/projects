@@ -64,7 +64,7 @@ export class InheritCommand extends BaseCommand {
 			initialMessage: message,
 			hero,
 			inherits: levels,
-			locale
+			locale,
 		});
 
 		await embed.send();

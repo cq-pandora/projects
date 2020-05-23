@@ -5,5 +5,5 @@ export default interface IHeroEmbedConstructorOptions {
 	initialMessage: Message;
 	hero: Hero;
 	page?: number;
-	locale: string;
+	locales: string[];
 }

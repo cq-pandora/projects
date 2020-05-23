@@ -23,13 +23,10 @@ export interface IFishingGearsEmbedOptions {
 }
 
 export default class FishingGearsEmbed extends PaginationEmbed {
-	constructor(options: IFishingGearsEmbedOptions) {
-		super({
-			initialMessage: options.initialMessage,
-			locale: options.locales[0],
-		});
+	constructor({ locales, initialMessage, gears }: IFishingGearsEmbedOptions) {
+		super({ initialMessage, locales });
 
-		const embeds = arraify(options.gears).map((gear) => {
+		const embeds = arraify(gears).map((gear) => {
 			const embed = new LocalizableMessageEmbed()
 				.setTitle(l`${gear.name} (${gear.grade}★)`)
 				.setDescription(l`${gear.description}`)

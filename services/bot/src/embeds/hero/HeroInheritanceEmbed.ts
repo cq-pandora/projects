@@ -25,10 +25,7 @@ export default class HeroInheritanceEmbed extends PaginationEmbed {
 		inherits,
 		locale
 	}: IHeroInheritanceEmbedOptions) {
-		super({
-			initialMessage,
-			locale,
-		});
+		super({ initialMessage, locales: [locale] });
 
 		const form = hero.forms.find(f => f.star === 6) as HeroForm;
 		const maxBerry = sumStats(form.maxBerries, form);

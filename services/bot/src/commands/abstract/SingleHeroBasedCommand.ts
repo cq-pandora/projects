@@ -103,7 +103,7 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand {
 			initialMessage: message,
 			hero,
 			page,
-			locale,
+			locales: [locale],
 		});
 
 		await embed.send();

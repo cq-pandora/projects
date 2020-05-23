@@ -14,10 +14,7 @@ interface IGoddessesEmbedOptions {
 
 export default class GoddessesEmbed extends PaginationEmbed {
 	constructor({ initialMessage, goddesses, locales }: IGoddessesEmbedOptions) {
-		super({
-			initialMessage,
-			locale: locales[0],
-		});
+		super({ initialMessage, locales });
 
 		const embeds = arraify(goddesses).map(goddess => new LocalizableMessageEmbed()
 			.setTitle(l(goddess.name))

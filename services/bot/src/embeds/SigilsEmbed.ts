@@ -20,7 +20,7 @@ export default class SigilsEmbed extends PaginationEmbed {
 	constructor({ initialMessage, sigs, locales }: ISigilsEmbedOptions) {
 		super({
 			initialMessage,
-			locale: locales[0],
+			locales,
 		});
 
 		const embeds = arraify(sigs).map((sigil) => {

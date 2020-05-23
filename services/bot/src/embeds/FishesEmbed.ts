@@ -24,10 +24,7 @@ interface IFishesEmbedOptions {
 
 export default class FishesEmbed extends PaginationEmbed {
 	constructor({ initialMessage, fishes, locales }: IFishesEmbedOptions) {
-		super({
-			initialMessage,
-			locale: locales[0],
-		});
+		super({ initialMessage, locales });
 
 		const embeds = arraify(fishes).map(fish => new LocalizableMessageEmbed()
 			.setTitle(l`${fish.name} (${fish.grade}★)`)

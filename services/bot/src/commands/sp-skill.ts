@@ -33,7 +33,7 @@ export class SpSkillCommand extends BaseCommand {
 	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
 		const { message, args } = payload;
 
-		if (!args.length) this.sendUsageInstructions(payload);
+		if (!args.length) return this.sendUsageInstructions(payload);
 
 		const grade = parseGrade(args);
 		const name = parseQuery(args, [`${grade}`]);

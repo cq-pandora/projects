@@ -8,13 +8,10 @@ import { l, LocalizableMessageEmbed } from '../LocalizableMessageEmbed';
 import IHeroEmbedConstructorOptions from './IHeroEmbedConstructorOptions';
 
 export default class HeroBlockEmbed extends PaginationEmbed {
-	constructor(options: IHeroEmbedConstructorOptions) {
-		super({
-			initialMessage: options.initialMessage,
-			locale: options.locale,
-		});
+	constructor({ initialMessage, locales, ...rest }: IHeroEmbedConstructorOptions) {
+		super({ initialMessage, locales });
 
-		const { hero, page } = options;
+		const { hero, page } = rest;
 
 		const embeds = hero.forms.map((form) => {
 			const embed = new LocalizableMessageEmbed()

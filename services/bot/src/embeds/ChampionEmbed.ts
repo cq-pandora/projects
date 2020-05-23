@@ -17,7 +17,7 @@ export default class ChampionEmbed extends PaginationEmbed {
 	constructor(options: IChampionEmbedOptions) {
 		super({
 			initialMessage: options.initialMessage,
-			locale: options.locale,
+			locales: [options.locale],
 		});
 
 		const { champion, page } = options;

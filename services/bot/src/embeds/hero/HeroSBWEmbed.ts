@@ -12,9 +12,9 @@ export default class HeroFormsEmbed extends PaginationEmbed {
 		initialMessage,
 		hero,
 		page,
-		locale
+		locales
 	}: IHeroEmbedConstructorOptions) {
-		super({ initialMessage, locale });
+		super({ initialMessage, locales });
 
 		const embeds = hero.sbws.map((sbw) => {
 			const embed = new LocalizableMessageEmbed()

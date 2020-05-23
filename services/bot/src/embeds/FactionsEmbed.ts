@@ -15,10 +15,7 @@ interface IFactionsEmbedOptions {
 
 export default class FactionsEmbed extends PaginationEmbed {
 	constructor({ initialMessage, factions, locales }: IFactionsEmbedOptions) {
-		super({
-			initialMessage,
-			locale: locales[0],
-		});
+		super({ initialMessage, locales });
 
 		const embeds = arraify(factions).map((faction) => {
 			const heroesKeys = heroes

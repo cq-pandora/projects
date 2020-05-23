@@ -12,9 +12,9 @@ export default class HeroSBWBlockEmbed extends PaginationEmbed {
 		initialMessage,
 		hero,
 		page,
-		locale
+		locales
 	}: IHeroEmbedConstructorOptions) {
-		super({ initialMessage, locale });
+		super({ initialMessage, locales });
 
 		const embeds = hero.forms.map((form) => {
 			const sbw = hero.sbws.find(s => form.star === s.star);

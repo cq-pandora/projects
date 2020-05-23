@@ -160,10 +160,10 @@ export default async function normalize(): Promise<void> {
 							logger.warn(`No translation available for ${e[0]}`);
 						}
 
-						if (text === defaultText) {
-							logger.warn(`${locale} text is the same as default text for key ${e[0]}. Skipping...`);
-							continue;
-						}
+						// if (text === defaultText) {
+						// logger.warn(`${locale} text is the same as default text for key ${e[0]}`);
+						// continue;
+						// }
 
 						indices.push(
 							new TranslationIndex({

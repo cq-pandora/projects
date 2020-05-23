@@ -21,6 +21,8 @@ export interface ISearchableOptions<T extends Entities, C extends Container<T>> 
 	index: TranslationIndex[];
 }
 
+const DEFAULT_LOCALE = 'en_us';
+
 export class Searchable<T extends Entities, C extends Container<T>> implements ISearchable<T, C> {
 	private readonly fuse: Fuse<TranslationIndex, FuseOptions>;
 	private readonly entities: C;
@@ -63,6 +65,7 @@ export class Searchable<T extends Entities, C extends Container<T>> implements I
 					};
 				})
 			))
-			.flat(1);
+			.flat(1)
+			.sort((a, b) => Number(b.locale === DEFAULT_LOCALE) - Number(a.locale === DEFAULT_LOCALE));
 	}
 }

@@ -1,72 +1,58 @@
-/* eslint-disable no-underscore-dangle */ // Because private methods in discord-paginationembed are underscored
 import {
-	Message, MessageEmbed, TextChannel, MessageReaction, User, NewsChannel, DMChannel
+	Message, MessageEmbed, TextChannel, MessageReaction, User, NewsChannel, DMChannel, Snowflake
 } from 'discord.js';
-import { PaginationEmbed as PaginationEmbedOriginal } from 'discord-paginationembed';
-
 import logger from '../logger';
-import { translate, locales } from '../cq-data';
+import { translate } from '../cq-data';
 
 import { LocalizableMessageEmbed } from './LocalizableMessageEmbed';
 
 export interface IPaginationEmbedOptions {
 	initialMessage?: Message;
-	locale?: string;
-	showLocales?: boolean;
+	locales?: string[];
 }
+
+// Based on https://github.com/thekelvinliu/country-code-emoji/blob/master/src/index.js
+const OFFSET = 127397;
 
 function localeToEmoji(locale: string): string {
-	return `:flag_${locale.split('_')[1]}:`;
+	const chars = [...locale.split('_')[1].toUpperCase()].map(c => c.charCodeAt(0) + OFFSET);
+	return String.fromCodePoint(...chars);
 }
 
-export default class PaginationEmbed extends PaginationEmbedOriginal<LocalizableMessageEmbed> {
+const EMOJIS = {
+	BACK: '◀',
+	FORWARD: '▶',
+	DELETE: '🗑',
+	LANGUAGE_SELECT: '🌐',
+};
+
+const EMOJIS_ORDER = [EMOJIS.DELETE, EMOJIS.BACK, EMOJIS.FORWARD, EMOJIS.LANGUAGE_SELECT];
+
+export default class PaginationEmbed {
+	protected authorizedUsers: Snowflake[] = [];
+	protected channel?: TextChannel | DMChannel;
+	protected array: LocalizableMessageEmbed[] = [];
+	protected pageIndicator = true;
+	protected page = 0;
+	protected timeout?: number;
+	protected functionEmojis: Record<string, Function> = {};
+	protected originalMessage?: Message;
+	protected message!: Message;
 	protected locale: string;
+	protected locales: string[];
 
 	constructor(options: IPaginationEmbedOptions) {
-		super();
-
 		const {
 			initialMessage,
-			locale = 'en_us',
-			showLocales = true,
+			locales = ['en_us'],
 		} = options;
 
-		this.locale = locale;
+		[this.locale] = this.locales = locales;
 
-		this.setNavigationEmojis({
-			back: '◀',
-			jump: '🅱',
-			forward: '▶',
-			delete: '🤔'
-		});
+		this.originalMessage = initialMessage;
 
-		this.setDisabledNavigationEmojis(['JUMP', 'DELETE']);
-		this.addFunctionEmoji('🗑', (_, self) => {
-			logger.verbose('Removing messages...');
-
-			if (self.clientAssets.message) {
-				self.clientAssets.message.delete().catch(reason => {
-					logger.warn('Error while deleting client message: ', reason);
-				});
-			}
-
-			if (initialMessage && (initialMessage.channel as TextChannel).guild) {
-				initialMessage.delete().catch(reason => {
-					logger.warn('Error while deleting initial message: ', reason);
-				});
-			}
-		});
-
-		if (showLocales) {
-			// for (const l of locales) {
-			// this.addFunctionEmoji(localeToEmoji(l), (_, self) => {
-			//
-			// });
-			// }
-		}
-
-		if (initialMessage) {
-			this.setAuthorizedUsers([initialMessage.author.id]);
+		if (typeof initialMessage !== 'undefined') {
+			this.authorizedUsers = [initialMessage.author.id];
 			this.setChannel(initialMessage.channel);
 		}
 	}
@@ -76,33 +62,52 @@ export default class PaginationEmbed extends PaginationEmbedOriginal<Localizable
 			throw new TypeError('NewsChannel is not supported!');
 		}
 
-		return super.setChannel(channel);
+		this.channel = channel;
+
+		return this;
+	}
+
+	setPage(page: number): this {
+		this.page = page;
+
+		return this;
+	}
+
+	showPageIndicator(pageIndicator: boolean): this {
+		this.pageIndicator = pageIndicator;
+
+		return this;
 	}
 
 	setArray(arr: LocalizableMessageEmbed[]): this {
-		if (arr.length > 1) {
-			return super.setArray(arr.map((e: LocalizableMessageEmbed, idx: number) => e.setFooter(`Page ${idx + 1}/${arr.length}`)));
+		if (arr.length < 1) {
+			throw new TypeError('Array should contain embeds');
 		}
 
-		return super.setArray(arr);
+		if (arr.length > 1 && this.pageIndicator) {
+			this.array = arr.map(
+				(e: LocalizableMessageEmbed, idx: number) => e.setFooter(`Page ${idx + 1}/${arr.length}`)
+			);
+		} else {
+			this.array = arr;
+		}
+
+		return this;
 	}
 
-	send(): Promise<void> {
-		this.pages = this.array.length;
+	async send(): Promise<void> {
+		if (!await this.checkPermissions()) {
+			throw new Error('Not enough required permissions to proceed');
+		}
 
-		return this._loadList();
-	}
-
-	showPageIndicator(v: boolean): this {
-		return this.setPageIndicator(v);
+		return this.setMessage();
 	}
 
 	translate(key: string): string {
 		return translate(key, this.locale);
 	}
 
-	// region PaginationEmbed overrides
-	async _checkPermissions(): Promise<boolean> {
+	protected async checkPermissions(): Promise<boolean> {
 		const channel = this.channel as TextChannel;
 
 		if (channel.guild) {
@@ -118,84 +123,96 @@ export default class PaginationEmbed extends PaginationEmbedOriginal<Localizable
 		return true;
 	}
 
-	protected _buildEmbed(): MessageEmbed {
+	protected buildEmbed(): MessageEmbed {
 		const embed = this.array[this.page - 1];
 
 		return embed.toEmbed(this.locale);
 	}
 
-	async _loadList(callNavigation = true): Promise<void> {
-		if (this.clientAssets.message) {
-			await this.clientAssets.message.edit({ embed: this._buildEmbed() });
+	protected async setMessage(): Promise<void> {
+		if (this.message) {
+			await this.message.edit({ embed: this.buildEmbed() });
 		} else {
-			this.clientAssets.message = await this.channel.send({ embed: this._buildEmbed() }) as Message;
-		}
-
-		return super._loadList(callNavigation);
-	}
-
-	protected async onFunctionEmojiClicked(emoji: string[], user: User, clientMessage: Message): Promise<void> {
-		const cb = this.functionEmojis[emoji[0]] || this.functionEmojis[emoji[1]];
-
-		try {
-			// @ts-ignore
-			await cb(user, this);
-		} catch (err) {
-			return this._cleanUp(err, clientMessage, false, user);
-		}
-
-		return this._loadPage(this.page);
-	}
-
-	async _awaitResponse(): Promise<void> {
-		const emojis = Object.values(this.navigationEmojis);
-		const filter = (r: MessageReaction, u: User): boolean => {
-			const enabledEmoji = this._enabled('ALL')
-				? !this._disabledNavigationEmojiValues.length
-				|| this._disabledNavigationEmojiValues.some(e => ![r.emoji.name, r.emoji.id].includes(e))
-				: false;
-			const passedEmoji = (enabledEmoji && (emojis.includes(r.emoji.name) || emojis.includes(r.emoji.id)))
-				|| r.emoji.name in this.functionEmojis || r.emoji.id! in this.functionEmojis;
-
-			if (this.authorizedUsers.length) {
-				return this.authorizedUsers.includes(u.id) && passedEmoji;
+			if (typeof this.channel === 'undefined') {
+				throw new TypeError('Channel was not set.');
 			}
 
-			return !u.bot && passedEmoji;
-		};
+			this.message = await this.channel.send({ embed: this.buildEmbed() }) as Message;
+		}
+	}
 
-		const clientMessage = this.clientAssets.message as Message;
+	protected async loadPage(page: number): Promise<void> {
+		this.setPage(page);
 
+		await this.setMessage();
+
+		return this.awaitResponse();
+	}
+
+	protected emojiFilter(r: MessageReaction, u: User): boolean {
+		const passedEmoji = r.emoji.name in this.functionEmojis || r.emoji.id! in this.functionEmojis;
+
+		if (this.authorizedUsers.length) {
+			return this.authorizedUsers.includes(u.id) && passedEmoji;
+		}
+
+		return !u.bot && passedEmoji;
+	}
+
+	protected async awaitResponse(): Promise<void> {
 		try {
-			const responses = await clientMessage.awaitReactions(filter, { max: 1, time: this.timeout, errors: ['time'] });
+			const responses = await this.message.awaitReactions(this.emojiFilter, { max: 1, time: this.timeout, errors: ['time'] });
 			const response = responses.first() as MessageReaction;
 			const user = await response.users.cache.last();
 			const emoji = [response.emoji.name, response.emoji.id];
-			const channel = clientMessage.channel as TextChannel;
+			const channel = this.message.channel as TextChannel;
 
-			if (this.listenerCount('react')) this.emit('react', user, response.emoji);
-
-			if (clientMessage.guild && channel.permissionsFor(channel.client.user!)?.has('MANAGE_MESSAGES')) {
+			if (this.message.guild && channel.permissionsFor(channel.client.user!)?.has('MANAGE_MESSAGES')) {
 				await response.users.remove(user);
 			}
 
 			switch (emoji[0] || emoji[1]) {
-				case this.navigationEmojis.back:
-					if (this.page === 1) return this._awaitResponse();
+				case EMOJIS.DELETE:
+					logger.verbose('Removing messages...');
 
-					return this._loadPage('back');
+					if (this.message) {
+						this.message.delete().catch(reason => {
+							logger.warn('Error while deleting bot message: ', reason);
+						});
+					}
 
-				case this.navigationEmojis.forward:
-					if (this.page === this.pages) return this._awaitResponse();
+					if (this.originalMessage && (this.originalMessage.channel as TextChannel).guild) {
+						this.originalMessage.delete().catch(reason => {
+							logger.warn('Error while deleting initial message: ', reason);
+						});
+					}
 
-					return this._loadPage('forward');
+					return Promise.resolve();
+
+				case EMOJIS.BACK:
+					if (this.page === 1) return this.awaitResponse();
+
+					return this.loadPage(this.page - 1);
+
+				case EMOJIS.FORWARD:
+					if (this.page === this.array.length - 1) return this.awaitResponse();
+
+					return this.loadPage(this.page + 1);
+
+				case EMOJIS.LANGUAGE_SELECT:
+					// TODO draw language select menu
+					return Promise.resolve();
 
 				default:
-					return await this.onFunctionEmojiClicked(emoji as string[], user!, clientMessage);
+					// TODO handle languages selection
+					return Promise.resolve();
 			}
 		} catch (err) {
-			return this._cleanUp(err, clientMessage);
+			return this.cleanUp();
 		}
 	}
-	// endregion
+
+	protected async cleanUp(): Promise<void> {
+		if (this.message.guild && !this.message.deleted) await this.message.reactions.removeAll();
+	}
 }

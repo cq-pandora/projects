@@ -13,13 +13,10 @@ interface IBossesEmbedOptions {
 }
 
 export default class BossesEmbed extends PaginationEmbed {
-	constructor(options: IBossesEmbedOptions) {
-		super({
-			initialMessage: options.initialMessage,
-			locale: options.locales[0],
-		});
+	constructor({ initialMessage, locales, bosses }: IBossesEmbedOptions) {
+		super({ initialMessage, locales });
 
-		const embeds = arraify(options.bosses).map(boss => new LocalizableMessageEmbed()
+		const embeds = arraify(bosses).map(boss => new LocalizableMessageEmbed()
 			.setTitle(l`${boss.name}`)
 			.setDescription(statsToString(boss))
 			.setThumbnail(imageUrl(`heroes/${boss.image}`)));

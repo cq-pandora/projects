@@ -19,7 +19,7 @@ export default class BerriesEmbed extends PaginationEmbed {
 	constructor(options: IBerriesEmbedOptions) {
 		super({
 			initialMessage: options.initialMessage,
-			locale: options.locales[0],
+			locales: options.locales,
 		});
 
 		const berries = arraify(options.entities);

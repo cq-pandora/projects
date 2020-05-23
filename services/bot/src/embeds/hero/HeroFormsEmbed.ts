@@ -1,5 +1,4 @@
-import { Message } from 'discord.js';
-import { Hero, HeroClassColors } from '@pandora/entities';
+import { HeroClassColors } from '@pandora/entities';
 
 import { capitalizeFirstLetter, imageUrl } from '../../util/functions';
 
@@ -8,21 +7,14 @@ import { l, LocalizableMessageEmbed } from '../LocalizableMessageEmbed';
 
 import IHeroEmbedConstructorOptions from './IHeroEmbedConstructorOptions';
 
-interface IHeroFormsEmbedOptions {
-	initialMessage: Message;
-	hero: Hero;
-	page?: number;
-	locale: string;
-}
-
 export default class HeroFormsEmbed extends PaginationEmbed {
 	constructor({
 		initialMessage,
 		hero,
 		page,
-		locale
+		locales
 	}: IHeroEmbedConstructorOptions) {
-		super({ initialMessage, locale });
+		super({ initialMessage, locales });
 
 		const faction = (!hero.domain || hero.domain === 'NONEGROUP')
 			? '-'
