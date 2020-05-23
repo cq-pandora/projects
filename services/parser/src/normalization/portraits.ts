@@ -15,7 +15,7 @@ export async function normalize(input: PortraitsNormalizationInput): Promise<Nor
 	const portraitsTranslationIndex = {} as Record<string, string>;
 
 	const portraits = portraitsRaw.illust_collection.reduce((r, v) => {
-		r[v.name] = new Portrait({ keys: [v.portrait_1] });
+		r[v.name] = new Portrait({ keys: [v.portrait_1], id: v.id });
 
 		portraitsTranslationIndex[v.name] = v.name;
 

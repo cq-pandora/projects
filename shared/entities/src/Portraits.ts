@@ -4,13 +4,16 @@ import { registerSerializer } from './Serializer';
 
 export interface IPortraitOptions {
 	keys: string[];
+	id: string;
 }
 
 export class Portrait {
+	public readonly id: string;
 	public readonly keys: string[];
 
 	constructor(options: IPortraitOptions) {
 		this.keys = options.keys;
+		this.id = options.id;
 	}
 }
 
@@ -19,14 +22,20 @@ export type Portraits = {
 };
 
 type PortraitsRaw = {
-	[K in TranslationKey]: Array<string>;
+	[K in TranslationKey]: {
+		keys: string[];
+		id: string;
+	};
 };
 
 function parsePortraits(rawJson: string): Portraits {
 	const json = JSON.parse(rawJson) as PortraitsRaw;
 	return Object.entries(json).reduce<Portraits>(
-		(r, [translationKey, keys]) => {
-			r[translationKey] = new Portrait({ keys });
+		(r, [translationKey, portraitRaw]) => {
+			r[translationKey] = new Portrait({
+				keys: portraitRaw.keys,
+				id: portraitRaw.id,
+			});
 
 			return r;
 		},
@@ -39,13 +48,13 @@ function serializePortraits(input: Portraits | Portraits[]): object {
 
 	return Object.entries(target).reduce(
 		(res, current) => {
-			const [key, portraits] = current;
+			const [key, portrait] = current;
 
-			res[key] = portraits.keys;
+			res[key] = portrait;
 
 			return res;
 		},
-		{} as Record<string, string[]>
+		{} as Record<string, Portrait>
 	);
 }
 
