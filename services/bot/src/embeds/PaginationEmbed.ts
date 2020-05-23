@@ -1,8 +1,10 @@
 import {
 	Message, MessageEmbed, TextChannel, MessageReaction, User, NewsChannel, DMChannel, Snowflake
 } from 'discord.js';
+import { find as findEmoji } from 'node-emoji';
+
 import logger from '../logger';
-import { translate } from '../cq-data';
+import { translate, locales as globalLocales } from '../cq-data';
 
 import { LocalizableMessageEmbed } from './LocalizableMessageEmbed';
 
@@ -19,6 +21,12 @@ function localeToEmoji(locale: string): string {
 	return String.fromCodePoint(...chars);
 }
 
+function emojiToLocale(emoji: string): string {
+	const country = findEmoji(emoji).key.split('-')[1];
+
+	return globalLocales.filter(l => l.endsWith(country))[0];
+}
+
 const EMOJIS = {
 	BACK: '◀',
 	FORWARD: '▶',
@@ -26,16 +34,13 @@ const EMOJIS = {
 	LANGUAGE_SELECT: '🌐',
 };
 
-const EMOJIS_ORDER = [EMOJIS.DELETE, EMOJIS.BACK, EMOJIS.FORWARD, EMOJIS.LANGUAGE_SELECT];
-
 export default class PaginationEmbed {
 	protected authorizedUsers: Snowflake[] = [];
 	protected channel?: TextChannel | DMChannel;
 	protected array: LocalizableMessageEmbed[] = [];
 	protected pageIndicator = true;
-	protected page = 0;
+	protected page = 1;
 	protected timeout?: number;
-	protected functionEmojis: Record<string, Function> = {};
 	protected originalMessage?: Message;
 	protected message!: Message;
 	protected locale: string;
@@ -100,11 +105,46 @@ export default class PaginationEmbed {
 			throw new Error('Not enough required permissions to proceed');
 		}
 
-		return this.setMessage();
+		await this.setMessage();
+
+		await this.message.react(EMOJIS.DELETE);
+
+		if (this.array.length > 1) {
+			await this.message.react(EMOJIS.BACK);
+			await this.message.react(EMOJIS.FORWARD);
+		}
+
+		if (this.locales.length > 1) {
+			await this.message.react(EMOJIS.LANGUAGE_SELECT);
+		}
+
+		return this.awaitResponse();
 	}
 
 	translate(key: string): string {
 		return translate(key, this.locale);
+	}
+
+	protected async toggleLocales(show: boolean): Promise<void> {
+		if (show) {
+			const reaction = await this.message.reactions.resolve(EMOJIS.LANGUAGE_SELECT);
+
+			await reaction?.remove();
+
+			for (const locale of this.locales) {
+				await this.message.react(localeToEmoji(locale));
+			}
+		} else {
+			for (const locale of this.locales) {
+				const reaction = await this.message.react(localeToEmoji(locale));
+
+				await reaction?.remove();
+			}
+
+			await this.message.react(EMOJIS.LANGUAGE_SELECT);
+		}
+
+		return this.awaitResponse();
 	}
 
 	protected async checkPermissions(): Promise<boolean> {
@@ -149,29 +189,37 @@ export default class PaginationEmbed {
 		return this.awaitResponse();
 	}
 
-	protected emojiFilter(r: MessageReaction, u: User): boolean {
-		const passedEmoji = r.emoji.name in this.functionEmojis || r.emoji.id! in this.functionEmojis;
+	protected emojiFilter = (r: MessageReaction, u: User): boolean => {
+		if (u.bot) return false;
 
-		if (this.authorizedUsers.length) {
-			return this.authorizedUsers.includes(u.id) && passedEmoji;
+		const emoji = (r.emoji.name ?? r.emoji.id);
+
+		const navigationEmoji = Object.values(EMOJIS).includes(emoji);
+
+		if (navigationEmoji) {
+			if (this.authorizedUsers.length) {
+				return this.authorizedUsers.includes(u.id);
+			}
+
+			return true;
 		}
 
-		return !u.bot && passedEmoji;
-	}
+		return findEmoji(emoji).key.startsWith('flag-');
+	};
 
 	protected async awaitResponse(): Promise<void> {
 		try {
 			const responses = await this.message.awaitReactions(this.emojiFilter, { max: 1, time: this.timeout, errors: ['time'] });
 			const response = responses.first() as MessageReaction;
 			const user = await response.users.cache.last();
-			const emoji = [response.emoji.name, response.emoji.id];
+			const emoji = response.emoji.name ?? response.emoji.id;
 			const channel = this.message.channel as TextChannel;
 
 			if (this.message.guild && channel.permissionsFor(channel.client.user!)?.has('MANAGE_MESSAGES')) {
 				await response.users.remove(user);
 			}
 
-			switch (emoji[0] || emoji[1]) {
+			switch (emoji) {
 				case EMOJIS.DELETE:
 					logger.verbose('Removing messages...');
 
@@ -195,17 +243,19 @@ export default class PaginationEmbed {
 					return this.loadPage(this.page - 1);
 
 				case EMOJIS.FORWARD:
-					if (this.page === this.array.length - 1) return this.awaitResponse();
+					if (this.page === this.array.length) return this.awaitResponse();
 
 					return this.loadPage(this.page + 1);
 
 				case EMOJIS.LANGUAGE_SELECT:
-					// TODO draw language select menu
-					return Promise.resolve();
+					return this.toggleLocales(true);
 
 				default:
-					// TODO handle languages selection
-					return Promise.resolve();
+					this.locale = emojiToLocale(emoji);
+
+					await this.setMessage();
+
+					return this.toggleLocales(false);
 			}
 		} catch (err) {
 			return this.cleanUp();
