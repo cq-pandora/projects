@@ -261,7 +261,9 @@ export default class PaginationEmbed {
 				default:
 					this.locale = emojiToLocale(emoji);
 
-					return this.setMessage();
+					await this.setMessage();
+
+					return this.awaitResponse();
 			}
 		} catch (err) {
 			return this.cleanUp();
