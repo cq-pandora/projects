@@ -15,7 +15,7 @@ interface IHeroInheritanceEmbedOptions {
 	initialMessage: Message;
 	hero: Hero;
 	inherits: InheritanceLevel | InheritanceLevel[];
-	locale: string;
+	locales: string[];
 }
 
 export default class HeroInheritanceEmbed extends PaginationEmbed {
@@ -23,9 +23,9 @@ export default class HeroInheritanceEmbed extends PaginationEmbed {
 		initialMessage,
 		hero,
 		inherits,
-		locale
+		locales
 	}: IHeroInheritanceEmbedOptions) {
-		super({ initialMessage, locales: [locale] });
+		super({ initialMessage, locales });
 
 		const form = hero.forms.find(f => f.star === 6) as HeroForm;
 		const maxBerry = sumStats(form.maxBerries, form);

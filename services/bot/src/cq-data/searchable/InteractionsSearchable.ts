@@ -21,7 +21,7 @@ export class InteractionsSearchable implements ISearchable<Interaction, Interact
 		return this.entities
 			.filter(e => Boolean(e.actors.filter(a => a.id === query).length))
 			.map(e => ({
-				locale: 'generic',
+				locales: ['generic'],
 				result: e,
 			}));
 	}

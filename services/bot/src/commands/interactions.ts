@@ -31,7 +31,7 @@ export class InteractionsCommand extends BaseCommand {
 
 		const name = args.join(' ');
 
-		const { result: hero, locale } = extractResult(heroes.search(name));
+		const { result: hero, locales } = extractResult(heroes.search(name));
 
 		if (!hero) {
 			await message.channel.send('Hero not found!');
@@ -57,7 +57,7 @@ export class InteractionsCommand extends BaseCommand {
 		const ints = await Promise.all(heroInteractions.map(
 			async i => {
 				const actors = i.actors.map(actor => ({
-					text: translate(actor.text, locale).replace('\n', ' '),
+					text: translate(actor.text, locales[0]).replace('\n', ' '),
 					imageKey: actor.imageKey,
 				}));
 

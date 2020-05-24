@@ -586,6 +586,11 @@
     "@babel/runtime" "^7.7.2"
     core-js "^3.4.1"
 
+"@types/array-unique@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@types/array-unique/-/array-unique-0.3.0.tgz#4bdab51014680a9fda7b6e6f1ec7f597c2d474fe"
+  integrity sha512-J9HNrHjSt24ubmvyMgsTiE+rvGs2yTeI+luxPa7UF09nrWrBPkQlyVaPB24zXI2wxzypdF6SRAZ1Iza1BFbUew==
+
 "@types/babel__core@^7.1.0":
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.3.tgz#e441ea7df63cd080dfcd02ab199e6d16a735fc30"
@@ -5343,12 +5348,7 @@ typed-function@1.1.1:
   resolved "https://registry.yarnpkg.com/typed-function/-/typed-function-1.1.1.tgz#a1316187ec3628c9e219b91ca96918660a10138e"
   integrity sha512-RbN7MaTQBZLJYzDENHPA0nUmWT0Ex80KHItprrgbTPufYhIlTePvCXZxyQK7wgn19FW5bnuaBIKcBb5mRWjB1Q==
 
-typescript@^2.5.0:
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
-  integrity sha512-Gr4p6nFNaoufRIY4NMdpQRNmgxVIGMs4Fcu/ujdYk3nAZqk7supzBE9idmvfZIlH/Cuj//dvi+019qEue9lV0w==
-
-typescript@^3.8.3:
+typescript@^2.5.0, typescript@^3.8.3:
   version "3.8.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.3.tgz#409eb8544ea0335711205869ec458ab109ee1061"
   integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==

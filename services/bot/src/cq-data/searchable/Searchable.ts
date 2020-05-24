@@ -1,4 +1,5 @@
 import Fuse from 'fuse.js';
+import uniq from 'array-unique';
 
 import { TranslationIndex } from '@pandora/entities';
 
@@ -22,6 +23,8 @@ export interface ISearchableOptions<T extends Entities, C extends Container<T>> 
 }
 
 const DEFAULT_LOCALE = 'en_us';
+
+type RawStructure<E> = Record<string, { entity: E; locales: string[]; score: number }>;
 
 export class Searchable<T extends Entities, C extends Container<T>> implements ISearchable<T, C> {
 	private readonly fuse: Fuse<TranslationIndex, FuseOptions>;
@@ -51,21 +54,37 @@ export class Searchable<T extends Entities, C extends Container<T>> implements I
 	searchAll(rawQuery: string): ISearchResult<T>[] {
 		const query = alias(this.context, rawQuery);
 
-		const queryResult = this.fuse.search<TranslationIndex, false, false>(query);
+		const queryResult = this.fuse.search<TranslationIndex, true>(query);
 
-		return queryResult
-			.map(({ path: paths, locale }: TranslationIndex): ISearchResult<T>[] => (
-				paths.split(',').map(path => {
-					const [key] = path.split('.');
+		const rawResults = {} as RawStructure<T>;
 
-					return {
+		for (const q of queryResult) {
+			const { item: { path: paths, locale }, score } = q;
+
+			for (const path of paths.split(',')) {
+				const [key] = path.split('.');
+
+				if (!rawResults[key]) {
+					rawResults[key] = {
 						// @ts-ignore
-						result: this.entities[key],
-						locale,
+						entity: this.entities[key],
+						locales: [locale],
+						score,
 					};
-				})
-			))
-			.flat(1)
-			.sort((a, b) => Number(b.locale === DEFAULT_LOCALE) - Number(a.locale === DEFAULT_LOCALE));
+				} else {
+					rawResults[key].score = Math.max(score, rawResults[key].score);
+					rawResults[key].locales.push(locale);
+				}
+			}
+		}
+
+		return Object.values(rawResults)
+			.sort((a, b) => a.score - b.score)
+			.map(r => ({
+				result: r.entity,
+				locales: uniq(r.locales).sort(
+					(a, b) => Number(b === DEFAULT_LOCALE) - Number(a === DEFAULT_LOCALE)
+				)
+			}));
 	}
 }

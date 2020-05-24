@@ -53,6 +53,7 @@
 	},
 	"dependencies": {
 		"@pandora/entities": "^1.0.0",
+		"array-unique": "^0.3.2",
 		"axios": "^0.19.0",
 		"cerialize": "^0.1.18",
 		"compare-versions": "^3.4.0",
@@ -75,6 +76,7 @@
 		"winston": "^3.1.0"
 	},
 	"devDependencies": {
+		"@types/array-unique": "^0.3.0",
 		"@types/bluebird": "^3.5.29",
 		"@types/js-beautify": "^1.8.1",
 		"@types/mathjs": "^6.0.2",

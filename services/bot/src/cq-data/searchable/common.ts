@@ -1,4 +1,5 @@
 import Fuse from 'fuse.js';
+import uniq from 'array-unique';
 
 import { TranslationIndex, TranslationIndexSection } from '@pandora/entities';
 
@@ -6,7 +7,10 @@ import { ContextType } from '../../common-types';
 
 import { Locale } from '../translations';
 
-export type Entities = any;
+export type Entities = {
+	id: any;
+	[key: string]: any;
+};
 
 export type Container<T> = T[] | Record<string, T>;
 
@@ -14,7 +18,7 @@ export type HeroKeysDescription = Record<string, string>;
 
 export interface ISearchResult<T> {
 	result: T;
-	locale: Locale;
+	locales: Locale[];
 }
 
 export interface ISearchable<T extends Entities, C extends Container<T>> {
@@ -31,18 +35,18 @@ export interface IExtractedResult<T> {
 
 export interface IExtractedSingleResult<T> {
 	result: T;
-	locale: Locale;
+	locales: Locale[];
 }
 
 export function extractResult<T>(result: ISearchResult<T>[]): IExtractedResult<T>;
 export function extractResult<T>(result: ISearchResult<T>): IExtractedSingleResult<T>;
 export function extractResult<T>(
-	result: ISearchResult<T> | ISearchResult<T>[]
+	result: ISearchResult<T>[] | ISearchResult<T>
 ): IExtractedResult<T> | IExtractedSingleResult<T> {
 	if (Array.isArray(result)) {
-		return result.reduce(
+		const res = result.reduce(
 			(r, e) => {
-				r.locales.push(e.locale);
+				r.locales = r.locales.concat(e.locales);
 				r.results.push(e.result);
 
 				return r;
@@ -52,9 +56,16 @@ export function extractResult<T>(
 				locales: []
 			} as IExtractedResult<T>
 		);
+
+		res.locales = uniq(res.locales);
+
+		return res;
 	}
 
-	return result;
+	return {
+		result: result.result,
+		locales: uniq(result.locales),
+	};
 }
 
 export type FuseOptions = Fuse.FuseOptions<TranslationIndex>;
@@ -65,7 +76,8 @@ export const fuzzyOptions = {
 	distance: 100,
 	maxPatternLength: 32,
 	minMatchCharLength: 1,
-	keys: ['text']
+	keys: ['text'],
+	includeScore: true,
 } as FuseOptions;
 
 const contextToSectionDictionary = {

@@ -10,7 +10,7 @@ interface ISPSkillEmbedOptions {
 	initialMessage: Message;
 	skill: SpSkill;
 	page: number | undefined;
-	locale: string;
+	locales: string[];
 }
 
 export default class SPSkillEmbed extends PaginationEmbed {
@@ -18,12 +18,9 @@ export default class SPSkillEmbed extends PaginationEmbed {
 		initialMessage,
 		skill,
 		page,
-		locale
+		locales
 	}: ISPSkillEmbedOptions) {
-		super({
-			initialMessage,
-			locales: [locale],
-		});
+		super({ initialMessage, locales });
 
 		const embeds = skill.forms.map(form => (
 			new LocalizableMessageEmbed()

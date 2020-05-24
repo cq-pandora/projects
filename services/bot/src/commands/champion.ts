@@ -36,7 +36,7 @@ export class ChampionCommand extends BaseCommand {
 		const grade = parseGrade(args);
 		const name = parseQuery(args, [`${grade}`]);
 
-		const { result: champion, locale } = extractResult(champions.search(name));
+		const { result: champion, locales } = extractResult(champions.search(name));
 
 		if (!champion) {
 			await message.channel.send('Champion not found!');
@@ -64,7 +64,7 @@ export class ChampionCommand extends BaseCommand {
 		const page = champion.forms.indexOf(form) + 1;
 
 		const embed = new ChampionEmbed({
-			initialMessage: message, champion, page, locale
+			initialMessage: message, champion, page, locales
 		});
 
 		await embed.send();

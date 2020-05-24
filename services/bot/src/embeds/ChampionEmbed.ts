@@ -10,14 +10,14 @@ interface IChampionEmbedOptions {
 	initialMessage: Message;
 	champion: Champion;
 	page?: number;
-	locale: string;
+	locales: string[];
 }
 
 export default class ChampionEmbed extends PaginationEmbed {
 	constructor(options: IChampionEmbedOptions) {
 		super({
 			initialMessage: options.initialMessage,
-			locales: [options.locale],
+			locales: options.locales,
 		});
 
 		const { champion, page } = options;

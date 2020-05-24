@@ -36,7 +36,7 @@ export class InheritCommand extends BaseCommand {
 		const iLvl = parseInheritance(args);
 		const name = parseQuery(args, [iLvl]);
 
-		const { result: hero, locale } = extractResult(heroes.search(name));
+		const { result: hero, locales } = extractResult(heroes.search(name));
 
 		if (!hero) {
 			await message.channel.send('Hero not found!');
@@ -64,7 +64,7 @@ export class InheritCommand extends BaseCommand {
 			initialMessage: message,
 			hero,
 			inherits: levels,
-			locale,
+			locales,
 		});
 
 		await embed.send();

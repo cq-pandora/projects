@@ -64,7 +64,7 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand {
 			};
 		}
 
-		const { result: hero, locale } = extractResult(result);
+		const { result: hero, locales } = extractResult(result);
 
 		if (this.checkSBW && !hero.sbws.length) {
 			await message.channel.send('Soulbound weapon not found for hero!');
@@ -103,7 +103,7 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand {
 			initialMessage: message,
 			hero,
 			page,
-			locales: [locale],
+			locales,
 		});
 
 		await embed.send();
