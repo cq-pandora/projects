@@ -32,6 +32,7 @@ const EMOJIS = {
 	FORWARD: '▶',
 	DELETE: '🗑',
 	LANGUAGE_SELECT: '🌐',
+	LANGUAGE_SELECT_HIDE: '🔚',
 };
 
 export default class PaginationEmbed {
@@ -40,7 +41,7 @@ export default class PaginationEmbed {
 	protected array: LocalizableMessageEmbed[] = [];
 	protected pageIndicator = true;
 	protected page = 1;
-	protected timeout?: number;
+	protected timeout = 60000;
 	protected originalMessage?: Message;
 	protected message!: Message;
 	protected locale: string;
@@ -128,18 +129,22 @@ export default class PaginationEmbed {
 	protected async toggleLocales(show: boolean): Promise<void> {
 		if (show) {
 			const reaction = await this.message.reactions.resolve(EMOJIS.LANGUAGE_SELECT);
-
 			await reaction?.remove();
 
 			for (const locale of this.locales) {
 				await this.message.react(localeToEmoji(locale));
 			}
+
+			await this.message.react(EMOJIS.LANGUAGE_SELECT_HIDE);
 		} else {
 			for (const locale of this.locales) {
-				const reaction = await this.message.react(localeToEmoji(locale));
+				const reaction = await this.message.reactions.resolve(localeToEmoji(locale));
 
 				await reaction?.remove();
 			}
+
+			const reaction = await this.message.reactions.resolve(EMOJIS.LANGUAGE_SELECT_HIDE);
+			await reaction?.remove();
 
 			await this.message.react(EMOJIS.LANGUAGE_SELECT);
 		}
@@ -250,12 +255,13 @@ export default class PaginationEmbed {
 				case EMOJIS.LANGUAGE_SELECT:
 					return this.toggleLocales(true);
 
+				case EMOJIS.LANGUAGE_SELECT_HIDE:
+					return this.toggleLocales(false);
+
 				default:
 					this.locale = emojiToLocale(emoji);
 
-					await this.setMessage();
-
-					return this.toggleLocales(false);
+					return this.setMessage();
 			}
 		} catch (err) {
 			return this.cleanUp();
