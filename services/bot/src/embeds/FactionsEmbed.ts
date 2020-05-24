@@ -2,7 +2,7 @@ import { Message } from 'discord.js';
 import { Faction } from '@pandora/entities';
 
 import { imageUrl, arraify } from '../util/functions';
-import { translate, heroes } from '../cq-data';
+import { heroes } from '../cq-data';
 
 import PaginationEmbed from './PaginationEmbed';
 import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
@@ -23,12 +23,13 @@ export default class FactionsEmbed extends PaginationEmbed {
 				.filter(h => h.domain === faction.ingameId)
 				.map(h => h.forms[0].name);
 
-			const a = new Array<string>(heroesKeys.length).fill('\n');
-
 			return new LocalizableMessageEmbed()
-				.setTitle(translate(faction.name))
+				.setTitle(l(faction.name))
 				.setThumbnail(imageUrl(`common/${faction.image}`))
-				.addField('\u200b', l(a, heroesKeys));
+				.addField('\u200b', {
+					strings: new Array<string>(heroesKeys.length).fill('\n'),
+					keys: heroesKeys
+				});
 		});
 
 		this.setArray(embeds)
