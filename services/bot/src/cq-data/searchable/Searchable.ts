@@ -79,12 +79,23 @@ export class Searchable<T extends Entities, C extends Container<T>> implements I
 		}
 
 		return Object.values(rawResults)
-			.sort((a, b) => a.score - b.score)
 			.map(r => ({
 				result: r.entity,
 				locales: uniq(r.locales).sort(
 					(a, b) => Number(b === DEFAULT_LOCALE) - Number(a === DEFAULT_LOCALE)
-				)
-			}));
+				),
+				score: r.score,
+			}))
+			.sort((a, b) => {
+				// Default locale will be first if exists
+				const aHasEnglish = a.locales[0] === DEFAULT_LOCALE;
+				const bHasEnglish = b.locales[0] === DEFAULT_LOCALE;
+
+				if (aHasEnglish === bHasEnglish) {
+					return a.score - b.score;
+				}
+
+				return Number(bHasEnglish) - Number(aHasEnglish);
+			});
 	}
 }
