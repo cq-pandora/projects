@@ -259,9 +259,13 @@ export default class PaginationEmbed {
 					return this.toggleLocales(false);
 
 				default:
-					this.locale = emojiToLocale(emoji);
+					const newLocale = emojiToLocale(emoji);
 
-					await this.setMessage();
+					if (newLocale !== this.locale) {
+						this.locale = newLocale;
+
+						await this.setMessage();
+					}
 
 					return this.awaitResponse();
 			}
