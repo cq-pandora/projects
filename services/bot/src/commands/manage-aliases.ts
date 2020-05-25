@@ -83,6 +83,10 @@ const actions: Record<string, Action> = {
 	},
 	accept: async (message, { alias, context }) => {
 		try {
+			if (!context) {
+				await message.channel.send('Context may not be empty');
+			}
+
 			const res = await aliases.accept(alias, context);
 
 			if (!res) {
@@ -98,6 +102,10 @@ const actions: Record<string, Action> = {
 	},
 	decline: async (message, { alias, context }) => {
 		try {
+			if (!context) {
+				await message.channel.send('Context may not be empty');
+			}
+
 			await aliases.decline(alias, context);
 
 			await message.channel.send('Alias declined!');
