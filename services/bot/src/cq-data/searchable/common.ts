@@ -72,9 +72,9 @@ export type FuseOptions = Fuse.FuseOptions<TranslationIndex>;
 
 export const fuzzyOptions = {
 	threshold: 0.3,
-	location: 9_000_000,
-	distance: 500,
-	maxPatternLength: 9_000_000,
+	location: 0,
+	distance: 5000,
+	maxPatternLength: 100,
 	minMatchCharLength: 1,
 	keys: ['text'],
 	includeScore: true,
