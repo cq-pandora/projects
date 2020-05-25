@@ -26,7 +26,7 @@ export default class ChampionEmbed extends PaginationEmbed {
 			const embed = new LocalizableMessageEmbed()
 				.setTitle(l`${options.champion.name} (Lvl. ${form.grade})`)
 				.setThumbnail(imageUrl(`heroes/${champion.image}`))
-				.setDescription(`${champion.lore}`);
+				.setDescription(l`${champion.lore}`);
 
 			if (form.active) {
 				embed.addField(l`${form.active.name} (Active)`, l`${form.active.description}`);
