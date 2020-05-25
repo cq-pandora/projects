@@ -38,9 +38,9 @@ export class SpSkillCommand extends BaseCommand {
 		const grade = parseGrade(args);
 		const name = parseQuery(args, [`${grade}`]);
 
-		const { result: skill, locales } = extractResult(spSkills.search(name));
+		const searchResult = spSkills.search(name);
 
-		if (!skill) {
+		if (!searchResult) {
 			await message.channel.send('Skill not found!');
 
 			return {
@@ -48,6 +48,8 @@ export class SpSkillCommand extends BaseCommand {
 				target: 'spskill',
 			};
 		}
+
+		const { result: skill, locales } = extractResult(searchResult);
 
 		let form: SpSkillForm | undefined;
 		if (grade) {

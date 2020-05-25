@@ -188,14 +188,17 @@ export class ManageTranslationsCommand extends BaseCommand {
 			};
 		}
 
-		const { result: hero } = extractResult(heroes.search(heroName));
+		const result = heroes.search(heroName);
 
-		if (!hero) {
+		if (!result) {
+			await message.channel.send('Hero not found!');
+
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
-				target: 'hero',
 			};
 		}
+
+		const { result: hero } = extractResult(result);
 
 		let form: HeroForm | undefined;
 		let sbw: HeroSBW | undefined;

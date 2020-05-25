@@ -28,9 +28,10 @@ export class PortraitCommand extends BaseCommand {
 		if (!args.length) return this.sendUsageInstructions(payload);
 
 		const name = parseQuery(args);
-		const { result: portrait } = extractResult(portraits.search(name));
 
-		if (!portrait) {
+		const searchResult = portraits.search(name);
+
+		if (!searchResult) {
 			await message.channel.send('Portrait not found!');
 
 			return {
@@ -38,6 +39,8 @@ export class PortraitCommand extends BaseCommand {
 				args: JSON.stringify({ name }),
 			};
 		}
+
+		const { result: portrait } = extractResult(searchResult);
 
 		const embed = new PortraitsEmbed({ initialMessage: message, portraits: portrait.keys });
 

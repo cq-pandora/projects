@@ -36,15 +36,17 @@ export class InheritCommand extends BaseCommand {
 		const iLvl = parseInheritance(args);
 		const name = parseQuery(args, [iLvl]);
 
-		const { result: hero, locales } = extractResult(heroes.search(name));
+		const searchResult = heroes.search(name);
 
-		if (!hero) {
+		if (!searchResult) {
 			await message.channel.send('Hero not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
 			};
 		}
+
+		const { result: hero, locales } = extractResult(searchResult);
 
 		const form = hero.forms.find(f => f.star === 6);
 

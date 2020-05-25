@@ -24,7 +24,7 @@ export interface ISearchResult<T> {
 export interface ISearchable<T extends Entities, C extends Container<T>> {
 	list(): T[];
 	structure(): C;
-	search(query: string): ISearchResult<T>;
+	search(query: string): ISearchResult<T> | undefined;
 	searchAll(query: string): ISearchResult<T>[];
 }
 

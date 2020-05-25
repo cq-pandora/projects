@@ -43,16 +43,17 @@ export class TranslateCommand extends BaseCommand {
 		const [field, name, gradeStr, ...rest] = args;
 		const grade = Number(gradeStr);
 
-		const { result: hero } = extractResult(heroes.search(name));
+		const result = heroes.search(name);
 
-		if (!hero) {
+		if (!result) {
 			await message.channel.send('Hero not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
-				target: 'hero',
 			};
 		}
+
+		const { result: hero } = extractResult(result);
 
 		let form: HeroForm | undefined;
 		let sbw: HeroSBW | undefined;

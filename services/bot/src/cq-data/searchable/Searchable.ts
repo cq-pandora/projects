@@ -47,7 +47,7 @@ export class Searchable<T extends Entities, C extends Container<T>> implements I
 
 	structure(): C { return this.entities; }
 
-	search(query: string): ISearchResult<T> {
+	search(query: string): ISearchResult<T> | undefined {
 		return this.searchAll(query)[0];
 	}
 

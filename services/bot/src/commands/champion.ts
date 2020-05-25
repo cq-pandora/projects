@@ -36,15 +36,17 @@ export class ChampionCommand extends BaseCommand {
 		const grade = parseGrade(args);
 		const name = parseQuery(args, [`${grade}`]);
 
-		const { result: champion, locales } = extractResult(champions.search(name));
+		const searchResult = champions.search(name);
 
-		if (!champion) {
+		if (!searchResult) {
 			await message.channel.send('Champion not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
 			};
 		}
+
+		const { result: champion, locales } = extractResult(searchResult);
 
 		let form: ChampionForm | undefined;
 		if (grade) {

@@ -31,15 +31,17 @@ export class InteractionsCommand extends BaseCommand {
 
 		const name = args.join(' ');
 
-		const { result: hero, locales } = extractResult(heroes.search(name));
+		const searchResult = heroes.search(name);
 
-		if (!hero) {
+		if (!searchResult) {
 			await message.channel.send('Hero not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
 			};
 		}
+
+		const { result: hero, locales } = extractResult(searchResult);
 
 		const heroInteractions = hero.forms.reduce(
 			(r, v) => r.concat(extractResult(interactions.searchAll(v.id)).results),
