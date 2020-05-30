@@ -42,7 +42,7 @@ export class CommandResult {
 
 	constructor(
 		args: string, userId: Snowflake, channelId: Snowflake, server: Snowflake, sentTo: MessageTargetChannel,
-		content: string, statusCode: CommandResultCode, command: string, target: string | null | undefined
+		content: string, statusCode: CommandResultCode, command: string, target: string | undefined | null
 	) {
 		this.args = args;
 		this.userId = userId;
