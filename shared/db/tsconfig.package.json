@@ -13,5 +13,12 @@
 		"test",
 		"lib"
 	],
-	"references": []
+	"references": [
+		{
+			"path": "..\\entities\\tsconfig.package.json"
+		},
+		{
+			"path": "..\\logger\\tsconfig.package.json"
+		}
+	]
 }

@@ -16,6 +16,12 @@
 	"references": [
 		{
 			"path": "..\\..\\shared\\entities\\tsconfig.package.json"
+		},
+		{
+			"path": "..\\..\\shared\\logger\\tsconfig.package.json"
+		},
+		{
+			"path": "..\\..\\shared\\db\\tsconfig.package.json"
 		}
 	]
 }
