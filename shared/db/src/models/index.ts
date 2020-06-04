@@ -54,7 +54,7 @@ export async function init(options: IDBInitOptions): Promise<void> {
 		database: options.database,
 		username: options.username,
 		password: options.password,
-		schema: options.database,
+		schema: options.schema,
 		logger: new TypeORMLogger(),
 		entities: [Alias, Translation, Stats, Permission],
 	});
