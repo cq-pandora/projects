@@ -12,7 +12,7 @@ export default {
 			database: config.db.database,
 			username: config.db.user,
 			password: config.db.password,
-			schema: config.db.database,
+			schema: config.db.schema,
 		});
 
 		logger.info('Initialized');
