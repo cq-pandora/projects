@@ -1,8 +1,8 @@
 import { Client } from 'discord.js';
+import logger from '@pandora/logger';
 
 import preloadScripts from './preload';
 
-import logger from './logger';
 import config from './config';
 
 import unhandledRejection from './events/unhandledRejection';

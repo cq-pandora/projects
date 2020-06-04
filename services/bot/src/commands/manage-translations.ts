@@ -1,5 +1,7 @@
-import { HeroSBW, HeroForm } from '@pandora/entities';
 import { Message } from 'discord.js';
+
+import { translations, Translation } from '@pandora/db';
+import { HeroSBW, HeroForm } from '@pandora/entities';
 
 import { LocalizableMessageEmbed } from '../embeds/LocalizableMessageEmbed';
 import {
@@ -8,10 +10,10 @@ import {
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
 } from '../common-types';
-import * as translations from '../db/translations';
-import { Translation } from '../db/models';
 import { PaginationEmbed } from '../embeds';
-import { heroes, heroKeysDescription, extractResult } from '../cq-data';
+import {
+	heroes, heroKeysDescription, extractResult, localizations
+} from '../cq-data';
 
 import BaseCommand from './abstract/BaseCommand';
 
@@ -80,7 +82,9 @@ const actions: Record<string, Action> = {
 	},
 	accept: async (message, { id }) => {
 		try {
-			await translations.accept(id!);
+			const acceptedTranslation = await translations.accept(id!);
+
+			localizations[acceptedTranslation.locale][acceptedTranslation.key] = acceptedTranslation;
 
 			await message.channel.send('Translation accepted!');
 		} catch (error) {
@@ -150,7 +154,7 @@ export class ManageTranslationsCommand extends BaseCommand {
 	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
 		const { message, args } = payload;
 
-		if (!args.length) this.sendUsageInstructions(payload);
+		if (!args.length) return this.sendUsageInstructions(payload);
 
 		const [actionNameRaw, field, heroName, gradeStr, id] = args;
 

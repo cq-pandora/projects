@@ -1,10 +1,12 @@
-import BaseCommand from './abstract/BaseCommand';
+import { permissions } from '@pandora/db';
+
 import { extractMentions, parseQuery } from '../util';
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, PermissionTarget
 } from '../common-types';
-import * as permissions from '../db/permissions';
 import config from '../config';
+
+import BaseCommand from './abstract/BaseCommand';
 
 const cmdArgs: CommandArguments = {
 	mode: {
@@ -41,7 +43,7 @@ export class PermissionsCommand extends BaseCommand {
 	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
 		const { message, args } = payload;
 
-		if (!args.length) this.sendUsageInstructions(payload);
+		if (!args.length) return this.sendUsageInstructions(payload);
 
 		if (message.guild === null) {
 			await message.channel.send('This command designed only for servers!');
@@ -91,11 +93,19 @@ export class PermissionsCommand extends BaseCommand {
 		const shouldBeSet = mergedTargets.filter(t => Boolean(t.commands.length));
 
 		if (shouldBeSet.length) {
-			await permissions.set(message.guild.id, shouldBeSet);
+			const toBeSet = await permissions.set(message.guild.id, shouldBeSet);
+
+			for (const p of toBeSet) {
+				config.permissions.set(message.guild.id, p.targetType, p.targetId, p.mode, p.commands, p.priority);
+			}
 		}
 
 		if (shouldBeCleared.length) {
-			await permissions.clear(shouldBeCleared);
+			const toBeCleared = await permissions.clear(shouldBeCleared);
+
+			for (const p of toBeCleared) {
+				config.permissions.set(p.serverId, p.targetType, p.targetId, 0, []);
+			}
 		}
 
 		await message.channel.send('Permissions updated!');

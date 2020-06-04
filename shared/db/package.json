@@ -1,0 +1,47 @@
+{
+ "name": "@pandora/db",
+ "version": "1.0.0",
+ "description": "Database entities and services",
+ "main": "./lib/index.js",
+ "types": "./lib/index.d.ts",
+ "license": "MIT",
+ "private": true,
+ "keywords": [
+  "pandora"
+ ],
+ "repository": {
+  "type": "git",
+  "url": "git+ssh://git@github.com/cq-pandora/projects.git"
+ },
+ "bugs": "https://github.com/cq-pandora/projects/issues",
+ "homepage": "https://github.com/cq-pandora/projects/tree/master/shared/db",
+ "author": {
+  "name": "TrueLecter",
+  "email": "gabriel@tenma.moe"
+ },
+ "contributors": [
+  {
+   "name": "TrueLecter",
+   "email": "gabriel@tenma.moe",
+   "web": "https://github.com/TrueLecter"
+  }
+ ],
+ "maintainers": [
+  {
+   "name": "TrueLecter",
+   "email": "gabriel@tenma.moe",
+   "web": "https://github.com/TrueLecter"
+  }
+ ],
+ "dependencies": {
+  "@pandora/logger": "^1.0.0",
+  "@pandora/entities": "^1.1.0",
+  "pg": "^8.2.1",
+  "typeorm": "^0.2.25"
+ },
+ "devDependencies": {},
+ "peerDependencies": {},
+ "scripts": {
+  "build": "tsc --build ./tsconfig.package.json"
+ }
+}

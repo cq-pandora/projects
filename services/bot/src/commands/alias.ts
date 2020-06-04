@@ -1,8 +1,9 @@
+import { aliases } from '@pandora/db';
+
 import BaseCommand from './abstract/BaseCommand';
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ContextValues, ContextType
 } from '../common-types';
-import * as aliases from '../db/aliases';
 
 const commandArgs: CommandArguments = {
 	alias: {

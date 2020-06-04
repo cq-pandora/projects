@@ -1,11 +1,11 @@
 import { Client, Message, TextChannel } from 'discord.js';
 
-import { CommandResultCode, CommandResult } from '../common-types';
+import { CommandResultCode, CommandResult } from '@pandora/entities';
+import { stats } from '@pandora/db';
+import { commands as logger } from '@pandora/logger';
 
-import * as stats from '../db/stats';
 import { getPermittedCommands, isErrorIgnored } from '../util';
 import config from '../config';
-import { commands as logger } from '../logger';
 
 export default (client: Client): (msg: Message) => Promise<void> => {
 	const mentionRe = new RegExp(`^<@!?${client.user!.id}>`);

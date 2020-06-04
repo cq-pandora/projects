@@ -1,9 +1,7 @@
 import Fuse from 'fuse.js';
 import uniq from 'array-unique';
 
-import { TranslationIndex, TranslationIndexSection } from '@pandora/entities';
-
-import { ContextType } from '../../common-types';
+import { TranslationIndex, TranslationIndexSection, ContextType } from '@pandora/entities';
 
 import { Locale } from '../translations';
 
@@ -71,7 +69,7 @@ export function extractResult<T>(
 export type FuseOptions = Fuse.FuseOptions<TranslationIndex>;
 
 export const fuzzyOptions = {
-	threshold: 0.3,
+	threshold: 0.1,
 	location: 0,
 	distance: 5000,
 	maxPatternLength: 100,

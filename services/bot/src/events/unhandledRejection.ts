@@ -1,5 +1,5 @@
 import { DiscordAPIError } from 'discord.js';
-import logger from '../logger';
+import logger from '@pandora/logger';
 
 const ERROR_CODES = [
 	10008, // UNKNOWN_MESSAGE

@@ -1,0 +1,45 @@
+{
+ "name": "@pandora/logger",
+ "version": "1.0.0",
+ "description": "Loggers factory and declarations",
+ "main": "./lib/index.js",
+ "types": "./lib/index.d.ts",
+ "license": "MIT",
+ "private": true,
+ "keywords": [
+  "pandora"
+ ],
+ "repository": {
+  "type": "git",
+  "url": "git+ssh://git@github.com/cq-pandora/projects.git"
+ },
+ "bugs": "https://github.com/cq-pandora/projects/issues",
+ "homepage": "https://github.com/cq-pandora/projects/tree/master/shared/logger",
+ "author": {
+  "name": "TrueLecter",
+  "email": "gabriel@tenma.moe"
+ },
+ "contributors": [
+  {
+   "name": "TrueLecter",
+   "email": "gabriel@tenma.moe",
+   "web": "https://github.com/TrueLecter"
+  }
+ ],
+ "maintainers": [
+  {
+   "name": "TrueLecter",
+   "email": "gabriel@tenma.moe",
+   "web": "https://github.com/TrueLecter"
+  }
+ ],
+ "dependencies": {
+  "triple-beam": "^1.3.0",
+  "winston": "^3.2.1"
+ },
+ "devDependencies": {},
+ "peerDependencies": {},
+ "scripts": {
+  "build": "tsc --build ./tsconfig.package.json"
+ }
+}

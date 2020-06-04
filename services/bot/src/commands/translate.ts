@@ -1,12 +1,14 @@
 import { HeroForm, HeroSBW } from '@pandora/entities';
+import { translations } from '@pandora/db';
 
-import BaseCommand from './abstract/BaseCommand';
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
 } from '../common-types';
-import * as translations from '../db/translations';
 import { getFieldKey } from '../util';
 import { heroes, extractResult } from '../cq-data';
+import config from '../config';
+
+import BaseCommand from './abstract/BaseCommand';
 
 const cmdArgs: CommandArguments = {
 	field: {
@@ -95,7 +97,7 @@ export class TranslateCommand extends BaseCommand {
 		const text = rest.filter(Boolean).join(' ');
 
 		try {
-			await translations.submit(key, text);
+			await translations.submit(key, text, config.gameVersion);
 
 			await message.channel.send('Translation request submitted!\nThanks for trying to make translations clearer');
 		} catch (error) {

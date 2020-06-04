@@ -1,11 +1,12 @@
 import { Message } from 'discord.js';
 
+import { aliases, Alias } from '@pandora/db';
+
 import { splitText } from '../util';
+import config from '../config';
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ContextType
 } from '../common-types';
-import * as aliases from '../db/aliases';
-import { Alias } from '../db/models';
 import { PaginationEmbed } from '../embeds';
 import { LocalizableMessageEmbed } from '../embeds/LocalizableMessageEmbed';
 
@@ -92,6 +93,8 @@ const actions: Record<string, Action> = {
 			if (!res) {
 				await message.channel.send('Alias does not exist for specified context');
 			} else {
+				config.aliases.set(res.context, res.alias, res.for);
+
 				await message.channel.send('Alias accepted!');
 			}
 		} catch (error) {
