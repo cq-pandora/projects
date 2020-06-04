@@ -5,10 +5,10 @@ import { db as logger } from '@pandora/logger';
 import { Translation } from './models';
 
 const GET_LATEST_VERSION_ACCEPTED_TRANSLATION = `
-SELECT t1.* FROM cqdata.translations t1
+SELECT t1.* FROM translations t1
 INNER JOIN (
     SELECT MAX(string_to_array(version, '.')::int[]) AS intv, key
-    FROM cqdata.translations WHERE status = true
+    FROM translations WHERE status = true
     GROUP BY key
 ) t2 ON t1.key = t2.key AND string_to_array(version, '.')::int[] = t2.intv
 WHERE status = true
