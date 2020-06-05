@@ -4,15 +4,16 @@ import { db as logger } from '@pandora/logger';
 
 import { Translation } from './models';
 
-const GET_LATEST_VERSION_ACCEPTED_TRANSLATION = `
-SELECT t1.* FROM translations t1
+function getLatestTranslationsQuery(schema: string): string {
+	return `SELECT t1.* FROM ${schema}.translations t1
 INNER JOIN (
     SELECT MAX(string_to_array(version, '.')::int[]) AS intv, key
-    FROM translations WHERE status = true
+    FROM ${schema}.translations WHERE status = true
     GROUP BY key
 ) t2 ON t1.key = t2.key AND string_to_array(version, '.')::int[] = t2.intv
 WHERE status = true
 `;
+}
 
 export async function submit(key: string, translation: string, version: string): Promise<void> {
 	try {
@@ -100,7 +101,12 @@ export async function get(key?: string | null): Promise<Translation[]> {
 			});
 		}
 
-		const rows = await getConnection().query(GET_LATEST_VERSION_ACCEPTED_TRANSLATION);
+		const connection = await getConnection();
+
+		// @ts-ignore
+		const { schema } = connection.options; // it will exist in used DB
+
+		const rows = await connection.query(getLatestTranslationsQuery(schema));
 
 		return rows as Translation[];
 	} catch (err) {
