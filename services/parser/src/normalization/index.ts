@@ -66,6 +66,7 @@ export default async function normalize(): Promise<void> {
 				`text1_${locale}_2`,
 				`text2_${locale}_0`,
 				`text2_${locale}_1`,
+				`text2_${locale}_2`,
 				`textdialogue1_${locale}_0`,
 				`textdialogue1_${locale}_1`,
 				`textdialogue1_${locale}_2`,
