@@ -1,5 +1,5 @@
 {
-	"name": "@cquest/bot",
+	"name": "@cquest/pandora",
 	"version": "3.3.1",
 	"description": "Crusaders Quest data bot for Discord",
 	"main": "./lib/index.js",
