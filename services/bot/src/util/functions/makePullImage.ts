@@ -1,5 +1,5 @@
 import Jimp from 'jimp';
-import { HeroForm } from '@pandora/entities';
+import { HeroForm } from '@cquest/entities';
 import { resolve as pathResolve } from 'path';
 
 import chunk from './chunk';

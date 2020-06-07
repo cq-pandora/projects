@@ -1,6 +1,6 @@
-import { Deserialize, DeserializeSingle, GenericConstructor } from '@pandora/entities';
-
-import { ContextType } from '../../common-types';
+import {
+	Deserialize, DeserializeSingle, GenericConstructor, ContextType
+} from '@cquest/entities';
 
 import { loadInfo } from '../utils';
 import { translationIndices } from '../translations';

@@ -43,7 +43,7 @@ yarn build
 #### First run
 - Create database 
 - Set required connection info in environment variables or `database.json` file 
-- Migrate database using `yarn workspaces @pandora/bot db:migrate`
+- Migrate database using `yarn workspaces @cquest/bot db:migrate`
 
 #### General start
 Running configuration is set through environment variables. Best to be used with pm2.
@@ -76,4 +76,4 @@ module.exports = {
 
 ```
 
-Or, you can set all required environment variables in any other way and run bot using `yarn workspaces @pandora/bot start`
+Or, you can set all required environment variables in any other way and run bot using `yarn workspaces @cquest/bot start`

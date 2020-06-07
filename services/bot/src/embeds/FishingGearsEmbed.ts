@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { FishingGear } from '@pandora/entities';
+import { FishingGear } from '@cquest/entities';
 
 import PaginationEmbed from './PaginationEmbed';
 import { LocalizableMessageEmbed, l } from './LocalizableMessageEmbed';

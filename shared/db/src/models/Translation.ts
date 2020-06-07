@@ -2,7 +2,7 @@ import {
 	BaseEntity, Entity, PrimaryGeneratedColumn, Column,
 } from 'typeorm';
 
-import { Translation as TranslationEntity } from '@pandora/entities';
+import { Translation as TranslationEntity } from '@cquest/entities';
 
 @Entity('translations')
 export default class Translation extends BaseEntity implements TranslationEntity {

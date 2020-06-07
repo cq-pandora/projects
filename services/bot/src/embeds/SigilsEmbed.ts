@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Sigil } from '@pandora/entities';
+import { Sigil } from '@cquest/entities';
 
 import PaginationEmbed from './PaginationEmbed';
 import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';

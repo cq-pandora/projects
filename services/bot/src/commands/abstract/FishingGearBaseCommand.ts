@@ -1,4 +1,4 @@
-import { FishingGearType } from '@pandora/entities';
+import { FishingGearType } from '@cquest/entities';
 
 import BaseCommand from './BaseCommand';
 

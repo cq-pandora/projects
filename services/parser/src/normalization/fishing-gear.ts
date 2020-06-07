@@ -1,4 +1,4 @@
-import { FishingGear, FishingGearType, FishHabitat } from '@pandora/entities';
+import { FishingGear, FishingGearType, FishHabitat } from '@cquest/entities';
 
 import { NormalizationResult } from './common-types';
 

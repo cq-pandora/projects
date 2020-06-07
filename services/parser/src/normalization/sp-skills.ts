@@ -1,4 +1,4 @@
-import { HeroClass, SpSkill, SpSkillForm } from '@pandora/entities';
+import { HeroClass, SpSkill, SpSkillForm } from '@cquest/entities';
 
 import { NormalizationResult } from './common-types';
 

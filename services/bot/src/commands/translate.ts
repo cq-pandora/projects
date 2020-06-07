@@ -1,5 +1,5 @@
-import { HeroForm, HeroSBW } from '@pandora/entities';
-import { translations } from '@pandora/db';
+import { HeroForm, HeroSBW } from '@cquest/entities';
+import { translations } from '@cquest/db';
 
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments

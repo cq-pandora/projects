@@ -1,4 +1,4 @@
-import { SpSkillForm } from '@pandora/entities';
+import { SpSkillForm } from '@cquest/entities';
 
 import BaseCommand from './abstract/BaseCommand';
 

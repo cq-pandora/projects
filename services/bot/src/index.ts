@@ -1,5 +1,5 @@
 import { Client } from 'discord.js';
-import logger from '@pandora/logger';
+import logger from '@cquest/logger';
 
 import preloadScripts from './preload';
 

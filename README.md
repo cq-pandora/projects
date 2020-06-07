@@ -13,4 +13,4 @@
 	</a>
 </div>
 
-#### [@pandora/entities](https://github.com/cq-pandora/projects/tree/master/shared/entities) - common entities used to structurize parsed information. Includes tools for serializing and deserializing
+#### [@cquest/entities](https://github.com/cq-pandora/projects/tree/master/shared/entities) - common entities used to structurize parsed information. Includes tools for serializing and deserializing

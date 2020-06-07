@@ -3,7 +3,7 @@ import {
 } from 'discord.js';
 import { find as findEmoji } from 'node-emoji';
 
-import logger from '@pandora/logger';
+import logger from '@cquest/logger';
 import { translate, locales as globalLocales } from '../cq-data';
 
 import { LocalizableMessageEmbed } from './LocalizableMessageEmbed';

@@ -1,4 +1,4 @@
-import { Interaction } from '@pandora/entities';
+import { Interaction } from '@cquest/entities';
 import { MessageAttachment } from 'discord.js';
 
 import BaseCommand from './abstract/BaseCommand';

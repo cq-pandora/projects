@@ -1,6 +1,6 @@
 import {
 	Berry, BerryRarity, HeroStats, BerryCategory
-} from '@pandora/entities';
+} from '@cquest/entities';
 
 import { NormalizationResult } from './common-types';
 

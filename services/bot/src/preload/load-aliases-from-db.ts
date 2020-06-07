@@ -1,5 +1,5 @@
-import { aliases } from '@pandora/db';
-import logger from '@pandora/logger';
+import { aliases } from '@cquest/db';
+import logger from '@cquest/logger';
 
 import { ContextType, IPreloadScript } from '../common-types';
 

@@ -1,7 +1,7 @@
 import { FindConditions, IsNull } from 'typeorm';
 
-import { db as logger } from '@pandora/logger';
-import { ContextType } from '@pandora/entities';
+import { db as logger } from '@cquest/logger';
+import { ContextType } from '@cquest/entities';
 
 import { Alias } from './models';
 

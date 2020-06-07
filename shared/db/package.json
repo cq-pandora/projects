@@ -1,5 +1,5 @@
 {
-  "name": "@pandora/db",
+  "name": "@cquest/db",
   "version": "1.0.4",
   "description": "Database entities and services",
   "main": "./lib/index.js",
@@ -34,8 +34,8 @@
 	}
   ],
   "dependencies": {
-	"@pandora/entities": "^1.1.0",
-	"@pandora/logger": "^1.0.0",
+	"@cquest/entities": "^1.1.0",
+	"@cquest/logger": "^1.0.0",
 	"pg": "^8.2.1",
 	"ts-node": "^8.10.2",
 	"typeorm": "^0.2.25",

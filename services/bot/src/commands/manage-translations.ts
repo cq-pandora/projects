@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 
-import { translations, Translation } from '@pandora/db';
-import { HeroSBW, HeroForm } from '@pandora/entities';
+import { translations, Translation } from '@cquest/db';
+import { HeroSBW, HeroForm } from '@cquest/entities';
 
 import { LocalizableMessageEmbed } from '../embeds/LocalizableMessageEmbed';
 import {

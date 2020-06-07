@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Hero } from '@pandora/entities';
+import { Hero } from '@cquest/entities';
 
 export default interface IHeroEmbedConstructorOptions {
 	initialMessage: Message;

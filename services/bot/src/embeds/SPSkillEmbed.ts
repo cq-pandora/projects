@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { SpSkill, HeroClassColors } from '@pandora/entities';
+import { SpSkill, HeroClassColors } from '@cquest/entities';
 
 import { imageUrl } from '../util/functions';
 

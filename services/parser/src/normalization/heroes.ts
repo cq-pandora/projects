@@ -1,6 +1,6 @@
 import {
 	HeroBerriesStats, HeroSBW, WeaponType, Hero, HeroClass, HeroType, HeroGender, HeroForm, HeroStats, HeroSkin
-} from '@pandora/entities';
+} from '@cquest/entities';
 
 import { NormalizationResult } from './common-types';
 

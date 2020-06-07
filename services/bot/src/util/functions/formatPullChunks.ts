@@ -1,4 +1,4 @@
-import { HeroForm } from '@pandora/entities';
+import { HeroForm } from '@cquest/entities';
 
 import chunk from './chunk';
 import { translate } from '../../cq-data';

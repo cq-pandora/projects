@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Goddess } from '@pandora/entities';
+import { Goddess } from '@cquest/entities';
 
 import { imageUrl, arraify } from '../util/functions';
 

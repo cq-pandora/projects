@@ -2,11 +2,11 @@ import {
 	Client, Message, EmbedField, MessageEmbedOptions
 } from 'discord.js';
 
-import { CommandResult } from '@pandora/entities';
+import { CommandResult } from '@cquest/entities';
 
 export {
 	CommandResult, CommandResultCode, PermissionTarget, PermissionMergeResult, ContextType, ContextValues
-} from '@pandora/entities';
+} from '@cquest/entities';
 
 export type CommandPayload = {
 	client: Client;

@@ -1,4 +1,4 @@
-import { Faction } from '@pandora/entities';
+import { Faction } from '@cquest/entities';
 
 import { NormalizationResult } from './common-types';
 

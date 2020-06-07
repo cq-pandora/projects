@@ -1,4 +1,4 @@
-import { IStatsHolder, Stats } from '@pandora/entities';
+import { IStatsHolder, Stats } from '@cquest/entities';
 
 export default function sumStats(stat1: IStatsHolder, stat2: IStatsHolder): IStatsHolder {
 	const stats = {} as IStatsHolder;

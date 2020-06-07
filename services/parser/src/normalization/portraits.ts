@@ -1,6 +1,6 @@
 import {
 	Portrait, Portraits
-} from '@pandora/entities';
+} from '@cquest/entities';
 
 import { NormalizationResult } from './common-types';
 

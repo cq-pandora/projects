@@ -1,7 +1,7 @@
 import {
 	Deserialize, DeserializeSingle, Berry, Boss, Bread, Champion, Faction, Fish, FishingGear, Goddess,
 	Hero, Inheritance, Interaction, Portrait, Sigil, SpSkill,
-} from '@pandora/entities';
+} from '@cquest/entities';
 
 import { loadInfo } from '../utils';
 

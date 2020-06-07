@@ -1,4 +1,4 @@
-import { HeroClassColors } from '@pandora/entities';
+import { HeroClassColors } from '@cquest/entities';
 
 import { capitalizeFirstLetter, imageUrl } from '../../util/functions';
 

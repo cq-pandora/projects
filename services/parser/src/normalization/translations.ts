@@ -1,4 +1,4 @@
-import { Translations, Translation } from '@pandora/entities';
+import { Translations, Translation } from '@cquest/entities';
 
 import { readJSON, gameVersion } from '../util';
 

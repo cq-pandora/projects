@@ -1,9 +1,8 @@
 import Fuse from 'fuse.js';
 import uniq from 'array-unique';
 
-import { TranslationIndex } from '@pandora/entities';
+import { TranslationIndex, ContextType } from '@cquest/entities';
 
-import { ContextType } from '../../common-types';
 import config from '../../config';
 
 import {

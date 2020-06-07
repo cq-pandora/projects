@@ -1,8 +1,8 @@
 import { Client, Message, TextChannel } from 'discord.js';
 
-import { CommandResultCode, CommandResult } from '@pandora/entities';
-import { stats } from '@pandora/db';
-import { commands as logger } from '@pandora/logger';
+import { CommandResultCode, CommandResult } from '@cquest/entities';
+import { stats } from '@cquest/db';
+import { commands as logger } from '@cquest/logger';
 
 import { getPermittedCommands, isErrorIgnored } from '../util';
 import config from '../config';

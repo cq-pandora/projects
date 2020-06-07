@@ -1,5 +1,5 @@
-import { db as logger } from '@pandora/logger';
-import { init } from '@pandora/db';
+import { db as logger } from '@cquest/logger';
+import { init } from '@cquest/db';
 
 import { IPreloadScript } from '../common-types';
 import config from '../config';

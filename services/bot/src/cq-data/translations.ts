@@ -1,6 +1,6 @@
 import {
 	DeserializeSingle, TranslationIndices, Translations, TranslationsMeta
-} from '@pandora/entities';
+} from '@cquest/entities';
 
 import { loadInfo } from './utils';
 

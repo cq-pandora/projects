@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 import {
 	Hero, HeroClassColors, InheritanceLevel, HeroForm
-} from '@pandora/entities';
+} from '@cquest/entities';
 
 import {
 	statsToString, imageUrl, sumStats, arraify

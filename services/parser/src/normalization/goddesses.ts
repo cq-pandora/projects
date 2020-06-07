@@ -1,4 +1,4 @@
-import { Goddess } from '@pandora/entities';
+import { Goddess } from '@cquest/entities';
 
 import { NormalizationResult } from './common-types';
 

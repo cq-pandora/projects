@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Faction } from '@pandora/entities';
+import { Faction } from '@cquest/entities';
 
 import { imageUrl, arraify } from '../util/functions';
 import { heroes } from '../cq-data';

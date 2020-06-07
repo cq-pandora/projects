@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Fish } from '@pandora/entities';
+import { Fish } from '@cquest/entities';
 
 import {
 	capitalizeFirstLetter, imageUrl, toClearNumber, arraify

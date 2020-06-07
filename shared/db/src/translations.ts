@@ -1,6 +1,6 @@
 import { FindConditions, getConnection, IsNull } from 'typeorm';
 
-import { db as logger } from '@pandora/logger';
+import { db as logger } from '@cquest/logger';
 
 import { Translation } from './models';
 

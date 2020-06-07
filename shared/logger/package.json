@@ -1,5 +1,5 @@
 {
- "name": "@pandora/logger",
+ "name": "@cquest/logger",
  "version": "1.0.0",
  "description": "Loggers factory and declarations",
  "main": "./lib/index.js",

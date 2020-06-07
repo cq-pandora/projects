@@ -1,4 +1,4 @@
-import { InheritanceLevel } from '@pandora/entities';
+import { InheritanceLevel } from '@cquest/entities';
 
 import BaseCommand from './abstract/BaseCommand';
 

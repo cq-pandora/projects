@@ -1,6 +1,6 @@
 import { Message } from 'discord.js';
 
-import { GenericConstructor } from '@pandora/entities';
+import { GenericConstructor } from '@cquest/entities';
 
 import { random } from '../util';
 

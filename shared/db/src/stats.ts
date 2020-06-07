@@ -1,5 +1,5 @@
-import { db as logger } from '@pandora/logger';
-import { CommandResult } from '@pandora/entities';
+import { db as logger } from '@cquest/logger';
+import { CommandResult } from '@cquest/entities';
 
 import { Stats } from './models';
 

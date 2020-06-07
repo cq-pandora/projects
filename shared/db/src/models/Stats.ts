@@ -4,7 +4,7 @@ import {
 
 import {
 	Snowflake, CommandResult, MessageTargetChannel, CommandResultCode
-} from '@pandora/entities';
+} from '@cquest/entities';
 
 @Entity('stats')
 export default class Stats extends BaseEntity implements CommandResult {

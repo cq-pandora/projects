@@ -2,7 +2,7 @@ import {
 	BaseEntity, Entity, PrimaryColumn, Column, BeforeUpdate, AfterLoad
 } from 'typeorm';
 
-import { Snowflake, PermissionTarget, PermissionMergeResult } from '@pandora/entities';
+import { Snowflake, PermissionTarget, PermissionMergeResult } from '@cquest/entities';
 
 @Entity('color_lists')
 export default class Permission extends BaseEntity implements PermissionMergeResult {

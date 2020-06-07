@@ -7,7 +7,7 @@ import { promisify } from 'util';
 import {
 	Hero, Berry, Champion, SpSkill, Boss, Bread, Sigil, Goddess, Faction, Fish, FishingGear, TranslationIndexSection,
 	TranslationIndices, TranslationIndex, GenericConstructor, Serialize, Translations, Interaction, TranslationsMeta
-} from '@pandora/entities';
+} from '@cquest/entities';
 
 import { resolve as pathResolve } from 'path';
 

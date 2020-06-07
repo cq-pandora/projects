@@ -1,4 +1,4 @@
-import { Stats, HeroStats } from '@pandora/entities';
+import { Stats, HeroStats } from '@cquest/entities';
 
 export type StatsKey = Stats | HeroStats;
 

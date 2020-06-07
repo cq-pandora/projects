@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Champion } from '@pandora/entities';
+import { Champion } from '@cquest/entities';
 
 import { imageUrl } from '../util/functions';
 

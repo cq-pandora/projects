@@ -1,6 +1,6 @@
 import {
 	Sigil, SigilStats, SigilRarity, SigilPair, IStatsHolder
-} from '@pandora/entities';
+} from '@cquest/entities';
 
 import { NormalizationResult } from './common-types';
 import { SigilsSetsRaw, SigilsRaw, SigilsStatsRaw } from './raw-types/sigils';

@@ -1,4 +1,4 @@
-import { ChampionForm } from '@pandora/entities';
+import { ChampionForm } from '@cquest/entities';
 
 import BaseCommand from './abstract/BaseCommand';
 

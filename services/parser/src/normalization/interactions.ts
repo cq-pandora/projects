@@ -1,4 +1,4 @@
-import { Interaction, InteractionActor } from '@pandora/entities';
+import { Interaction, InteractionActor } from '@cquest/entities';
 
 import { InteractionsInput } from './input';
 import { NormalizationResult } from './common-types';

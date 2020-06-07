@@ -2,7 +2,7 @@ import {
 	BaseEntity, Entity, PrimaryColumn, Column
 } from 'typeorm';
 
-import { ContextType } from '@pandora/entities';
+import { ContextType } from '@cquest/entities';
 
 @Entity('aliases')
 class Alias extends BaseEntity {

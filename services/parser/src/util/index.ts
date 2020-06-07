@@ -1,4 +1,4 @@
-import { IStatsHolder, Stats } from '@pandora/entities';
+import { IStatsHolder, Stats } from '@cquest/entities';
 import { promisify } from 'util';
 import { readFile } from 'fs';
 import { resolve as pathResolve } from 'path';

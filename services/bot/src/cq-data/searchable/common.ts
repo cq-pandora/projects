@@ -1,7 +1,7 @@
 import Fuse from 'fuse.js';
 import uniq from 'array-unique';
 
-import { TranslationIndex, TranslationIndexSection, ContextType } from '@pandora/entities';
+import { TranslationIndex, TranslationIndexSection, ContextType } from '@cquest/entities';
 
 import { Locale } from '../translations';
 

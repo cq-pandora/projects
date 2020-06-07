@@ -1,4 +1,4 @@
-import { aliases } from '@pandora/db';
+import { aliases } from '@cquest/db';
 
 import BaseCommand from './abstract/BaseCommand';
 import {

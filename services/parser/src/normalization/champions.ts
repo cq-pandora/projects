@@ -1,6 +1,6 @@
 import {
 	Champion, ChampionForm, ChampionSkill, ChampionType
-} from '@pandora/entities';
+} from '@cquest/entities';
 
 import { NormalizationResult } from './common-types';
 

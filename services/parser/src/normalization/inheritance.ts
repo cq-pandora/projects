@@ -1,6 +1,6 @@
 import {
 	Inheritance, HeroClass, isInheritanceLevel, InheritanceStats
-} from '@pandora/entities';
+} from '@cquest/entities';
 
 import { NormalizationResult } from './common-types';
 

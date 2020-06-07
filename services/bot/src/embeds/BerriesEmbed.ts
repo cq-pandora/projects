@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Berry } from '@pandora/entities';
+import { Berry } from '@cquest/entities';
 
 import config from '../config';
 import {

@@ -1,6 +1,6 @@
 import { Message } from 'discord.js';
 
-import { aliases, Alias } from '@pandora/db';
+import { aliases, Alias } from '@cquest/db';
 
 import { splitText } from '../util';
 import config from '../config';

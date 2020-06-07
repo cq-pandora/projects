@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Boss } from '@pandora/entities';
+import { Boss } from '@cquest/entities';
 
 import { statsToString, imageUrl, arraify } from '../util/functions';
 

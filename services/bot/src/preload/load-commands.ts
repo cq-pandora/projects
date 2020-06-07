@@ -1,4 +1,4 @@
-import logger from '@pandora/logger';
+import logger from '@cquest/logger';
 
 import { IPreloadScript } from '../common-types';
 import commands from '../commands';

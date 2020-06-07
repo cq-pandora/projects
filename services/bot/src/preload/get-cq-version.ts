@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import logger from '@pandora/logger';
+import logger from '@cquest/logger';
 import config from '../config';
 import { IPreloadScript } from '../common-types';
 

@@ -1,4 +1,4 @@
-import { HeroForm, HeroSBW } from '@pandora/entities';
+import { HeroForm, HeroSBW } from '@cquest/entities';
 
 export default function getKey(field: string, form: HeroForm | undefined, sbw: HeroSBW | undefined): string | null {
 	switch (field) {

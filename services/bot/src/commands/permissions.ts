@@ -1,4 +1,4 @@
-import { permissions } from '@pandora/db';
+import { permissions } from '@cquest/db';
 
 import { extractMentions, parseQuery } from '../util';
 import {

@@ -1,5 +1,5 @@
 import { MessageAttachment, MessageEmbed } from 'discord.js';
-import { HeroForm } from '@pandora/entities';
+import { HeroForm } from '@cquest/entities';
 
 import {
 	random, makeInRange, makePullImage, pickGrade, formatPullChunks, chancesRoll,

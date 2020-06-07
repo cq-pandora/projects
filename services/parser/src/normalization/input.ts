@@ -1,4 +1,4 @@
-import { Translations } from '@pandora/entities';
+import { Translations } from '@cquest/entities';
 
 export type BerriesNormalizationInput = {
 	berriesRawPath: string;

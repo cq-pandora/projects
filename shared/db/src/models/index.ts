@@ -1,6 +1,6 @@
 import { createConnection, Logger as ORMLogger } from 'typeorm';
 
-import { db } from '@pandora/logger';
+import { db } from '@cquest/logger';
 
 import Alias from './Alias';
 import Permission from './Permission';

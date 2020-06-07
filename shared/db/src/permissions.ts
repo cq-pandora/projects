@@ -1,7 +1,7 @@
 import { getConnection } from 'typeorm';
 
-import { db as logger } from '@pandora/logger';
-import { Snowflake, PermissionMergeResult } from '@pandora/entities';
+import { db as logger } from '@cquest/logger';
+import { Snowflake, PermissionMergeResult } from '@cquest/entities';
 
 import { Permission } from './models';
 
