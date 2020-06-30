@@ -21,8 +21,10 @@
         "skills": ["spritecollection_allskillcollection"],
 		"common": [
 		  "buildresource_commoncollection",
-		  "spritecollection_commoncollection_opt"
-		]
+		  "spritecollection_commoncollection_opt",
+          "spritecollection_allmaterialcollection"
+		],
+        "stickers": ["spritecollection_chatstickercollection"]
     },
 
     "1": {
