@@ -81,6 +81,10 @@ export class LocalizableMessageEmbed {
 		return this.addField('\u200B', '\u200B', inline);
 	}
 
+	public addNoNameField(value: StringResolvable, inline = false): this {
+		return this.addField('\u200B', value, inline);
+	}
+
 	public addField(name: StringResolvable, value: StringResolvable, inline = false): this {
 		this.fields.push({ name, value, inline });
 

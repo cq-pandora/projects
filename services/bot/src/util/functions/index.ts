@@ -13,7 +13,7 @@ export { default as splitText } from './splitText';
 export { default as statsToString } from './statsToString';
 export { default as sumStats } from './sumStats';
 export { default as toClearNumber } from './toClearNumber';
-export { default as translateStat } from './translateStat';
+export * from './stat-utils';
 export { default as makePullImage } from './makePullImage';
 export { default as localImagePath } from './localImagePath';
 export { default as createImage } from './createImage';

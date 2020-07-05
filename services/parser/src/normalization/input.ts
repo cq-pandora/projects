@@ -87,9 +87,15 @@ export type InteractionsInput = {
 	charactersGeneralInfoRawPath: string;
 };
 
+export type ScarecrowsNormalizationInput = {
+	charactersGeneralInfoRawPath: string;
+	charactersStatsRawPath: string;
+	dummyRawPath: string;
+};
+
 export type UniversalNormalizationInput =
 	BerriesNormalizationInput & BossesNormalizationInput & BreadsNormalizationInput & ChampionsNormalizationInput
 	& FactionsNormalizationInput & FishesNormalizationInput & FishingGearNormalizationInput
 	& GoddessesNormalizationInput & HeroesNormalizationInput & InheritanceNormalizationInput
 	& PortraitsNormalizationInput & SigilsNormalizationInput & SpSkillNormalizationInput
-	& InteractionsInput;
+	& InteractionsInput & ScarecrowsNormalizationInput;

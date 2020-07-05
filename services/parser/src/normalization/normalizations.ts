@@ -13,3 +13,4 @@ export { normalize as normalizeFish } from './fishes';
 export { normalize as normalizeFishingGear } from './fishing-gear';
 export { normalize as normalizePortraits } from './portraits';
 export { normalize as normalizeInteractions } from './interactions';
+export { normalize as normalizeScarecrows } from './scarecrows';

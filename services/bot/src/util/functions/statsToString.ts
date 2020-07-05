@@ -1,5 +1,4 @@
-import translateStat, { StatsKey } from './translateStat';
-import toClearNumber from './toClearNumber';
+import { StatsKey, formatStat } from './stat-utils';
 
 export default (obj: Partial<Record<StatsKey, number>>, force = false): string => (
 	Object.entries(obj)
@@ -8,12 +7,9 @@ export default (obj: Partial<Record<StatsKey, number>>, force = false): string =
 		))
 		.map((kv) => {
 			const [key, value] = kv as [StatsKey, number];
-			const name = translateStat(key);
-			const statValue = value < 10
-				? `${Number((value * 100).toFixed(2))}%`
-				: toClearNumber(value.toFixed(2));
 
-			return `**${name}**: ${statValue}`;
+			return formatStat(key, value);
 		})
+		.filter(v => Boolean(v))
 		.join('\n')
 );

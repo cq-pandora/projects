@@ -18,3 +18,4 @@ export * from './Deserializer';
 export * from './Serializer';
 export * from './Interactions';
 export * from './pandora-related';
+export * from './Scarecrow';

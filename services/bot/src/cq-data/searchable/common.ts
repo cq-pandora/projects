@@ -92,6 +92,7 @@ const contextToSectionDictionary = {
 	fishes: 'fishes',
 	'fish-gear': 'fishing_gear',
 	portraits: 'portraits',
+	scarecrows: 'scarecrows',
 } as Record<ContextType, TranslationIndexSection>;
 
 export function contextToSection(context: ContextType): TranslationIndexSection {

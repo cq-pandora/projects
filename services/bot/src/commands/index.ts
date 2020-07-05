@@ -35,11 +35,12 @@ import spSkill from './sp-skill';
 import translate from './translate';
 import waifu from './waifu';
 import interactions from './interactions';
+import scarecrows from './scarecrows';
 
 const commands: ICommand[] = [
 	about, alias, bait, berry, block, boss, champion, eval, faction, fish, float, goddess, help, hero, inherit,
 	lenny, links, manageAliases, manageTranslations, math, permissions, pick, ping, portrait, print, pull, rod,
-	sbwBlock, sbw, sigil, skin, spSkill, translate, waifu, interactions
+	sbwBlock, sbw, sigil, skin, spSkill, translate, waifu, interactions, scarecrows
 ];
 
 export default commands;

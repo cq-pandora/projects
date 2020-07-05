@@ -9,4 +9,5 @@ export { default as SPSkillEmbed } from './SPSkillEmbed';
 export { default as FishesEmbed } from './FishesEmbed';
 export { default as SigilsEmbed } from './SigilsEmbed';
 export { default as FactionsEmbed } from './FactionsEmbed';
+export { default as ScarecrowsEmbed } from './ScarecrowsEmbed';
 export * from './hero';

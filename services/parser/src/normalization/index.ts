@@ -6,7 +6,8 @@ import { promisify } from 'util';
 
 import {
 	Hero, Berry, Champion, SpSkill, Boss, Bread, Sigil, Goddess, Faction, Fish, FishingGear, TranslationIndexSection,
-	TranslationIndices, TranslationIndex, GenericConstructor, Serialize, Translations, Interaction, TranslationsMeta
+	TranslationIndices, TranslationIndex, GenericConstructor, Serialize, Translations, Interaction, TranslationsMeta,
+	Scarecrow
 } from '@cquest/entities';
 
 import { resolve as pathResolve } from 'path';
@@ -43,6 +44,7 @@ const toNormalize = {
 	portraits: ['Portraits', normalizations.normalizePortraits],
 	inheritance: ['Inheritance', normalizations.normalizeInheritance],
 	interactions: [Interaction, normalizations.normalizeInteractions],
+	scarecrows: [Scarecrow, normalizations.normalizeScarecrows],
 } as Record<TranslationIndexSection, NormalizationEntry<object>>;
 
 const logger = makeLogger('normalize');
@@ -118,6 +120,7 @@ export default async function normalize(): Promise<void> {
 		spSkillsRawPath: absolute('spskill'),
 		weaponsRawPath: absolute('weapon'),
 		interactionsRawPath: absolute('hero_easteregg'),
+		dummyRawPath: absolute('dummy'),
 		localizations,
 	};
 
