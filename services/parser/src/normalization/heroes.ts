@@ -72,6 +72,12 @@ function costumeStatMapping(stats: CostumeStat): HeroStats {
 	}
 }
 
+function buildHeroTree(start: CharacterVisual, targetsMap: Record<string, CharacterVisual>): CharacterVisual[] {
+	if (targetsMap[start.id] === undefined) return [start];
+
+	return [...buildHeroTree(targetsMap[start.id], targetsMap), start];
+}
+
 function growBreadStats(base: number, growth: number, grade: number): number {
 	return (1 + (grade - 1) / 10) * growStats(base, growth, grade * 10);
 }
@@ -246,21 +252,33 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 	).reduce((res, [classid, classidHeroes]) => {
 		res[classid] = Object.entries(groupBy(classidHeroes, 'rarity')).reduce(
 			(rarityRes, [rarity, rarityHeroes]) => {
-				if ('ADVENTURER'.toLowerCase() === (rarity || '').toLowerCase()) {
-					rarityRes[rarity] = rarityHeroes.map(hero => heroToForms([hero])).filter(hero => !!hero);
+				const groupedHeroes = groupBy(rarityHeroes, 'subnumber');
+				const groupedHeroesTrees = {} as Record<string, CharacterVisual[][]>; // lol
 
-					return rarityRes;
+				for (const [k, v] of Object.entries(groupedHeroes)) {
+					const targetMap = v.reduce((r, c) => {
+						if (c.upgradetargethero == null) return r;
+
+						r[c.upgradetargethero] = c;
+
+						return r;
+					}, {} as Record<string, CharacterVisual>);
+
+					const highestGrades = v.filter(c => c.upgradetargethero === null);
+
+					groupedHeroesTrees[k] = highestGrades.map(c => buildHeroTree(c, targetMap));
 				}
 
-				const groupedHeroes = groupBy(rarityHeroes, 'subnumber');
 				const r = [];
 
-				for (const groupKey of Object.getOwnPropertyNames(groupedHeroes)) {
-					const hero = heroToForms(groupedHeroes[groupKey]);
+				for (const groupKey of Object.getOwnPropertyNames(groupedHeroesTrees)) {
+					for (const group of groupedHeroesTrees[groupKey]) {
+						const hero = heroToForms(group);
 
-					if (!hero) continue;
+						if (!hero) continue;
 
-					r.push(hero);
+						r.push(hero);
+					}
 				}
 
 				rarityRes[rarity] = r;
