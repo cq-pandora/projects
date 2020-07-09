@@ -40,9 +40,8 @@ yarn build
 
 ### Running
 
-#### First run
+#### Before first run
 - Create database 
-- Set required connection info in environment variables or `database.json` file 
 - Migrate database using `yarn workspaces @cquest/bot db:migrate`
 
 #### General start
