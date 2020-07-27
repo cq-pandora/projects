@@ -38,7 +38,7 @@ type SplitOptions = {
 	scale?: number;
 };
 
-export default async function (options: SplitOptions): Promise<void> {
+export default async function splitUnity(options: SplitOptions): Promise<void> {
 	const {
 		logger, patterns, filesDir, outputDir, scale
 	} = options;

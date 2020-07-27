@@ -20,7 +20,6 @@ import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
 } from '../common-types';
 
-
 class Picker<T> {
 	private readonly collection: T[];
 	private readonly embed: GenericConstructor<PaginationEmbed>;
@@ -31,7 +30,6 @@ class Picker<T> {
 	}
 
 	pick(message: Message): PaginationEmbed {
-		// @ts-ignore
 		// eslint-disable-next-line new-cap
 		return new this.embed(message, this.collection[random(0, this.collection.length - 1)]);
 	}

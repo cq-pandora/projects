@@ -8,7 +8,6 @@ const {
 	miniContract, miniPromotable, miniBrown, miniEvent, miniSupply
 } = config.emojis;
 
-// @ts-ignore
 export default (pull: HeroForm[], canBeGuaranteed = true): string[][] => chunk(
 	pull.map(
 		(form, idx) => {

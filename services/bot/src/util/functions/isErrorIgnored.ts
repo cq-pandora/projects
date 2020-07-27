@@ -10,8 +10,7 @@ const IGNORE_RAW = [
 	'Two factor is required for this operation',
 ];
 
-
-export default function isErrorIgnored(error: any): boolean {
+export default function isErrorIgnored(error: unknown): boolean {
 	return (
 		error instanceof DiscordAPIError && (
 			IGNORED_ERROR_CODES.includes(error.code)

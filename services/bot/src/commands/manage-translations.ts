@@ -119,7 +119,6 @@ const actions: Record<string, Action> = {
 
 actions['list-all'] = actions.list;
 
-
 const cmdArgs: CommandArguments = {
 	action: {
 		required: true,

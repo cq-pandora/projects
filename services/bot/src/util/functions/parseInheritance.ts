@@ -2,11 +2,12 @@ import { InheritanceLevel } from '@cquest/entities';
 
 import range from './range';
 
+const inhLevel = range(1, 30);
+
 export default (args: readonly string[]): InheritanceLevel | undefined => {
-	const grade = args.find(i => range(1, 30).includes(parseInt(i, 10)));
+	const grade = args.map(p => parseInt(p, 10)).find(i => inhLevel.includes(i));
 
 	if (grade === undefined) return undefined;
 
-	// @ts-ignore
-	return parseInt(grade, 10) || undefined;
+	return grade as InheritanceLevel;
 };

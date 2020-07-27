@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { sync as mkdirp } from 'mkdirp';
 
 import { writeFile } from 'fs';

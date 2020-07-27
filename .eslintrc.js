@@ -12,6 +12,7 @@ module.exports = {
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
 		project: './tsconfig.json',
+		sourceType: 'module',
 		tsconfigRootDir: __dirname
 	},
 	plugins: [
@@ -19,7 +20,7 @@ module.exports = {
 		'@typescript-eslint'
 	],
 	rules: {
-		'@typescript-eslint/interface-name-prefix': ['error', 'always'],
+		// '@typescript-eslint/interface-name-prefix': ['error', 'always'],
 		'@typescript-eslint/no-non-null-assertion': 'off',
 		'@typescript-eslint/indent': ['error', 'tab'],
 		'@typescript-eslint/ban-ts-ignore': 'off',
@@ -61,7 +62,26 @@ module.exports = {
 		'@typescript-eslint/no-explicit-any': 'off',
 		'no-bitwise': 'off',
 		'no-case-declarations': 'off',
+		'@typescript-eslint/ban-types': ['error', {
+			types: {
+				'{}': false,
+				object: false,
+				Function: false
+			},
+			extendDefaults: true
+		}],
+		'@typescript-eslint/ban-ts-comment': ['error', {
+			'ts-ignore': true,
+			'ts-expect-error': 'allow-with-description'
+		}],
 	},
+	// settings: {
+	// 	'import/resolver': {
+	// 		typescript: {
+	// 			directory: '.'
+	// 		},
+	// 	}
+	// },
 	overrides: [
 		{
 			files: [

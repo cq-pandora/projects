@@ -32,7 +32,6 @@ export class EvalCommand extends BaseCommand {
 
 		input = beautify(input, {
 			// This is how library works
-			// eslint-disable-next-line @typescript-eslint/camelcase
 			indent_size: 2
 		});
 

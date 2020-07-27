@@ -9,11 +9,8 @@ export type StatsKeyTranslations = {
 };
 
 const statsInfoMapping: StatsKeyTranslations = {
-	// eslint-disable-next-line @typescript-eslint/camelcase
 	atk_power: ['Attack power', false],
-	// eslint-disable-next-line @typescript-eslint/camelcase
 	crit_chance: ['Crit chance', true],
-	// eslint-disable-next-line @typescript-eslint/camelcase
 	crit_dmg: ['Crit damage', true],
 	great: ['Great', true],
 	atkPower: ['Attack power', false],

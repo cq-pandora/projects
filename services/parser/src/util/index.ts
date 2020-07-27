@@ -34,14 +34,14 @@ export async function gameVersion(): Promise<string> {
 	return gameVersionCached as string;
 }
 
-type Grouped<T> = Record<string, T[]>;
+type Grouped<T> = Record<keyof T, T[]>;
 
 export function groupBy<T>(arr: T[], field: keyof T): Grouped<T> {
 	return arr.reduce(
-		(r, v) => {
+		(r: Grouped<T>, v: T) => {
 			const k = v[field];
 
-			// @ts-ignore
+			// @ts-expect-error Shorthand
 			(r[k] = r[k] || []).push(v);
 
 			return r;

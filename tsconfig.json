@@ -9,5 +9,9 @@
 				"./services/*/src"
 			]
 		}
-	}
+	},
+	"exclude": [
+		"./shared/*/lib",
+		"./services/*/lib"
+	]
 }

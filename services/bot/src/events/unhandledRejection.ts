@@ -11,7 +11,7 @@ const IGNORE_RAW = [
 	'Two factor is required for this operation',
 ];
 
-export default (error: any): void => {
+export default (error: unknown): void => {
 	// Ignore discord api errors related to embed
 	if (error instanceof DiscordAPIError && (ERROR_CODES.includes(error.code) || IGNORE_RAW.includes(error.message))) {
 		return;

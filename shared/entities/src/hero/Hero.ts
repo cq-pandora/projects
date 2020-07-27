@@ -67,8 +67,8 @@ export class HeroForm implements IStatsHolder {
 	@autoserializeAs('block_description') public readonly blockDescription!: string;
 	@autoserializeAs('passive_description') public readonly passiveDescription!: string;
 	@autoserializeAs(HeroBerriesStats, 'max_berries') public readonly maxBerries!: HeroBerriesStats;
-	// @ts-ignore
-	public hero: Hero = null;
+
+	public hero!: Hero;
 
 	constructor(options: IHeroFormOptions) {
 		if (!options) return; // only for tests

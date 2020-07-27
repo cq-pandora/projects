@@ -103,8 +103,8 @@ export async function get(key?: string | null): Promise<Translation[]> {
 
 		const connection = await getConnection();
 
-		// @ts-ignore
-		const { schema } = connection.options; // it will exist in used DB
+		// @ts-expect-error Will exist in used DB
+		const { schema } = connection.options;
 
 		const rows = await connection.query(getLatestTranslationsQuery(schema));
 
