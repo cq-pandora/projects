@@ -1,11 +1,11 @@
 import { CommandResultCode, Scarecrow } from '@cquest/entities';
+import {
+	scarecrows, extractResult, locales as allLocales, Locale
+} from '@cquest/data-provider';
 
 import {
 	CommandArguments, CommandCategory, CommandPayload, CommandResult
 } from '../common-types';
-import {
-	scarecrows, extractResult, locales as allLocales, Locale
-} from '../cq-data';
 import { ScarecrowsEmbed } from '../embeds';
 
 import BaseCommand from './abstract/BaseCommand';

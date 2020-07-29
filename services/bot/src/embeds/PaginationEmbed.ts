@@ -4,7 +4,7 @@ import {
 import { find as findEmoji } from 'node-emoji';
 
 import logger from '@cquest/logger';
-import { translate, locales as globalLocales } from '../cq-data';
+import { translate, locales as globalLocales } from '@cquest/data-provider';
 
 import { LocalizableMessageEmbed } from './LocalizableMessageEmbed';
 

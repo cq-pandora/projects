@@ -1,8 +1,9 @@
 import { Message } from 'discord.js';
+
 import { Faction } from '@cquest/entities';
+import { heroes } from '@cquest/data-provider';
 
 import { imageUrl, arraify } from '../util/functions';
-import { heroes } from '../cq-data';
 
 import PaginationEmbed from './PaginationEmbed';
 import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';

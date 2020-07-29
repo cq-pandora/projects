@@ -1,3 +1,5 @@
+import { sigils, extractResult } from '@cquest/data-provider';
+
 import BaseCommand from './abstract/BaseCommand';
 
 import {
@@ -5,7 +7,6 @@ import {
 } from '../common-types';
 import { SigilsEmbed } from '../embeds';
 import { parseQuery } from '../util';
-import { sigils, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {

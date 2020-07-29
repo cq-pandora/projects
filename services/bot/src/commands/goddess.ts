@@ -1,10 +1,11 @@
+import { goddesses, extractResult } from '@cquest/data-provider';
+
 import BaseCommand from './abstract/BaseCommand';
 
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
 } from '../common-types';
 import { GoddessesEmbed } from '../embeds';
-import { goddesses, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {

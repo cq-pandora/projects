@@ -1,7 +1,9 @@
 import { promises } from 'fs';
 import { join as pathJoin } from 'path';
 
-import { IDataSource, DataType } from './common';
+import {
+	IDataSource, DataType, DataOchkoZalupa, TranslationsDataType
+} from './common';
 
 const { readFile } = promises;
 
@@ -14,7 +16,13 @@ export default class FileDataSource implements IDataSource {
 		this.dataRoot = dataRoot;
 	}
 
-	public async get(type: DataType): Promise<string> {
+	public async get(type: DataOchkoZalupa): Promise<string> {
+		if (type instanceof TranslationsDataType) {
+			const tr = type as TranslationsDataType;
+
+			return readText(pathJoin(this.dataRoot, pathJoin('translations', `${tr.getLocale()}.json`)));
+		}
+
 		switch (type) {
 			case DataType.BERRIES:
 				return readText(pathJoin(this.dataRoot, 'berries.json'));
@@ -60,6 +68,12 @@ export default class FileDataSource implements IDataSource {
 
 			case DataType.HEROES_KEYS_DESCRIPTION:
 				return readText(pathJoin(this.dataRoot, 'heroes_translations_indices.json'));
+
+			case DataType.TRANSLATION_INDICES:
+				return readText(pathJoin(this.dataRoot, 'translations_indices.json'));
+
+			case DataType.SCARECROWS:
+				return readText(pathJoin(this.dataRoot, 'scarecrows.json'));
 
 			default: throw new TypeError(`Unsupported data type: ${type}`);
 		}

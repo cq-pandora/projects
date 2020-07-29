@@ -1,4 +1,5 @@
 import { HeroForm } from '@cquest/entities';
+import { heroes, extractResult } from '@cquest/data-provider';
 
 import BaseCommand from './BaseCommand';
 
@@ -11,7 +12,6 @@ import {
 } from '../../embeds';
 
 import { parseQuery, parseGrade } from '../../util';
-import { heroes, extractResult } from '../../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {

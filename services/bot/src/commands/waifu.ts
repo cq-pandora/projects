@@ -1,13 +1,11 @@
-import { random, imageUrl } from '../util/functions';
+import { heroes } from '@cquest/data-provider';
 
-import { heroes } from '../cq-data';
+import { random, imageUrl } from '../util/functions';
 
 import BaseCommand from './abstract/BaseCommand';
 import {
 	CommandCategory, CommandPayload, CommandResult, CommandResultCode
 } from '../common-types';
-
-const heroez = heroes.list();
 
 export class WaifuCommand extends BaseCommand {
 	readonly args = {};
@@ -18,6 +16,8 @@ export class WaifuCommand extends BaseCommand {
 	readonly protected = false;
 
 	async run({ message }: CommandPayload): Promise<Partial<CommandResult>> {
+		const heroez = heroes.list();
+
 		const hero = heroez[random(0, heroez.length - 1)];
 
 		await message.channel.send({

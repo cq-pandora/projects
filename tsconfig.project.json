@@ -12,6 +12,9 @@
 			"path": "shared\\db\\tsconfig.package.json"
 		},
 		{
+			"path": "shared\\data-provider\\tsconfig.package.json"
+		},
+		{
 			"path": "services\\bot\\tsconfig.package.json"
 		},
 		{

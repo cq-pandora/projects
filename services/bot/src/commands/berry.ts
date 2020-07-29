@@ -1,3 +1,5 @@
+import { berries, extractResult } from '@cquest/data-provider';
+
 import BaseCommand from './abstract/BaseCommand';
 
 import {
@@ -5,7 +7,6 @@ import {
 } from '../common-types';
 import BerriesListEmbed from '../embeds/BerriesEmbed';
 import { parseQuery } from '../util';
-import { berries, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {

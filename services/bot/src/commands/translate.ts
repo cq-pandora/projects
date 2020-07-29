@@ -1,11 +1,11 @@
 import { HeroForm, HeroSBW } from '@cquest/entities';
 import { translations } from '@cquest/db';
+import { heroes, extractResult } from '@cquest/data-provider';
 
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
 } from '../common-types';
 import { getFieldKey } from '../util';
-import { heroes, extractResult } from '../cq-data';
 import config from '../config';
 
 import BaseCommand from './abstract/BaseCommand';

@@ -1,4 +1,5 @@
 import { ChampionForm } from '@cquest/entities';
+import { champions, extractResult } from '@cquest/data-provider';
 
 import BaseCommand from './abstract/BaseCommand';
 
@@ -7,7 +8,6 @@ import {
 } from '../common-types';
 import { ChampionEmbed } from '../embeds';
 import { parseQuery, parseGrade } from '../util';
-import { champions, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {

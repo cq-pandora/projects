@@ -3,6 +3,10 @@ import { Message } from 'discord.js';
 import { translations, Translation } from '@cquest/db';
 import { HeroSBW, HeroForm } from '@cquest/entities';
 
+import {
+	heroes, heroKeysDescription, extractResult, localizations
+} from '@cquest/data-provider';
+
 import { LocalizableMessageEmbed } from '../embeds/LocalizableMessageEmbed';
 import {
 	splitText, chunk, parseGrade, getFieldKey
@@ -11,9 +15,6 @@ import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
 } from '../common-types';
 import { PaginationEmbed } from '../embeds';
-import {
-	heroes, heroKeysDescription, extractResult, localizations
-} from '../cq-data';
 
 import BaseCommand from './abstract/BaseCommand';
 

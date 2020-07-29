@@ -1,3 +1,5 @@
+import { portraits, extractResult } from '@cquest/data-provider';
+
 import BaseCommand from './abstract/BaseCommand';
 
 import {
@@ -5,7 +7,6 @@ import {
 } from '../common-types';
 import { PortraitsEmbed } from '../embeds';
 import { parseQuery } from '../util';
-import { portraits, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {

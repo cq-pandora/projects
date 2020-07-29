@@ -1,5 +1,7 @@
 import { Message } from 'discord.js';
+
 import { Sigil } from '@cquest/entities';
+import { sigils } from '@cquest/data-provider';
 
 import PaginationEmbed from './PaginationEmbed';
 import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
@@ -7,7 +9,6 @@ import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
 import {
 	statsToString, imageUrl, capitalizeFirstLetter, toClearNumber, arraify
 } from '../util/functions';
-import { sigils } from '../cq-data';
 import config from '../config';
 
 interface ISigilsEmbedOptions {

@@ -1,22 +1,20 @@
 import Fuse from 'fuse.js';
 import uniq from 'array-unique';
 
-import { TranslationIndex, ContextType } from '@cquest/entities';
-
-import config from '../../config';
+import { TranslationIndex } from '@cquest/entities';
 
 import {
 	Entities, Container, ISearchable, FuseOptions, fuzzyOptions, ISearchResult
 } from './common';
 
-const alias = (ctx: ContextType, key: string): string => (
-	key
-		? config.aliases.get(ctx, key.toLowerCase()) || key
-		: ''
-);
+export interface ISearchableAliasProvider {
+	(key: string): string;
+}
+
+export type PromiseResolvable<T> = Promise<T> | T;
 
 export interface ISearchableOptions<T extends Entities, C extends Container<T>> {
-	context: ContextType;
+	alias: ISearchableAliasProvider;
 	entities: C;
 	index: TranslationIndex[];
 }
@@ -26,34 +24,55 @@ const DEFAULT_LOCALE = 'en_us';
 type RawStructure<E> = Record<string, { entity: E; locales: string[]; score: number }>;
 
 export class Searchable<T extends Entities, C extends Container<T>> implements ISearchable<T, C> {
-	private readonly fuse: Fuse<TranslationIndex, FuseOptions>;
-	private readonly entities: C;
-	private readonly context: ContextType;
-	private readonly entitiesList: T[];
+	private fuse?: Fuse<TranslationIndex, FuseOptions>;
+	private entities?: C;
+	private alias?: ISearchableAliasProvider;
+	private entitiesList?: T[];
+	private initialized = false;
 
-	constructor(options: ISearchableOptions<T, C>) {
+	async init(resolvable: PromiseResolvable<ISearchableOptions<T, C>>): Promise<void> {
+		const options = await resolvable;
+
 		this.fuse = new Fuse<TranslationIndex, FuseOptions>(
 			options.index,
 			fuzzyOptions
 		);
 
 		this.entities = options.entities;
-		this.context = options.context;
+		this.alias = options.alias;
 		this.entitiesList = Array.isArray(this.entities) ? this.entities : Object.values(this.entities);
+
+		this.initialized = true;
 	}
 
-	list(): T[] { return this.entitiesList; }
+	list(): T[] {
+		if (!this.initialized) {
+			throw new Error('This searchable instance has not been initialized');
+		}
 
-	structure(): C { return this.entities; }
+		return this.entitiesList!;
+	}
+
+	structure(): C {
+		if (!this.initialized) {
+			throw new Error('This searchable instance has not been initialized');
+		}
+
+		return this.entities!;
+	}
 
 	search(query: string): ISearchResult<T> | undefined {
 		return this.searchAll(query)[0];
 	}
 
 	searchAll(rawQuery: string): ISearchResult<T>[] {
-		const query = alias(this.context, rawQuery);
+		if (!this.initialized) {
+			throw new Error('This searchable instance has not been initialized');
+		}
 
-		const queryResult = this.fuse.search<TranslationIndex, true>(query);
+		const query = this.alias!(rawQuery);
+
+		const queryResult = this.fuse!.search<TranslationIndex, true>(query);
 
 		const rawResults = {} as RawStructure<T>;
 
@@ -65,8 +84,8 @@ export class Searchable<T extends Entities, C extends Container<T>> implements I
 
 				if (!rawResults[key]) {
 					rawResults[key] = {
-						// @ts-ignore
-						entity: this.entities[key],
+						// @ts-expect-error Just to unify index types. May be move to Map
+						entity: this.entities![key],
 						locales: [locale],
 						score,
 					};

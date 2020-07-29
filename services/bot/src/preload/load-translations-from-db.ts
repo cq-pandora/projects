@@ -2,8 +2,8 @@ import compare from 'compare-versions';
 
 import logger from '@cquest/logger';
 import { translations } from '@cquest/db';
+import { localizations } from '@cquest/data-provider';
 
-import { localizations } from '../cq-data';
 import { IPreloadScript } from '../common-types';
 
 export default {

@@ -5,7 +5,8 @@ import {
 	MessageEmbedFooter as OriginalMessageEmbedFooter,
 } from 'discord.js';
 
-import { translate } from '../cq-data';
+import { translate } from '@cquest/data-provider';
+
 import { splitText } from '../util/functions';
 
 type Identity<T> = { [P in keyof T]: T[P] };

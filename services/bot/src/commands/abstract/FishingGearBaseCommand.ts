@@ -1,4 +1,5 @@
 import { FishingGearType } from '@cquest/entities';
+import { extractResult, fishingGear } from '@cquest/data-provider';
 
 import BaseCommand from './BaseCommand';
 
@@ -7,7 +8,6 @@ import {
 } from '../../common-types';
 import { FishingGearsEmbed } from '../../embeds';
 import { parseQuery, capitalizeFirstLetter } from '../../util';
-import { extractResult, fishingGear } from '../../cq-data';
 
 export default abstract class FishingGearBaseCommand extends BaseCommand {
 	public readonly args: CommandArguments;

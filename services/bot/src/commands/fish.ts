@@ -1,3 +1,5 @@
+import { fishes, extractResult } from '@cquest/data-provider';
+
 import BaseCommand from './abstract/BaseCommand';
 
 import {
@@ -5,7 +7,6 @@ import {
 } from '../common-types';
 import { FishesEmbed } from '../embeds';
 import { parseQuery } from '../util';
-import { fishes, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {

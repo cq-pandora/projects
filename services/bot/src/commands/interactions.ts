@@ -1,5 +1,9 @@
-import { Interaction } from '@cquest/entities';
 import { MessageAttachment } from 'discord.js';
+
+import {
+	heroes, interactions, translate, extractResult
+} from '@cquest/data-provider';
+import { Interaction } from '@cquest/entities';
 
 import BaseCommand from './abstract/BaseCommand';
 
@@ -7,9 +11,6 @@ import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
 } from '../common-types';
 import { renderInteraction, chunk } from '../util';
-import {
-	heroes, interactions, translate, extractResult
-} from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {

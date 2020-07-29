@@ -1,4 +1,5 @@
 import { SpSkillForm } from '@cquest/entities';
+import { spSkills, extractResult } from '@cquest/data-provider';
 
 import BaseCommand from './abstract/BaseCommand';
 
@@ -9,7 +10,6 @@ import {
 import { SPSkillEmbed } from '../embeds';
 
 import { parseQuery, parseGrade } from '../util';
-import { spSkills, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {

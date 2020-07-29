@@ -3,7 +3,7 @@ import uniq from 'array-unique';
 
 import { TranslationIndex, TranslationIndexSection, ContextType } from '@cquest/entities';
 
-import { Locale } from '../translations';
+import { Locale } from '../common';
 
 export type Entities = {
 	id: any;
@@ -103,4 +103,8 @@ export function contextToSection(context: ContextType): TranslationIndexSection 
 	}
 
 	return section;
+}
+
+export interface IAliasProvider {
+	get(context: ContextType, alias: string): string | undefined;
 }

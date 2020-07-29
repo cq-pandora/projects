@@ -1,7 +1,7 @@
 import { HeroForm } from '@cquest/entities';
+import { translate } from '@cquest/data-provider';
 
 import chunk from './chunk';
-import { translate } from '../../cq-data';
 import config from '../../config';
 
 const {

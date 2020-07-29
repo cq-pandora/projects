@@ -1,22 +1,35 @@
+import { BasicDataType, TranslationsDataType } from './data-types';
+
+export * from './data-types';
+
+export type DataOchkoZalupa = (new (lang: string) => BasicDataType) | BasicDataType;
+
 export interface IDataSource {
-	get(type: DataType): Promise<string>;
+	get(type: DataOchkoZalupa): Promise<string>;
 }
 
-export enum DataType {
-	BERRIES = 'berries',
-	BOSSES = 'bosses',
-	BREADS = 'breads',
-	CHAMPIONS = 'champions',
-	GODDESSES = 'goddesses',
-	HEROES = 'heroes',
-	SIGILS = 'sigils',
-	FACTIONS = 'factions',
-	SP_SKILLS = 'spSkills',
-	FISHES = 'fishes',
-	FISHING_GEAR = 'fishingGear',
-	INTERACTIONS = 'interactions',
-	INHERITANCE = 'inheritance',
-	PORTRAITS = 'portraits',
-	HEROES_KEYS_DESCRIPTION = 'heroesKeysDescription',
-	TRANSLATIONS = 'translations',
-}
+export type DataTypeKey = 'BERRIES' | 'BOSSES' | 'BREADS' | 'CHAMPIONS' | 'GODDESSES' | 'HEROES' | 'SIGILS' |
+'FACTIONS' | 'SP_SKILLS' | 'FISHES' | 'FISHING_GEAR' | 'INTERACTIONS' | 'INHERITANCE' | 'PORTRAITS' | 'SCARECROWS' |
+'HEROES_KEYS_DESCRIPTION' | 'TRANSLATIONS' | 'TRANSLATION_INDICES' | 'TRANSLATIONS_META';
+
+export const DataType: Record<DataTypeKey, DataOchkoZalupa> = {
+	BERRIES: new BasicDataType('berries'),
+	BOSSES: new BasicDataType('bosses'),
+	BREADS: new BasicDataType('breads'),
+	CHAMPIONS: new BasicDataType('champions'),
+	GODDESSES: new BasicDataType('goddesses'),
+	HEROES: new BasicDataType('heroes'),
+	SIGILS: new BasicDataType('sigils'),
+	FACTIONS: new BasicDataType('factions'),
+	SP_SKILLS: new BasicDataType('sp_skills'),
+	FISHES: new BasicDataType('fishes'),
+	FISHING_GEAR: new BasicDataType('fishing_gear'),
+	INTERACTIONS: new BasicDataType('interactions'),
+	INHERITANCE: new BasicDataType('inheritance'),
+	PORTRAITS: new BasicDataType('portraits'),
+	SCARECROWS: new BasicDataType('scarecrows'),
+	HEROES_KEYS_DESCRIPTION: new BasicDataType('heroes_translations_indices'),
+	TRANSLATION_INDICES: new BasicDataType('translations_indices'),
+	TRANSLATIONS_META: new TranslationsDataType('meta'),
+	TRANSLATIONS: TranslationsDataType,
+};

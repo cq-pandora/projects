@@ -1,4 +1,5 @@
 import { InheritanceLevel } from '@cquest/entities';
+import { heroes, extractResult } from '@cquest/data-provider';
 
 import BaseCommand from './abstract/BaseCommand';
 
@@ -7,7 +8,6 @@ import {
 } from '../common-types';
 import { parseQuery, parseInheritance } from '../util';
 import { HeroInheritanceEmbed } from '../embeds';
-import { heroes, extractResult } from '../cq-data';
 
 const cmdArgs: CommandArguments = {
 	name: {

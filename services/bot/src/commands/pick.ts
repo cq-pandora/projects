@@ -1,8 +1,11 @@
 import { Message } from 'discord.js';
 
 import { GenericConstructor } from '@cquest/entities';
+import {
+	berries, bosses, champions, fishes, fishingGear, goddesses, factions, heroes, spSkills, sigils, portraits
+} from '@cquest/data-provider';
 
-import { random } from '../util';
+import { random, stringTuple } from '../util';
 
 import BaseCommand from './abstract/BaseCommand';
 
@@ -11,10 +14,6 @@ import {
 	HeroBlockEmbed, HeroFormsEmbed, HeroSBWEmbed, HeroSkinsEmbed, PortraitsEmbed, SigilsEmbed, SPSkillEmbed,
 	PaginationEmbed,
 } from '../embeds';
-
-import {
-	berries, bosses, champions, fishes, fishingGear, goddesses, factions, heroes, spSkills, sigils, portraits
-} from '../cq-data';
 
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
@@ -35,33 +34,16 @@ class Picker<T> {
 	}
 }
 
-const fishingGearz = fishingGear.list();
-const heroez = heroes.list();
+const CollectionValues = stringTuple('berry', 'boss', 'champion', 'fish', 'fishing-gear',
+	'rod', 'bait', 'float', 'goddess', 'faction', 'block', 'sbw', 'hero',
+	'skin', 'portrait', 'sigil', 'skill');
 
-const pickMapping: Record<string, Picker<object>> = {
-	berry: new Picker(berries.list(), BerriesEmbed),
-	boss: new Picker(bosses.list(), BossesEmbed),
-	champion: new Picker(champions.list(), ChampionEmbed),
-	fish: new Picker(fishes.list(), FishesEmbed),
-	'fishing-gear': new Picker(fishingGearz, FishingGearsEmbed),
-	rod: new Picker(fishingGearz.filter(g => g.type === 'item_rod'), FishingGearsEmbed),
-	bait: new Picker(fishingGearz.filter(g => g.type === 'item_bait'), FishingGearsEmbed),
-	float: new Picker(fishingGearz.filter(g => g.type === 'item_float'), FishingGearsEmbed),
-	goddess: new Picker(goddesses.list(), GoddessesEmbed),
-	faction: new Picker(factions.list(), FactionsEmbed),
-	block: new Picker(heroez, HeroBlockEmbed),
-	sbw: new Picker(heroez.filter(h => h.sbws?.length), HeroSBWEmbed),
-	hero: new Picker(heroez, HeroFormsEmbed),
-	skin: new Picker(heroez.filter(h => h.skins?.length), HeroSkinsEmbed),
-	portrait: new Picker(portraits.list(), PortraitsEmbed),
-	sigil: new Picker(sigils.list(), SigilsEmbed),
-	skill: new Picker(spSkills.list(), SPSkillEmbed),
-};
+type CollectionName = typeof CollectionValues[number];
 
 const cmdArgs: CommandArguments = {
 	collection: {
 		required: true,
-		description: `Collection to pick from.\nCan be one of ${Object.keys(pickMapping).join(', ')}`,
+		description: `Collection to pick from.\nCan be one of ${CollectionValues.join(', ')}`,
 	}
 };
 
@@ -73,6 +55,33 @@ export class PickCommand extends BaseCommand {
 	readonly description = 'Pick random entity from specified collection';
 	readonly protected = false;
 
+	private pickMapping?: Record<CollectionName, Picker<object>>;
+
+	private initializePickMapping(): void {
+		const fishingGearz = fishingGear.list();
+		const heroez = heroes.list();
+
+		this.pickMapping = {
+			berry: new Picker(berries.list(), BerriesEmbed),
+			boss: new Picker(bosses.list(), BossesEmbed),
+			champion: new Picker(champions.list(), ChampionEmbed),
+			fish: new Picker(fishes.list(), FishesEmbed),
+			'fishing-gear': new Picker(fishingGearz, FishingGearsEmbed),
+			rod: new Picker(fishingGearz.filter(g => g.type === 'item_rod'), FishingGearsEmbed),
+			bait: new Picker(fishingGearz.filter(g => g.type === 'item_bait'), FishingGearsEmbed),
+			float: new Picker(fishingGearz.filter(g => g.type === 'item_float'), FishingGearsEmbed),
+			goddess: new Picker(goddesses.list(), GoddessesEmbed),
+			faction: new Picker(factions.list(), FactionsEmbed),
+			block: new Picker(heroez, HeroBlockEmbed),
+			sbw: new Picker(heroez.filter(h => h.sbws?.length), HeroSBWEmbed),
+			hero: new Picker(heroez, HeroFormsEmbed),
+			skin: new Picker(heroez.filter(h => h.skins?.length), HeroSkinsEmbed),
+			portrait: new Picker(portraits.list(), PortraitsEmbed),
+			sigil: new Picker(sigils.list(), SigilsEmbed),
+			skill: new Picker(spSkills.list(), SPSkillEmbed),
+		};
+	}
+
 	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
 		const { message, args } = payload;
 
@@ -80,9 +89,11 @@ export class PickCommand extends BaseCommand {
 
 		const collection = args[0].toLowerCase();
 
-		const picker = pickMapping[collection];
+		if (this.pickMapping === undefined) {
+			this.initializePickMapping();
+		}
 
-		if (!picker) {
+		if (!(collection in this.pickMapping!)) {
 			await message.channel.send('Collection not found!');
 
 			return {
@@ -91,7 +102,7 @@ export class PickCommand extends BaseCommand {
 			};
 		}
 
-		await picker.pick(message).send();
+		await this.pickMapping![collection as CollectionName].pick(message).send();
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,

@@ -1,12 +1,13 @@
 import { Message } from 'discord.js';
+
 import {
 	Hero, HeroClassColors, InheritanceLevel, HeroForm
 } from '@cquest/entities';
+import { inheritance } from '@cquest/data-provider';
 
 import {
 	statsToString, imageUrl, sumStats, arraify
 } from '../../util/functions';
-import { inheritance } from '../../cq-data';
 
 import PaginationEmbed from '../PaginationEmbed';
 import { l, LocalizableMessageEmbed } from '../LocalizableMessageEmbed';
