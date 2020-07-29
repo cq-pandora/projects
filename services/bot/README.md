@@ -42,7 +42,7 @@ yarn build
 
 #### Before first run
 - Create database 
-- Migrate database using `yarn workspaces @cquest/bot db:migrate`
+- Migrate database using `yarn workspaces @cquest/db migrate:up`
 
 #### General start
 Running configuration is set through environment variables. Best to be used with pm2.
