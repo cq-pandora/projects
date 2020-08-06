@@ -16,6 +16,8 @@ const loggingFormat = format.printf((info) => {
 	return `${timestamp} [${label}:${level}] ${message} ${splat.map((s: any) => formatExtra(s)).join('\n')}`;
 });
 
+export { Logger } from 'winston';
+
 export function makeLogger(label: string): Logger {
 	return createLogger({
 		format: format.combine(

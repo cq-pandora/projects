@@ -14,6 +14,8 @@ function bfDecrypt(content: Buffer): Uint8Array {
 	return bf.decode(content, Blowfish.TYPE.UINT8_ARRAY);
 }
 
+export function decrypt(absoluteFilename: string[]): Promise<string[]>;
+export function decrypt(absoluteFilename: string): Promise<string>;
 export async function decrypt(absoluteFilename: string | string[]): Promise<string | string[]> {
 	if (Array.isArray(absoluteFilename)) {
 		return Promise.all(absoluteFilename.map(decrypt).map(p => p.catch(e => e)));
