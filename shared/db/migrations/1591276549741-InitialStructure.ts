@@ -88,6 +88,7 @@ export class InitialStructure1591276549741 implements MigrationInterface {
 						isNullable: false,
 						type: 'bigint',
 						isPrimary: true,
+						isGenerated: true,
 						generationStrategy: 'increment',
 					},
 					{
