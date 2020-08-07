@@ -5,7 +5,7 @@ import {
 
 import {
 	arraySearchable, objectSearchable, generateArraySearchableOptions, InteractionsSearchable, HeroKeysDescription,
-	IAliasProvider
+	IAliasProvider, generateObjectSearchableOptions
 } from '../searchable';
 import { IDataSource, DataType } from '../data-source';
 import { Locale, Localizations } from '../common';
@@ -174,6 +174,14 @@ export default class DataProvider implements IDataProvider {
 			dataType: DataType.SCARECROWS,
 			context: 'scarecrows',
 			ctor: Scarecrow,
+			translationIndices: this.translationIndices,
+		}));
+
+		await this.portraits.init(generateObjectSearchableOptions({
+			...genericOptions,
+			dataType: DataType.PORTRAITS,
+			context: 'portraits',
+			ctor: 'Portraits',
 			translationIndices: this.translationIndices,
 		}));
 	};

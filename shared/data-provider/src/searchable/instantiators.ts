@@ -1,5 +1,5 @@
 import {
-	ContextType, GenericConstructor, Deserialize, TranslationIndices
+	ContextType, GenericConstructor, Deserialize, TranslationIndices, DeserializeSingle
 } from '@cquest/entities';
 
 import { IDataSource, DataOchkoZalupa } from '../data-source';
@@ -28,8 +28,25 @@ export interface IArraySearchableOptionsGeneratorParams<T extends Entities> {
 	aliasProvider: IAliasProvider;
 	dataSource: IDataSource;
 	context: ContextType;
-	ctor: GenericConstructor<T>;
+	ctor: GenericConstructor<T> | string;
 	translationIndices: TranslationIndices;
+}
+
+export async function generateObjectSearchableOptions<T extends Entities>(
+	options: IArraySearchableOptionsGeneratorParams<T>
+): Promise<ISearchableOptions<T, Record<string, T>>> {
+	const {
+		dataType, dataSource, context, ctor, aliasProvider, translationIndices
+	} = options;
+
+	const section = contextToSection(context);
+	const rawData = await dataSource.get(dataType);
+
+	return {
+		alias: generateSearchableAliasProvider(aliasProvider, context),
+		entities: DeserializeSingle(rawData, ctor),
+		index: translationIndices[section],
+	};
 }
 
 export async function generateArraySearchableOptions<T extends Entities>(
