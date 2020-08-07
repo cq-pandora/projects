@@ -60,7 +60,7 @@ export class InheritCommand extends BaseCommand {
 
 		const levels = (iLvl || iLvl === 0)
 			? [iLvl]
-			: [0, 5, 10, 15, 20, 25, 30] as InheritanceLevel[];
+			: [0, 5, 10, 15, 20, 25, 30, 35] as InheritanceLevel[];
 
 		const embed = new HeroInheritanceEmbed({
 			initialMessage: message,
