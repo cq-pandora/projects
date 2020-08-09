@@ -1,7 +1,6 @@
-import Fuse from 'fuse.js';
 import uniq from 'array-unique';
 
-import { TranslationIndex, TranslationIndexSection, ContextType } from '@cquest/entities';
+import { TranslationIndexSection, ContextType } from '@cquest/entities';
 
 import { Locale } from '../common';
 
@@ -65,19 +64,6 @@ export function extractResult<T>(
 		locales: uniq(result.locales),
 	};
 }
-
-export type FuseOptions = Fuse.FuseOptions<TranslationIndex>;
-
-export const fuzzyOptions = {
-	threshold: 0.1,
-	location: 0,
-	distance: 5000,
-	maxPatternLength: 100,
-	minMatchCharLength: 1,
-	keys: ['text'],
-	includeScore: true,
-	shouldSort: false,
-} as FuseOptions;
 
 const contextToSectionDictionary = {
 	heroes: 'heroes',
