@@ -28,6 +28,7 @@
     },
 
     "1": {
-        "portraits": ["portrait_*"]
+        "portraits": ["portrait_*"],
+		"backgrounds": ["tips*"]
     }
 }

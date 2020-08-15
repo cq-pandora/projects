@@ -1,6 +1,6 @@
 {
 	"name": "@cquest/kaede",
-	"version": "2.4.1",
+	"version": "2.4.2",
 	"description": "CQ data decoder and normalizer",
 	"main": "./lib/index.js",
 	"types": "./lib/index.d.ts",
