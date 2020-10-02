@@ -57,7 +57,14 @@ export default class DataProvider implements IDataProvider {
 		generateTranslationIndicesInitializer(this),
 	);
 
-	init = async (): Promise<void> => {
+	private readonly additionalTranslationIndices: TranslationIndices[] = [];
+
+	addTranslationIndices = (indices: TranslationIndices): this => {
+		this.additionalTranslationIndices.push(indices);
+		return this;
+	};
+
+	init = async (): Promise<this> => {
 		if (this.aliasProvider === undefined) {
 			throw new Error('Alias provider was not set!');
 		}
@@ -71,6 +78,15 @@ export default class DataProvider implements IDataProvider {
 		await init(this.locales);
 		await init(this.localizations);
 		await init(this.translationIndices);
+
+		for (const indices of this.additionalTranslationIndices) {
+			for (const sectionRaw of Object.keys(indices)) {
+				const section = sectionRaw as keyof TranslationIndices;
+				const sectionIndices = indices[section];
+
+				this.translationIndices[section] = sectionIndices.concat(this.translationIndices[section]);
+			}
+		}
 
 		const genericOptions = {
 			aliasProvider: this.aliasProvider,
@@ -184,9 +200,11 @@ export default class DataProvider implements IDataProvider {
 			ctor: 'Portraits',
 			translationIndices: this.translationIndices,
 		}));
+
+		return this;
 	};
 
-	reinit = async (): Promise<void> => this.init();
+	reinit = async (): Promise<this> => this.init();
 
 	setDataSource = (dataSource: IDataSource): void => {
 		this.dataSource = dataSource;

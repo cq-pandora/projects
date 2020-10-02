@@ -35,8 +35,10 @@ export interface IDataProvider {
 	readonly locales: Locale[];
 	readonly localizations: Localizations;
 
-	init(): Promise<unknown>;
-	reinit(): Promise<unknown>;
+	addTranslationIndices(indices: TranslationIndices): this;
+
+	init(): Promise<this>;
+	reinit(): Promise<this>;
 
 	getDataSource(): IDataSource | undefined;
 	setDataSource(dataSource: IDataSource): unknown;

@@ -7,7 +7,7 @@ export const {
 	berries, bosses, breads, champions, factions, fishes, fishingGear, goddesses, heroes, interactions, portraits,
 	sigils, spSkills, heroKeysDescription, inheritance, locales, localizations, translationIndices, scarecrows,
 
-	init, reinit, setDataSource, getDataSource, setAliasProvider, getAliasProvider
+	init, reinit, setDataSource, getDataSource, setAliasProvider, getAliasProvider, addTranslationIndices
 } = defaultInstance;
 
 export function translate(keyRaw?: string, locale: Locale = 'en_us'): string {
