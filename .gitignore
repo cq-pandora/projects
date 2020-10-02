@@ -25,3 +25,5 @@ shared/*/lib
 
 # Idea files
 .idea/**
+
+services/bot/custom_translation_indices.json

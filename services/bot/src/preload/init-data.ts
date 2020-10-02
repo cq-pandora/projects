@@ -1,10 +1,12 @@
 import logger from '@cquest/logger';
 import {
-	init, setDataSource, setAliasProvider, FileDataSource
+	init, setDataSource, setAliasProvider, FileDataSource, addTranslationIndices
 } from '@cquest/data-provider';
+import { DeserializeSingle, TranslationIndices } from '@cquest/entities';
 
 import { IPreloadScript } from '../common-types';
 import config from '../config';
+import { loadRootConfig } from '../util/functions';
 
 export default {
 	async run(): Promise<void> {
@@ -13,6 +15,15 @@ export default {
 		const dataSource = new FileDataSource(config.parsedData);
 
 		setDataSource(dataSource);
+
+		try {
+			const defaultAdditionalIndicesPath = loadRootConfig('custom_translation_indices.json');
+			const indices = DeserializeSingle<TranslationIndices>(defaultAdditionalIndicesPath, 'TranslationIndices');
+
+			addTranslationIndices(indices);
+		} catch (e) {
+			logger.warn(`Unable to load custom translation indices: ${e.message}`);
+		}
 
 		await init();
 
