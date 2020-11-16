@@ -27,10 +27,12 @@ export class CommandResult {
 	@serializeAs('status_code') public statusCode: CommandResultCode;
 	@serialize public command: string;
 	@serialize public target?: string | null;
+	@serialize public timestamp!: Date;
 
 	constructor(
 		args: string, userId: Snowflake, channelId: Snowflake, server: Snowflake, sentTo: MessageTargetChannel,
-		content: string, statusCode: CommandResultCode, command: string, target: string | undefined | null
+		content: string, statusCode: CommandResultCode, command: string, target: string | undefined | null,
+		timestamp?: Date | null
 	) {
 		this.args = args;
 		this.userId = userId;
@@ -41,5 +43,6 @@ export class CommandResult {
 		this.statusCode = statusCode;
 		this.command = command;
 		this.target = target;
+		this.timestamp = timestamp || new Date();
 	}
 }
