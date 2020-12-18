@@ -2,6 +2,8 @@ import { IStatsHolder, Stats } from '@cquest/entities';
 import { promisify } from 'util';
 import { readFile } from 'fs';
 import { resolve as pathResolve } from 'path';
+import gpScraper from 'google-play-scraper';
+import ReadableStream = NodeJS.ReadableStream;
 
 import { paths } from '../config';
 
@@ -32,6 +34,18 @@ export async function gameVersion(): Promise<string> {
 	}
 
 	return gameVersionCached as string;
+}
+
+let apkVersionCached: string | undefined;
+
+export async function apkVersion(): Promise<string> {
+	if (!apkVersionCached) {
+		const scrap = await gpScraper.app({ appId: 'com.nhnent.SKQUEST' });
+
+		apkVersionCached = scrap.version;
+	}
+
+	return apkVersionCached;
 }
 
 type Grouped<T> = Record<keyof T, T[]>;
@@ -77,4 +91,13 @@ export function sumStats(stat1: IStatsHolder, stat2: IStatsHolder): IStatsHolder
 
 export function growStats(base: number, growth: number, level: number): number {
 	return base + growth * (level - 1);
+}
+
+export function streamToString(stream: ReadableStream): Promise<string> {
+	const chunks: Uint8Array[] = [];
+	return new Promise((resolve, reject) => {
+		stream.on('data', chunk => chunks.push(chunk));
+		stream.on('error', reject);
+		stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+	})
 }

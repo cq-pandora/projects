@@ -30,11 +30,15 @@ for (const [, types] of Object.entries(images)) {
 	}
 }
 
+export interface IAssetsDownloaderOptions {
+	versionUrl: string
+}
+
 export default class AssetsDownloader extends AbstractDownloader {
-	constructor() {
+	constructor({ versionUrl }: IAssetsDownloaderOptions) {
 		super({
 			loggerName: 'download.assets',
-			baseUrl: 'http://cru.gslb.toastoven.net/Asset/Real/Android/',
+			baseUrl: `http://${versionUrl}Android/`,
 			skipHashCheck: true,
 		});
 	}

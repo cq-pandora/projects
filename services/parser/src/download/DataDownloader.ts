@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { crc32 } from 'crc';
 
 import { promises as fsPromises } from 'fs';
@@ -6,14 +5,19 @@ import { resolve as pathResolve } from 'path';
 
 import AbstractDownloader from './AbstractDownloader';
 import { paths } from '../config';
+import { streamToString } from '../util';
 
 const { readFile } = fsPromises;
 
+export interface IDataDownloaderOptions {
+	versionUrl: string
+}
+
 export default class DataDownloader extends AbstractDownloader {
-	constructor() {
+	constructor({ versionUrl }: IDataDownloaderOptions) {
 		super({
 			loggerName: 'download.data',
-			baseUrl: 'http://cru.gslb.toastoven.net/Asset/Real/DataSheet/',
+			baseUrl: `http://${versionUrl}DataSheet/`,
 		});
 	}
 
@@ -36,6 +40,6 @@ export default class DataDownloader extends AbstractDownloader {
 	}
 
 	async loadHashes(): Promise<Record<string, string>> {
-		return (await axios.get<Record<string, string>>('http://cru.gslb.toastoven.net/Asset/Real/DataSheet/sha1.json')).data;
+		return JSON.parse(await streamToString((await this.fileDownloadInstance.get('sha1.json')).data));
 	}
 }

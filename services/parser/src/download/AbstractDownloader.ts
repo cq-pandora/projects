@@ -30,7 +30,10 @@ export default abstract class AbstractDownloader {
 
 		this.fileDownloadInstance = axios.create({
 			baseURL: baseUrl,
-			responseType: 'stream'
+			responseType: 'stream',
+			headers: {
+				'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 9; SM-G960F Build/R16NW)',
+			},
 		});
 
 		this.skipHashCheck = skipHashCheck ?? false;
