@@ -4,13 +4,14 @@ import {
 	heroes, interactions, translate, extractResult
 } from '@cquest/data-provider';
 import { Interaction } from '@cquest/entities';
+import logger from '@cquest/logger';
 
 import BaseCommand from './abstract/BaseCommand';
 
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
 } from '../common-types';
-import { renderInteraction, chunk } from '../util';
+import { renderInteraction, chunk, allSettled } from '../util';
 
 const cmdArgs: CommandArguments = {
 	name: {
@@ -57,7 +58,7 @@ export class InteractionsCommand extends BaseCommand {
 			};
 		}
 
-		const ints = await Promise.all(heroInteractions.map(
+		const ints = await allSettled(heroInteractions.map(
 			async i => {
 				const actors = i.actors.map(actor => ({
 					text: translate(actor.text, locales[0]).replace('\n', ' '),
@@ -70,7 +71,17 @@ export class InteractionsCommand extends BaseCommand {
 			}
 		));
 
-		const msgs = chunk(ints, 10);
+		const succeededInts = [] as Buffer[];
+
+		for (const int of ints) {
+			if (int.status === 'rejected') {
+				logger.warn('Failed to render interaction', int.reason);
+			} else {
+				succeededInts.push(int.value);
+			}
+		}
+
+		const msgs = chunk(succeededInts, 10);
 
 		for (const msg of msgs) {
 			await message.channel.send(msg.map((v, idx) => new MessageAttachment(v, `${idx}.png`)));
