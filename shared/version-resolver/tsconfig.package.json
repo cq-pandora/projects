@@ -13,12 +13,5 @@
 		"test",
 		"lib"
 	],
-	"references": [
-		{
-			"path": "..\\..\\shared\\entities\\tsconfig.package.json",
-		},
-		{
-			"path": "..\\..\\shared\\version-resolver\\tsconfig.package.json",
-		}
-	]
+	"references": []
 }

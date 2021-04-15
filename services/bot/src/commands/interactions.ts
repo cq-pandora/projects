@@ -73,6 +73,14 @@ export class InteractionsCommand extends BaseCommand {
 
 		const succeededInts = [] as Buffer[];
 
+		if (!heroInteractions.length) {
+			await message.channel.send('Hero has no interactions!');
+
+			return {
+				statusCode: CommandResultCode.SUCCESS,
+			};
+		}
+
 		for (const int of ints) {
 			if (int.status === 'rejected') {
 				logger.warn('Failed to render interaction', int.reason);

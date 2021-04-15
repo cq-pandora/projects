@@ -1,18 +1,12 @@
-import axios from 'axios';
-
 import logger from '@cquest/logger';
+import {resolveVersion} from '@cquest/version-resolver';
+
 import config from '../config';
 import { IPreloadScript } from '../common-types';
 
-const GET_VERSION_RE = /Latest Version:\s*<\/strong>\s*<\/p>\s*<p>\s*(\d+\.\d+\.\d+).*<\/p>/;
-
 export default {
 	async run(): Promise<void> {
-		const { data } = await axios.get('https://apkpure.com/crusaders-quest/com.nhnent.SKQUEST');
-
-		const [, version] = (data as string).match(GET_VERSION_RE) as RegExpMatchArray;
-
-		config.gameVersion = version;
+		config.gameVersion = await resolveVersion();
 
 		logger.verbose(`Using game version: ${config.gameVersion}`);
 	},

@@ -25,6 +25,9 @@
 		},
 		{
 			"path": "..\\..\\shared\\data-provider\\tsconfig.package.json"
+		},
+		{
+			"path": "..\\..\\shared\\version-resolver\\tsconfig.package.json",
 		}
 	]
 }

@@ -1,8 +1,9 @@
 import { IStatsHolder, Stats } from '@cquest/entities';
+import { resolveVersion } from '@cquest/version-resolver';
+
 import { promisify } from 'util';
 import { readFile } from 'fs';
 import { resolve as pathResolve } from 'path';
-import gpScraper from 'google-play-scraper';
 import ReadableStream = NodeJS.ReadableStream;
 
 import { paths } from '../config';
@@ -40,9 +41,7 @@ let apkVersionCached: string | undefined;
 
 export async function apkVersion(): Promise<string> {
 	if (!apkVersionCached) {
-		const scrap = await gpScraper.app({ appId: 'com.nhnent.SKQUEST' });
-
-		apkVersionCached = scrap.version;
+		apkVersionCached = await resolveVersion();
 	}
 
 	return apkVersionCached;

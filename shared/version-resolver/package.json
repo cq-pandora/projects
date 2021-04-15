@@ -1,0 +1,44 @@
+{
+	"name": "@cquest/version-resolver",
+	"version": "1.0.0",
+	"description": "Resolves latest CQ version from Google Play",
+	"main": "./lib/index.js",
+	"types": "./lib/index.d.ts",
+	"license": "MIT",
+	"private": true,
+	"keywords": [
+		"pandora"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/cq-pandora/projects.git"
+	},
+	"bugs": "https://github.com/cq-pandora/projects/issues",
+	"homepage": "https://github.com/cq-pandora/projects/tree/master/shared/logger",
+	"author": {
+		"name": "TrueLecter",
+		"email": "gabriel@tenma.moe"
+	},
+	"contributors": [
+		{
+			"name": "TrueLecter",
+			"email": "gabriel@tenma.moe",
+			"web": "https://github.com/TrueLecter"
+		}
+	],
+	"maintainers": [
+		{
+			"name": "TrueLecter",
+			"email": "gabriel@tenma.moe",
+			"web": "https://github.com/TrueLecter"
+		}
+	],
+	"dependencies": {
+		"google-play-scraper": "^8.0.2"
+	},
+	"devDependencies": {},
+	"peerDependencies": {},
+	"scripts": {
+		"build": "tsc --build ./tsconfig.package.json"
+	}
+}
