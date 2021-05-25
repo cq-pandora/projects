@@ -22,7 +22,7 @@ jobs:
       - name: Generate image tags
         id: tags
         run: |
-          PACKAGE_VERSION=$(awk '/version/{gsub(/("|",)/,"",$2);print $2};' services/bot/package.json)
+          PACKAGE_VERSION=$(awk '/"version"/{gsub(/("|",)/,"",$2);print $2};' services/bot/package.json)
           echo ::set-output name=versions::$DOCKER_IMAGE_TAG:$PACKAGE_VERSION,$DOCKER_IMAGE_TAG:latest
       - name: Cache Docker layers
         uses: actions/cache@v2
