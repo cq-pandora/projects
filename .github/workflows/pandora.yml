@@ -9,7 +9,7 @@ on:
       - .github/workflows/pandora.yml
 
 jobs:
-  push-publisher:
+  build-push-pandora:
     env:
       DOCKER_IMAGE_TAG: ghcr.io/cq-pandora/pandora
     runs-on: ubuntu-latest
