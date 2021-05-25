@@ -1,0 +1,50 @@
+name: Build and publish pandora image
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - services/bot/*
+      - .github/workflows/pandora.yml
+
+jobs:
+  push-publisher:
+    env:
+      DOCKER_IMAGE_TAG: ghcr.io/cq-pandora/pandora
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Generate image tags
+        id: tags
+        run: |
+          PACKAGE_VERSION=$(awk '/version/{gsub(/("|",)/,"",$2);print $2};' services/bot/package.json)
+          echo ::set-output name=versions::$DOCKER_IMAGE_TAG:$PACKAGE_VERSION,$DOCKER_IMAGE_TAG:latest
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./services/bot/Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: ${{ steps.tags.outputs.versions }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
