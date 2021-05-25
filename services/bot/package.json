@@ -82,10 +82,6 @@
 	},
 	"peerDependencies": {},
 	"scripts": {
-		"sequelize": "sequelize",
-		"db:migrate": "yarn run db:migrate:up",
-		"db:migrate:up": "db-migrate up",
-		"db:migrate:down": "db-migrate down",
 		"build": "tsc --build ./tsconfig.package.json",
 		"start": "node --harmony ./lib/index.js"
 	}
