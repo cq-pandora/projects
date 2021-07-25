@@ -49,7 +49,7 @@ export default class AssetsDownloader extends AbstractDownloader {
 	}
 
 	getDownloadFileName(filename: string): string {
-		return `${filename}.gz`;
+		return `${filename}.bytes`;
 	}
 
 	getFilePath(filename: string): string {
@@ -68,9 +68,9 @@ export default class AssetsDownloader extends AbstractDownloader {
 
 		const responseBuffer = Buffer.concat(parts.map(p => Buffer.from(p)));
 
-		const ungzipped = await ungzip(responseBuffer);
+		// const ungzipped = await ungzip(responseBuffer);
 
-		writer.write(ungzipped);
+		writer.write(responseBuffer);
 		writer.close();
 	}
 

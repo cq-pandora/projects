@@ -33,6 +33,8 @@ export default abstract class AbstractDownloader {
 			responseType: 'stream',
 			headers: {
 				'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 9; SM-G960F Build/R16NW)',
+				'X-Unity-Version': '2018.4.31f1',
+				'Accept-Encoding': 'gzip'
 			},
 		});
 
@@ -82,6 +84,7 @@ export default abstract class AbstractDownloader {
 			try {
 				await this.download(filepath, filename);
 			} catch (e) {
+				console.log(e);
 				this.logger.warn(`${filename}: Attempt ${attempt} failed: ${e.message}`);
 				continue;
 			}
@@ -89,15 +92,13 @@ export default abstract class AbstractDownloader {
 			const hash = await this.calculateHash(filepath);
 
 			if (hash === targetHash || this.skipHashCheck) {
-				break;
+				return;
 			}
 
 			this.logger.warn(`${filename}: Attempt ${attempt} failed. Invalid hash ${hash} !== ${targetHash}`);
 		}
 
-		if (attempt === 5) {
-			throw new Error(`Unable to download ${filename} after 5 attempts. Giving up`);
-		}
+		throw new Error(`Unable to download ${filename} after 5 attempts. Giving up`);
 	}
 
 	async execute(): Promise<void> {
@@ -131,7 +132,7 @@ export default abstract class AbstractDownloader {
 					await this.downloadAsset(filename, targetHash);
 					this.logger.info(`${filename} downloaded successfully`);
 				} catch (err) {
-					this.logger.warn(err.message);
+					this.logger.error(err.message);
 				}
 			}
 		});
