@@ -15,10 +15,10 @@
 	],
 	"references": [
 		{
-			"path": "..\\..\\shared\\entities\\tsconfig.package.json",
+			"path": "..\\..\\shared\\entities\\tsconfig.package.json"
 		},
 		{
-			"path": "..\\..\\shared\\version-resolver\\tsconfig.package.json",
+			"path": "..\\..\\shared\\version-resolver\\tsconfig.package.json"
 		}
 	]
 }

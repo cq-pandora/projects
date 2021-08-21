@@ -73,6 +73,7 @@ export default async function normalize(): Promise<void> {
 				`textdialogue1_${locale}_2`,
 				`textdialogue2_${locale}_0`,
 				`textdialogue2_${locale}_1`,
+				`textdialogue2_${locale}_2`,
 			].map(absolute),
 		});
 

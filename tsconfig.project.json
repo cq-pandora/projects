@@ -3,9 +3,6 @@
 	"files": [],
 	"references": [
 		{
-			"path": "shared\\version-resolver\\tsconfig.package.json"
-		},
-		{
 			"path": "shared\\entities\\tsconfig.package.json"
 		},
 		{
@@ -16,6 +13,9 @@
 		},
 		{
 			"path": "shared\\data-provider\\tsconfig.package.json"
+		},
+		{
+			"path": "shared\\version-resolver\\tsconfig.package.json"
 		},
 		{
 			"path": "services\\bot\\tsconfig.package.json"

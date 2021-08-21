@@ -30,7 +30,7 @@
 		"test:jest": "jest --config jest.config.json --no-cache",
 		"test:eslint": "eslint --ignore-path .gitignore --ignore-path .eslintignore {services,shared}/*/src/**/*.ts",
 		"typescript:build": "tsc --build ./tsconfig.project.json",
-		"typescript:watch": "yarn run typescript:build --watch",
+		"typescript:watch": "tsc --build ./tsconfig.project.json --watch",
 		"typescript:clean": "rimraf ./{services,shared}/*/{lib,*.tsbuildinfo}",
 		"update:tsconfig": "ts-node scripts/update-package-tsconfig.ts"
 	}
