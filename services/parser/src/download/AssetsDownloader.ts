@@ -1,6 +1,5 @@
 import { Entry as ZipEntry, Parse as ZipParse } from 'unzipper';
 import glob from 'glob';
-import { ungzip } from 'node-gzip';
 import streamToParts from 'stream-to-array';
 
 import { createWriteStream } from 'fs';

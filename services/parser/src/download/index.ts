@@ -16,7 +16,7 @@ export async function initData(): Promise<void> {
 
 export async function downloadData(): Promise<void> {
 	if (!rootUrl) {
-		throw new Error('Root URL not initialized')
+		throw new Error('Root URL not initialized');
 	}
 
 	await new DataDownloader({ versionUrl: rootUrl }).execute();
@@ -24,7 +24,7 @@ export async function downloadData(): Promise<void> {
 
 export async function downloadAssets(): Promise<void> {
 	if (!rootUrl) {
-		throw new Error('Root URL not initialized')
+		throw new Error('Root URL not initialized');
 	}
 
 	await new AssetsDownloader({ versionUrl: rootUrl }).execute();

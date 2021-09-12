@@ -1,5 +1,5 @@
 import logger from '@cquest/logger';
-import {resolveVersion} from '@cquest/version-resolver';
+import { resolveVersion } from '@cquest/version-resolver';
 
 import config from '../config';
 import { IPreloadScript } from '../common-types';

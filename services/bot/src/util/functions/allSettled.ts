@@ -6,7 +6,7 @@ export type PromiseFailed = {
 export type PromiseSucceeded<T> = {
 	status: 'fulfilled';
 	value: T;
-}
+};
 
 export type PromiseSettledResult<T> = PromiseSucceeded<T> | PromiseFailed;
 
@@ -24,4 +24,4 @@ export default function allSettled<T>(promises: Promise<T>[]): Promise<PromiseSe
 			} as PromiseFailed;
 		}
 	}));
-};
+}

@@ -84,7 +84,6 @@ export default abstract class AbstractDownloader {
 			try {
 				await this.download(filepath, filename);
 			} catch (e) {
-				console.log(e);
 				this.logger.warn(`${filename}: Attempt ${attempt} failed: ${e.message}`);
 				continue;
 			}

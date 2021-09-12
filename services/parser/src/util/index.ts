@@ -4,9 +4,9 @@ import { resolveVersion } from '@cquest/version-resolver';
 import { promisify } from 'util';
 import { readFile } from 'fs';
 import { resolve as pathResolve } from 'path';
-import ReadableStream = NodeJS.ReadableStream;
 
 import { paths } from '../config';
+import ReadableStream = NodeJS.ReadableStream;
 
 const readFileAsync = promisify(readFile);
 
@@ -98,5 +98,5 @@ export function streamToString(stream: ReadableStream): Promise<string> {
 		stream.on('data', chunk => chunks.push(chunk));
 		stream.on('error', reject);
 		stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-	})
+	});
 }
