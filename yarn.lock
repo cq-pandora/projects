@@ -2751,6 +2751,19 @@ google-play-scraper@^8.0.2:
     request "^2.88.0"
     throttled-request "^0.1.1"
 
+google-play-scraper@^8.0.4:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/google-play-scraper/-/google-play-scraper-8.0.4.tgz#506c5013c8cfa4fd713d4dd656808562cb9c1f2e"
+  integrity sha512-/++VIq2OGnnGuU3bwc2RbfhOBG8a5tuFA+srd2KPyQPFdmvJpvXCf4fVDrRNMloJ/WkCULG9TaEJZrVXmrIm8w==
+  dependencies:
+    cheerio "^0.22.0"
+    debug "^2.2.0"
+    eslint "^5.16.0"
+    memoizee "^0.4.11"
+    ramda "^0.21.0"
+    request "^2.88.0"
+    throttled-request "^0.1.1"
+
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.2.2:
   version "4.2.4"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
