@@ -2,7 +2,7 @@ import {
 	ContextType, GenericConstructor, Deserialize, TranslationIndices, DeserializeSingle
 } from '@cquest/entities';
 
-import { IDataSource, DataOchkoZalupa } from '../data-source';
+import { IDataSource, DataTypeLocator } from '../data-source';
 
 import { contextToSection, Entities, IAliasProvider } from './common';
 import { Searchable, ISearchableOptions } from './Searchable';
@@ -24,7 +24,7 @@ export const generateSearchableAliasProvider = (aliasProvider: IAliasProvider, c
 );
 
 export interface IArraySearchableOptionsGeneratorParams<T extends Entities> {
-	dataType: DataOchkoZalupa;
+	dataType: DataTypeLocator;
 	aliasProvider: IAliasProvider;
 	dataSource: IDataSource;
 	context: ContextType;

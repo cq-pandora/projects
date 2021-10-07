@@ -2,17 +2,17 @@ import { BasicDataType, TranslationsDataType } from './data-types';
 
 export * from './data-types';
 
-export type DataOchkoZalupa = (new (lang: string) => BasicDataType) | BasicDataType;
+export type DataTypeLocator = (new (lang: string) => BasicDataType) | BasicDataType;
 
 export interface IDataSource {
-	get(type: DataOchkoZalupa): Promise<string>;
+	get(type: DataTypeLocator): Promise<string>;
 }
 
 export type DataTypeKey = 'BERRIES' | 'BOSSES' | 'BREADS' | 'CHAMPIONS' | 'GODDESSES' | 'HEROES' | 'SIGILS' |
 'FACTIONS' | 'SP_SKILLS' | 'FISHES' | 'FISHING_GEAR' | 'INTERACTIONS' | 'INHERITANCE' | 'PORTRAITS' | 'SCARECROWS' |
 'HEROES_KEYS_DESCRIPTION' | 'TRANSLATIONS' | 'TRANSLATION_INDICES' | 'TRANSLATIONS_META';
 
-export const DataType: Record<DataTypeKey, DataOchkoZalupa> = {
+export const DataType: Record<DataTypeKey, DataTypeLocator> = {
 	BERRIES: new BasicDataType('berries'),
 	BOSSES: new BasicDataType('bosses'),
 	BREADS: new BasicDataType('breads'),

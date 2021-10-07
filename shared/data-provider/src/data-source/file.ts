@@ -2,7 +2,7 @@ import { promises } from 'fs';
 import { join as pathJoin } from 'path';
 
 import {
-	IDataSource, DataType, DataOchkoZalupa, TranslationsDataType
+	IDataSource, DataType, DataTypeLocator, TranslationsDataType
 } from './common';
 
 const { readFile } = promises;
@@ -16,7 +16,7 @@ export default class FileDataSource implements IDataSource {
 		this.dataRoot = dataRoot;
 	}
 
-	public async get(type: DataOchkoZalupa): Promise<string> {
+	public async get(type: DataTypeLocator): Promise<string> {
 		if (type instanceof TranslationsDataType) {
 			const tr = type as TranslationsDataType;
 
