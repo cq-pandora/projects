@@ -1,4 +1,6 @@
-FROM node:16.0.0-alpine3.13
+ARG BASE_IMAGE=node:16.0.0-alpine3.13
+
+FROM $BASE_IMAGE
 WORKDIR /opt/cquest/
 
 # Expects context in monorepo root
