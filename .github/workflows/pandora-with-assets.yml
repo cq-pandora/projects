@@ -12,10 +12,11 @@ jobs:
   build-push-pandora:
     runs-on: ubuntu-latest
     steps:
-    - uses: convictional/trigger-workflow-and-wait@v1.3.0
+    - uses: convictional/trigger-workflow-and-wait@v1.5.0
       with:
         owner: cq-pandora
         repo: assets
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_user: ${{ secrets.GITHUB_PERSONAL_ACCESS_TOKEN_OWNER }}
+        github_token: ${{ secrets.GITHUB_PERSONAL_ACCESS_TOKEN }}
         workflow_file_name: build-docker-images.yml
         wait_workflow: false
