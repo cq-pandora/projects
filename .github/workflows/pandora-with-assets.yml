@@ -12,7 +12,7 @@ jobs:
   build-push-pandora:
     runs-on: ubuntu-latest
     steps:
-    - uses: convictional/trigger-workflow-and-wait
+    - uses: convictional/trigger-workflow-and-wait@master
       with:
         owner: cq-pandora
         repo: assets
