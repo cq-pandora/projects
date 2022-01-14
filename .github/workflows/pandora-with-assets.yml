@@ -17,5 +17,5 @@ jobs:
         owner: cq-pandora
         repo: assets
         github_token: ${{ secrets.GITHUB_TOKEN }}
-				workflow_file_name: build-docker-images.yml
+        workflow_file_name: build-docker-images.yml
         wait_workflow: false
