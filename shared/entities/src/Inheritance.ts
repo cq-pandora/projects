@@ -9,7 +9,7 @@ import { HeroClass } from './hero';
 import { ComputeRange } from './common-types';
 
 type MAX_INHERITANCE_TYPE = 41;
-const MAX_INHERITANCE = 40;
+export const MAX_INHERITANCE = 40;
 
 export type InheritanceLevel = ComputeRange<MAX_INHERITANCE_TYPE>[number];
 
