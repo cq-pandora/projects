@@ -34,7 +34,7 @@
 		}
 	],
 	"dependencies": {
-		"google-play-scraper": "^8.0.4"
+		"google-play-scraper": "^8.1.0"
 	},
 	"devDependencies": {},
 	"peerDependencies": {},
