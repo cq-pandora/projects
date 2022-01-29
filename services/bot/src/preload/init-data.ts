@@ -21,7 +21,7 @@ export default {
 			const indices = DeserializeSingle<TranslationIndices>(defaultAdditionalIndicesPath, 'TranslationIndices');
 
 			addTranslationIndices(indices);
-		} catch (e) {
+		} catch (e: any) {
 			logger.warn(`Unable to load custom translation indices: ${e.message}`);
 		}
 

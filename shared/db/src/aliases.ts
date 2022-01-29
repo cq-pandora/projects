@@ -34,7 +34,7 @@ export const accept = async (alias: string, ctx: ContextType): Promise<Alias | n
 		await entity.save();
 
 		return entity;
-	} catch (err) {
+	} catch (err: any) {
 		logger.error(`Error accepting alias: ${ctx}:${alias}: ${err.message}`);
 
 		throw err;

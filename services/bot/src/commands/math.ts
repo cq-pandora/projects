@@ -32,7 +32,7 @@ export class MathCommand extends BaseCommand {
 		let result: string;
 		try {
 			result = mathjsEvaluate(problem).toString();
-		} catch (error) {
+		} catch (error: any) {
 			result = error.toString();
 			err = true;
 		}

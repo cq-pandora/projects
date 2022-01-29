@@ -15,7 +15,7 @@ export default abstract class BaseCommand implements ICommand {
 	public abstract readonly commandName: string;
 	public abstract readonly protected: boolean;
 
-	abstract async run(payload: CommandPayload): Promise<Partial<CommandResult>>;
+	abstract run(payload: CommandPayload): Promise<Partial<CommandResult>>;
 
 	protected async sendUsageInstructions(payload: CommandPayload): Promise<Partial<CommandResult>> {
 		const embed = await this.instructions(payload);

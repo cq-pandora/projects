@@ -1,49 +1,49 @@
 {
- "name": "@cquest/data-provider",
- "version": "1.1.0",
- "description": "Data provider from different sources",
- "main": "./lib/index.js",
- "types": "./lib/index.d.ts",
- "license": "MIT",
- "private": true,
- "keywords": [
-  "pandora"
- ],
- "repository": {
-  "type": "git",
-  "url": "git+ssh://git@github.com/cq-pandora/projects.git"
- },
- "bugs": "https://github.com/cq-pandora/projects/issues",
- "homepage": "https://github.com/cq-pandora/projects/tree/master/shared/db",
- "author": {
-  "name": "TrueLecter",
-  "email": "gabriel@tenma.moe"
- },
- "contributors": [
-  {
-   "name": "TrueLecter",
-   "email": "gabriel@tenma.moe",
-   "web": "https://github.com/TrueLecter"
-  }
- ],
- "maintainers": [
-  {
-   "name": "TrueLecter",
-   "email": "gabriel@tenma.moe",
-   "web": "https://github.com/TrueLecter"
-  }
- ],
- "dependencies": {
-  "@cquest/entities": "^1.1.0",
-  "@cquest/logger": "^1.0.0",
-  "array-unique": "^0.3.2",
-  "fuzzysort": "^1.1.4"
- },
- "devDependencies": {},
- "peerDependencies": {},
- "scripts": {
-  "migrate:create": "node --harmony --require ts-node/register ../../node_modules/typeorm/cli.js migration:create -n",
-  "migrate:up": "node --harmony --require ts-node/register ../../node_modules/typeorm/cli.js migration:run",
-  "migrate:down": "node --harmony --require ts-node/register ../../node_modules/typeorm/cli.js migration:revert"
- }
+	"name": "@cquest/data-provider",
+	"version": "1.1.1",
+	"description": "Data provider from different sources",
+	"main": "./lib/index.js",
+	"types": "./lib/index.d.ts",
+	"license": "MIT",
+	"private": true,
+	"keywords": [
+		"pandora"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/cq-pandora/projects.git"
+	},
+	"bugs": "https://github.com/cq-pandora/projects/issues",
+	"homepage": "https://github.com/cq-pandora/projects/tree/master/shared/db",
+	"author": {
+		"name": "TrueLecter",
+		"email": "gabriel@tenma.moe"
+	},
+	"contributors": [
+		{
+			"name": "TrueLecter",
+			"email": "gabriel@tenma.moe",
+			"web": "https://github.com/TrueLecter"
+		}
+	],
+	"maintainers": [
+		{
+			"name": "TrueLecter",
+			"email": "gabriel@tenma.moe",
+			"web": "https://github.com/TrueLecter"
+		}
+	],
+	"dependencies": {
+		"@cquest/entities": "^1.1.0",
+		"@cquest/logger": "^1.0.0",
+		"array-unique": "^0.3.2",
+		"fuzzysort": "^1.1.4"
+	},
+	"devDependencies": {},
+	"peerDependencies": {},
+	"scripts": {
+		"migrate:create": "node --harmony --require ts-node/register ../../node_modules/typeorm/cli.js migration:create -n",
+		"migrate:up": "node --harmony --require ts-node/register ../../node_modules/typeorm/cli.js migration:run",
+		"migrate:down": "node --harmony --require ts-node/register ../../node_modules/typeorm/cli.js migration:revert"
+	}
 }

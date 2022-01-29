@@ -32,7 +32,9 @@ export function lateinit<T extends object>(obj: T, initializer: InitializerFunct
 	}
 
 	return new Proxy(late, {
-		get(target, name: keyof typeof late): any {
+		get(target, p): any {
+			const name = p as keyof typeof late;
+
 			if (target[initializedKey]) {
 				// @ts-expect-error Pass to original object, if not found in current
 				return target[name] ?? target[origKey][name];
