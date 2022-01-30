@@ -17,7 +17,7 @@ export default {
 		setDataSource(dataSource);
 
 		try {
-			const defaultAdditionalIndicesPath = loadRootConfig('custom_translation_indices.json');
+			const defaultAdditionalIndicesPath = loadRootConfig('custom_translation_indices.json', config.overridesPath);
 			const indices = DeserializeSingle<TranslationIndices>(defaultAdditionalIndicesPath, 'TranslationIndices');
 
 			addTranslationIndices(indices);

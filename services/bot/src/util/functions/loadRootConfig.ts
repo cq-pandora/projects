@@ -1,6 +1,8 @@
 import { readFileSync } from 'fs';
 import { join as pathJoin } from 'path';
 
-export default function loadRootConfig(path: string): string {
-	return readFileSync(pathJoin(__dirname, '../../../', path), { encoding: 'utf-8' });
+const defaultPath = pathJoin(__dirname, '../../../');
+
+export default function loadRootConfig(path: string, configPath: string = defaultPath): string {
+	return readFileSync(pathJoin(configPath, path), { encoding: 'utf-8' });
 }

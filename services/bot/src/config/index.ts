@@ -134,6 +134,7 @@ class Config {
 	public readonly permissions: PermissionsConfig;
 	public readonly links: LinksField[];
 	public readonly commands: Commands;
+	public readonly overridesPath: string;
 	public gameVersion = 'UNKNOWN';
 
 	constructor() {
@@ -147,9 +148,11 @@ class Config {
 		this.imageSuffix = prefixedEnv('IMAGES_SUFFIX', prefix);
 		this.ownerId = prefixedEnv('OWNER_ID', prefix);
 
-		this.emojis = Deserialize(JSON.parse(loadRootConfig('emojis.json')), EmojisConfig);
-		this.package = Deserialize(JSON.parse(loadRootConfig('package.json')), PackageConfig);
-		this.links = Deserialize(JSON.parse(loadRootConfig('links.json')), LinksField);
+		this.overridesPath = prefixedEnv('OVERRIDES_PATH', prefix);
+
+		this.emojis = Deserialize(JSON.parse(loadRootConfig('emojis.json', this.overridesPath)), EmojisConfig);
+		this.package = Deserialize(JSON.parse(loadRootConfig('package.json', this.overridesPath)), PackageConfig);
+		this.links = Deserialize(JSON.parse(loadRootConfig('links.json', this.overridesPath)), LinksField);
 
 		this.db = new DBConfig(`${prefix}DB_`);
 		this.aliases = new AliasesConfig();
