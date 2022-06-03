@@ -34,7 +34,7 @@
 		}
 	],
 	"dependencies": {
-		"google-play-scraper": "git+https://github.com/facundoolano/google-play-scraper#pull/545/head"
+		"google-play-scraper": "facundoolano/google-play-scraper#545/head"
 	},
 	"devDependencies": {},
 	"peerDependencies": {},
