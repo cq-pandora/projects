@@ -4,8 +4,8 @@ import { readJSON, gameVersion } from '../util';
 
 import { TranslationsNormalizationInput } from './input';
 
-type TranslationsKey = 'text1' | 'text2' | 'text_dialogue1' | 'text_dialogue2';
-const TranslationsValues = ['text1', 'text2', 'text_dialogue1', 'text_dialogue2'] as TranslationsKey[];
+type TranslationsKey = 'text1' | 'text2' | 'text3' | 'text_dialogue1' | 'text_dialogue2' | 'text_dialogue3';
+const TranslationsValues = ['text1', 'text2', 'text3', 'text_dialogue1', 'text_dialogue2', 'text_dialogue3'] as TranslationsKey[];
 
 type TranslationRaw = Record<string, string>;
 type TranslationDataStructure = {
