@@ -34,7 +34,7 @@
 		}
 	],
 	"dependencies": {
-		"google-play-scraper": "facundoolano/google-play-scraper#545/head"
+		"google-play-scraper": "^9.1.0"
 	},
 	"devDependencies": {},
 	"peerDependencies": {},
