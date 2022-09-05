@@ -58,6 +58,17 @@ export async function init(options: IDBInitOptions): Promise<void> {
 		logger: new TypeORMLogger(),
 		entities: [Alias, Translation, Stats, Permission],
 	});
+	// await new DataSource({
+	// 	type: 'postgres',
+	// 	host: options.host,
+	// 	port: options.port,
+	// 	database: options.database,
+	// 	username: options.username,
+	// 	password: options.password,
+	// 	schema: options.schema,
+	// 	logger: new TypeORMLogger(),
+	// 	entities: [Alias, Translation, Stats, Permission],
+	// }).initialize();
 }
 
 export { default as Alias } from './Alias';
