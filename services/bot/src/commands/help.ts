@@ -1,3 +1,5 @@
+import { EmbedBuilder } from 'discord.js';
+
 import BaseCommand from './abstract/BaseCommand';
 
 import {
@@ -39,7 +41,7 @@ export class HelpCommand extends BaseCommand {
 
 			const embed = await command.instructions(payload);
 
-			await message.channel.send({ embed });
+			await message.channel.send({ embeds: [embed] });
 
 			return {
 				statusCode: CommandResultCode.SUCCESS,
@@ -49,24 +51,27 @@ export class HelpCommand extends BaseCommand {
 		}
 
 		await message.channel.send({
-			embed: {
-				title: 'Commands',
-				description: `Prefix: ${config.prefix}, ${message.client.user}`,
-				fields: Object.entries(groupBy(Object.values(config.commands), 'category'))
-					.map(([name, cmds]) => ({
-						name,
-						inline: false,
-						value: cmds
-							.map((cmd) => {
-								const aliases = config.aliases.getCommandAliases(cmd.commandName);
+			embeds: [
+				new EmbedBuilder()
+					.setTitle('Commands')
+					.setDescription(`Prefix: ${config.prefix}, ${message.client.user}`)
+					.addFields(
+						Object.entries(groupBy(Object.values(config.commands), 'category'))
+							.map(([name, cmds]) => ({
+								name,
+								inline: false,
+								value: cmds
+									.map((cmd) => {
+										const aliases = config.aliases.getCommandAliases(cmd.commandName);
 
-								if (!aliases) return cmd.commandName;
+										if (!aliases) return cmd.commandName;
 
-								return `${cmd.commandName} (${aliases.join(', ')})`;
-							})
-							.join(', ')
-					}))
-			}
+										return `${cmd.commandName} (${aliases.join(', ')})`;
+									})
+									.join(', ')
+							}))
+					)
+			]
 		});
 
 		return {

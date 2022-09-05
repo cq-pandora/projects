@@ -1,4 +1,4 @@
-import { Client } from 'discord.js';
+import { ActivityType, Client } from 'discord.js';
 import logger from '@cquest/logger';
 
 import preloadScripts from './preload';
@@ -13,7 +13,9 @@ process.on('unhandledRejection', unhandledRejection);
 (async (): Promise<void> => {
 	logger.info(`Starting ${config.package.name}@${config.package.version}`);
 
-	const client = new Client();
+	const client = new Client({
+		intents: [],
+	});
 
 	logger.verbose('Executing preload scripts');
 
@@ -35,10 +37,10 @@ process.on('unhandledRejection', unhandledRejection);
 	logger.verbose('Loading events...');
 
 	client.on('message', message(client));
-	client.on('shardReconnecting', () => logger.warn('Connection to Discord interrupted. Reconnecting...'));
+	client.on('shardReconnecting', () => { logger.warn('Connection to Discord interrupted. Reconnecting...'); });
 	client.on('ready', () => {
 		logger.info(`Logged in as ${client.user!.tag}`);
-		client.user!.setActivity('with TypeScript', { type: 'PLAYING' });
+		client.user!.setActivity('with Slash Commands!', { type: ActivityType.Playing });
 	});
 
 	logger.verbose('Finished loading events');

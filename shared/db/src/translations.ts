@@ -1,4 +1,4 @@
-import { FindConditions, getConnection, IsNull } from 'typeorm';
+import { FindManyOptions, getConnection, IsNull } from 'typeorm';
 
 import { db as logger } from '@cquest/logger';
 
@@ -37,7 +37,7 @@ export async function accept(id: string): Promise<Translation> {
 		await Translation
 			.update(id, { status: true });
 
-		return await Translation.findOne(id) as Translation;
+		return await Translation.findOne({ where: { id: parseInt(id, 10) } }) as Translation;
 	} catch (err) {
 		logger.error(`Error accepting translation: ${id}`);
 
@@ -76,12 +76,15 @@ export async function declineAllUnaccepted(key: string): Promise<void> {
 
 export async function list(key: string | null = null): Promise<Translation[]> {
 	try {
-		const options: FindConditions<Translation> = {
-			status: IsNull(),
+		const options: FindManyOptions<Translation> = {
+			where: {
+				status: IsNull()
+			}
 		};
 
 		if (key) {
-			options.key = key;
+			// @ts-expect-error TODO: some typing error
+			options.where!.key = key;
 		}
 
 		return await Translation
@@ -97,7 +100,9 @@ export async function get(key?: string | null): Promise<Translation[]> {
 	try {
 		if (key) {
 			return await Translation.find({
-				key
+				where: {
+					key
+				}
 			});
 		}
 

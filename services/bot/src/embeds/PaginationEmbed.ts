@@ -1,5 +1,6 @@
 import {
-	Message, MessageEmbed, TextChannel, MessageReaction, User, NewsChannel, DMChannel, Snowflake
+	Message, TextChannel, MessageReaction, User, DMChannel, Snowflake, GuildTextBasedChannel, TextBasedChannel,
+	PermissionsBitField, EmbedBuilder
 } from 'discord.js';
 import { find as findEmoji } from 'node-emoji';
 
@@ -63,8 +64,8 @@ export default class PaginationEmbed {
 		}
 	}
 
-	setChannel(channel: TextChannel | DMChannel | NewsChannel): this {
-		if (channel instanceof NewsChannel) {
+	setChannel(channel: GuildTextBasedChannel | TextBasedChannel): this {
+		if (!(channel instanceof TextChannel)) {
 			throw new TypeError('NewsChannel is not supported!');
 		}
 
@@ -158,7 +159,12 @@ export default class PaginationEmbed {
 		if (channel.guild) {
 			const missing = channel
 				.permissionsFor(channel.client.user!)!
-				.missing(['ADD_REACTIONS', 'EMBED_LINKS', 'VIEW_CHANNEL', 'SEND_MESSAGES']);
+				.missing([
+					PermissionsBitField.Flags.AddReactions,
+					PermissionsBitField.Flags.EmbedLinks,
+					PermissionsBitField.Flags.ViewChannel,
+					PermissionsBitField.Flags.SendMessages,
+				]);
 
 			if (missing.length) {
 				throw new Error(`Cannot invoke PaginationEmbed class without required permissions: ${missing.join(', ')}`);
@@ -168,7 +174,7 @@ export default class PaginationEmbed {
 		return true;
 	}
 
-	protected buildEmbed(): MessageEmbed {
+	protected buildEmbed(): EmbedBuilder {
 		const embed = this.array[this.page - 1];
 
 		return embed.toEmbed(this.locale);
@@ -176,13 +182,13 @@ export default class PaginationEmbed {
 
 	protected async setMessage(): Promise<void> {
 		if (this.message) {
-			await this.message.edit({ embed: this.buildEmbed() });
+			await this.message.edit({ embeds: [this.buildEmbed()] });
 		} else {
 			if (typeof this.channel === 'undefined') {
 				throw new TypeError('Channel was not set.');
 			}
 
-			this.message = await this.channel.send({ embed: this.buildEmbed() }) as Message;
+			this.message = await this.channel.send({ embeds: [this.buildEmbed()] }) as Message;
 		}
 	}
 
@@ -199,7 +205,7 @@ export default class PaginationEmbed {
 
 		const emoji = (r.emoji.name ?? r.emoji.id);
 
-		const navigationEmoji = Object.values(EMOJIS).includes(emoji);
+		const navigationEmoji = Object.values(EMOJIS).includes(emoji!);
 
 		if (navigationEmoji) {
 			if (this.authorizedUsers.length) {
@@ -209,18 +215,27 @@ export default class PaginationEmbed {
 			return true;
 		}
 
-		return findEmoji(emoji).key.startsWith('flag-');
+		return findEmoji(emoji!).key.startsWith('flag-');
 	};
 
 	protected async awaitResponse(): Promise<void> {
 		try {
-			const responses = await this.message.awaitReactions(this.emojiFilter, { max: 1, time: this.timeout, errors: ['time'] });
+			const responses = await this.message.awaitReactions(
+				{
+					filter: this.emojiFilter,
+					max: 1,
+					time: this.timeout,
+					errors: ['time'],
+				}
+			);
 			const response = responses.first() as MessageReaction;
 			const user = await response.users.cache.last();
 			const emoji = response.emoji.name ?? response.emoji.id;
 			const channel = this.message.channel as TextChannel;
 
-			if (this.message.guild && channel.permissionsFor(channel.client.user!)?.has('MANAGE_MESSAGES')) {
+			if (this.message.guild
+				&& channel.permissionsFor(channel.client.user!)?.has(PermissionsBitField.Flags.ManageMessages)
+			) {
 				await response.users.remove(user);
 			}
 
@@ -259,7 +274,7 @@ export default class PaginationEmbed {
 					return this.toggleLocales(false);
 
 				default:
-					const newLocale = emojiToLocale(emoji);
+					const newLocale = emojiToLocale(emoji!);
 
 					if (newLocale !== this.locale) {
 						this.locale = newLocale;
@@ -275,6 +290,8 @@ export default class PaginationEmbed {
 	}
 
 	protected async cleanUp(): Promise<void> {
-		if (this.message.guild && !this.message.deleted) await this.message.reactions.removeAll();
+		// FIXME: Check if message is deleted
+		if (this.message.guild) await this.message.reactions.removeAll();
+		// if (this.message.guild && !this.message.deleted) await this.message.reactions.removeAll();
 	}
 }

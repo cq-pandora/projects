@@ -52,7 +52,7 @@ export function lateinit<T extends object>(obj: T, initializer: InitializerFunct
 				return target[initializedKey];
 			}
 
-			throw new Error(`Late init not initialized, but key "${name}" of type ${typeof name} requested`);
+			throw new Error(`Late init not initialized, but key "${String(name)}" of type ${typeof name} requested`);
 		}
 	});
 }

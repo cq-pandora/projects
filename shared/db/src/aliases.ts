@@ -1,4 +1,4 @@
-import { FindConditions, IsNull } from 'typeorm';
+import { FindManyOptions, FindOneOptions, IsNull } from 'typeorm';
 
 import { db as logger } from '@cquest/logger';
 import { ContextType } from '@cquest/entities';
@@ -34,8 +34,8 @@ export const accept = async (alias: string, ctx: ContextType): Promise<Alias | n
 		await entity.save();
 
 		return entity;
-	} catch (err: any) {
-		logger.error(`Error accepting alias: ${ctx}:${alias}: ${err.message}`);
+	} catch (err) {
+		logger.error(`Error accepting alias: ${ctx}:${alias}: ${(err as any).message}`);
 
 		throw err;
 	}
@@ -71,12 +71,15 @@ export const declineAllUnaccepted = async (fogh: string): Promise<void> => {
 
 export const list = async (fogh: string | null = null): Promise<Alias[]> => {
 	try {
-		const options: FindConditions<Alias> = {
-			status: IsNull()
+		const options: FindManyOptions<Alias> = {
+			where: {
+				status: IsNull()
+			}
 		};
 
 		if (fogh) {
-			options.for = fogh;
+			// @ts-expect-error TODO: some typing error
+			options.where!.for = fogh;
 		}
 
 		return await Alias.find(options);
@@ -99,7 +102,7 @@ export const listAll = async (): Promise<Alias[]> => {
 
 export const get = async (fogh: string | null = null): Promise<Alias[]> => {
 	try {
-		let options: FindConditions<Alias>;
+		let options: object;
 
 		if (fogh) {
 			options = { for: fogh };

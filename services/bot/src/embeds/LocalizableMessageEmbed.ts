@@ -1,8 +1,8 @@
 import {
-	ColorResolvable, FileOptions, MessageAttachment, MessageEmbed, Util,
+	ColorResolvable, EmbedBuilder,
 	EmbedField as OriginalEmbedField,
-	MessageEmbedAuthor as OriginalMessageEmbedAuthor,
-	MessageEmbedFooter as OriginalMessageEmbedFooter,
+	EmbedAuthorData as OriginalMessageEmbedAuthor,
+	EmbedFooterData as OriginalMessageEmbedFooter,
 } from 'discord.js';
 
 import { translate } from '@cquest/data-provider';
@@ -67,10 +67,10 @@ function localize(resolvable: StringResolvable, locale: string): string {
 
 export class LocalizableMessageEmbed {
 	private fields: EmbedField[] = [];
-	private files: (MessageAttachment | string | FileOptions)[] = [];
+	// private files: (MessageAttachment | string | FileOptions)[] = [];
 	private author: MessageEmbedAuthor | null = null;
 	private title?: StringResolvable;
-	private color?: number;
+	private color?: ColorResolvable;
 	private description?: StringResolvable;
 	private image: string | null = null;
 	private thumbnail: string | null = null;
@@ -92,11 +92,11 @@ export class LocalizableMessageEmbed {
 		return this;
 	}
 
-	public attachFiles(files: (MessageAttachment | FileOptions | string)[]): this {
-		this.files = this.files.concat(files);
+	// public attachFiles(files: (MessageAttachment | FileOptions | string)[]): this {
+	// this.files = this.files.concat(files);
 
-		return this;
-	}
+	// return this;
+	// }
 
 	public setAuthor(name: StringResolvable, iconURL?: string, url?: string): this {
 		this.author = { name, iconURL, url };
@@ -105,7 +105,7 @@ export class LocalizableMessageEmbed {
 	}
 
 	public setColor(color: ColorResolvable): this {
-		this.color = Util.resolveColor(color);
+		this.color = color;
 
 		return this;
 	}
@@ -158,11 +158,11 @@ export class LocalizableMessageEmbed {
 		return this;
 	}
 
-	public toEmbed(locale = 'en_us'): MessageEmbed {
-		const me = new MessageEmbed();
+	public toEmbed(locale = 'en_us'): EmbedBuilder {
+		const me = new EmbedBuilder();
 
 		if (this.author) {
-			me.setAuthor(this.author);
+			me.setAuthor(this.author as OriginalMessageEmbedAuthor);
 		}
 
 		if (this.title) {
@@ -177,11 +177,7 @@ export class LocalizableMessageEmbed {
 			const translation = localize(this.description, locale);
 
 			if (translation.length > 2048) {
-				const chunks = splitText(translation);
-
-				for (const chunk of chunks) {
-					me.addField('\u200b', chunk);
-				}
+				me.addFields(splitText(translation).map(chunk => ({ name: '\u200b', value: chunk })));
 			} else {
 				me.setDescription(localize(this.description, locale));
 			}
@@ -203,12 +199,17 @@ export class LocalizableMessageEmbed {
 			me.setURL(this.url);
 		}
 
-		if (this.files.length > 0) {
-			me.attachFiles(this.files);
-		}
+		// if (this.files.length > 0) {
+		// me.attachFiles(this.files);
+		// }
 
 		if (this.footer) {
-			me.setFooter(localize(this.footer.text, locale), this.footer.iconURL);
+			me.setFooter(
+				{
+					text: localize(this.footer.text, locale),
+					iconURL: this.footer.iconURL,
+				}
+			);
 		}
 
 		if (this.fields.length > 0) {
@@ -218,11 +219,13 @@ export class LocalizableMessageEmbed {
 
 				const chunks = splitText(value);
 
-				me.addField(name, chunks.shift());
-
-				for (const chunk of chunks) {
-					me.addField('\u200b', chunk);
-				}
+				me.addFields([
+					{ name, value: chunks.shift()! },
+					...chunks.map(chunk => ({
+						name: '\u200b',
+						value: chunk,
+					})),
+				]);
 			}
 		}
 

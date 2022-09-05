@@ -1,3 +1,5 @@
+import { EmbedBuilder } from 'discord.js';
+
 import { heroes } from '@cquest/data-provider';
 
 import { random, imageUrl } from '../util/functions';
@@ -21,14 +23,11 @@ export class WaifuCommand extends BaseCommand {
 		const hero = heroez[random(0, heroez.length - 1)];
 
 		await message.channel.send({
-			embed: {
-				image: {
-					url: imageUrl(`heroes/${hero.forms[hero.forms.length - 1].image}`),
-				},
-				footer: {
-					text: `${message.author.username}#${message.author.discriminator}`,
-				}
-			}
+			embeds: [
+				new EmbedBuilder()
+					.setImage(imageUrl(`heroes/${hero.forms[hero.forms.length - 1].image}`))
+					.setFooter({ text: `${message.author.username}#${message.author.discriminator}` })
+			]
 		});
 
 		return {

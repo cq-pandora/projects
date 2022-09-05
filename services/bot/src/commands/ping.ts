@@ -1,3 +1,5 @@
+import { EmbedBuilder } from 'discord.js';
+
 import BaseCommand from './abstract/BaseCommand';
 
 import {
@@ -14,16 +16,18 @@ export class PingCommand extends BaseCommand {
 
 	async run({ message }: CommandPayload): Promise<Partial<CommandResult>> {
 		const newMessage = await message.channel.send({
-			embed: {
-				description: 'Pinging...'
-			}
+			embeds: [
+				new EmbedBuilder()
+					.setDescription('🏓 Pinging...')
+			],
 		});
 
 		await newMessage.edit({
-			embed: {
-				title: 'Pong! 🏓',
-				description: `${newMessage.createdTimestamp - message.createdTimestamp} ms`
-			}
+			embeds: [
+				new EmbedBuilder()
+					.setTitle('🏓 Pong!')
+					.setDescription(`${newMessage.createdTimestamp - message.createdTimestamp} ms`)
+			],
 		});
 
 		return {

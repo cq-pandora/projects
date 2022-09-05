@@ -1,5 +1,3 @@
-import { MessageAttachment } from 'discord.js';
-
 import {
 	heroes, interactions, translate, extractResult
 } from '@cquest/data-provider';
@@ -92,7 +90,9 @@ export class InteractionsCommand extends BaseCommand {
 		const msgs = chunk(succeededInts, 10);
 
 		for (const msg of msgs) {
-			await message.channel.send(msg.map((v, idx) => new MessageAttachment(v, `${idx}.png`)));
+			await message.channel.send({
+				files: msg.map(v => ({ attachment: v }))
+			});
 		}
 
 		return {

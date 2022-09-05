@@ -36,9 +36,9 @@ export default abstract class FishingGearBaseCommand extends BaseCommand {
 		const { message, args } = payload;
 
 		if (!args.length) {
-			const embed = this.instructions(payload);
+			const embed = await this.instructions(payload);
 
-			await message.channel.send({ embed });
+			await message.channel.send({ embeds: [embed] });
 
 			return {
 				statusCode: CommandResultCode.NOT_ENOUGH_ARGS,

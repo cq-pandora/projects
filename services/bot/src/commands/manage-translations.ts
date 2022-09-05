@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Message, TextChannel } from 'discord.js';
 
 import { translations, Translation } from '@cquest/db';
 import { HeroSBW, HeroForm } from '@cquest/entities';

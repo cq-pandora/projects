@@ -1,3 +1,5 @@
+import { EmbedBuilder } from 'discord.js';
+
 import BaseCommand from './abstract/BaseCommand';
 
 import {
@@ -13,11 +15,11 @@ export class LennyCommand extends BaseCommand {
 	public readonly protected = false;
 
 	async run({ message }: CommandPayload): Promise<Partial<CommandResult>> {
-		const embed = {
-			description: '( ͡° ͜ʖ ͡°)'
-		};
-
-		await message.channel.send({ embed });
+		await message.channel.send({
+			embeds: [
+				new EmbedBuilder().setDescription('( ͡° ͜ʖ ͡°)')
+			]
+		});
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,

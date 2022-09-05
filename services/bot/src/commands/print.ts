@@ -29,9 +29,9 @@ export class PrintCommand extends BaseCommand {
 		const text = args.join(' ');
 
 		await message.channel.send({
-			embed: {
-				description: text
-			}
+			embeds: [
+				{ description: text }
+			]
 		});
 
 		return {

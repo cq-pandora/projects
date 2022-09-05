@@ -1,3 +1,4 @@
+import { EmbedBuilder } from 'discord.js';
 import { js_beautify as beautify } from 'js-beautify';
 import { inspect } from 'util';
 import { Script, createContext } from 'vm';
@@ -64,18 +65,21 @@ export class EvalCommand extends BaseCommand {
 		}
 
 		await message.channel.send({
-			embed: {
-				fields: [
-					{
-						name: 'Input',
-						value: `\`\`\`js\n${input}\`\`\``
-					},
-					{
-						name: 'Output',
-						value: `\`\`\`js\n${output}\`\`\``
-					}
-				]
-			}
+			embeds: [
+				new EmbedBuilder()
+					.addFields(
+						[
+							{
+								name: 'Input',
+								value: `\`\`\`js\n${input}\`\`\``
+							},
+							{
+								name: 'Output',
+								value: `\`\`\`js\n${output}\`\`\``
+							}
+						]
+					)
+			]
 		});
 
 		return {

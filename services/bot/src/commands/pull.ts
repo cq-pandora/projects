@@ -1,4 +1,4 @@
-import { MessageAttachment, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, AttachmentBuilder } from 'discord.js';
 
 import { HeroForm } from '@cquest/entities';
 import { heroes } from '@cquest/data-provider';
@@ -196,18 +196,20 @@ export class PullCommand extends BaseCommand {
 
 		const chunks = formatPullChunks(pull);
 
-		const embed = new MessageEmbed()
-			.setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.avatarURL() || undefined)
-			.setImage('attachment://pull.png');
-
-		for (const chunk of chunks) {
-			embed.addField('\u200b', chunk.join('\n'));
-		}
+		const embed = new EmbedBuilder()
+			.setAuthor({
+				name: `${message.author.username}#${message.author.discriminator}`,
+				iconURL: message.author.avatarURL() || undefined,
+			})
+			.setImage('attachment://pull.png')
+			.addFields(
+				chunks.map(chunk => ({ name: '\u200b', value: chunk.join('\n') }))
+			);
 
 		await message.channel.send({
-			embed,
+			embeds: [embed],
 			files: [
-				new MessageAttachment(await canvas.getBufferAsync('image/png'), 'pull.png')
+				new AttachmentBuilder(await canvas.getBufferAsync('image/png'), { name: 'pull.png' })
 			]
 		});
 

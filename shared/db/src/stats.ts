@@ -5,7 +5,7 @@ import { Stats } from './models';
 
 export async function submit(stats: CommandResult): Promise<void> {
 	try {
-		const stat = Stats.create(stats);
+		const stat = Stats.create(stats as Stats);
 
 		await stat.save();
 	} catch (err) {

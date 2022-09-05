@@ -1,4 +1,6 @@
-import { Client, Message, TextChannel } from 'discord.js';
+import {
+	Client, Message, TextChannel, PermissionsBitField
+} from 'discord.js';
 
 import { CommandResultCode, CommandResult } from '@cquest/entities';
 import { stats } from '@cquest/db';
@@ -60,8 +62,10 @@ export default (client: Client): (msg: Message) => Promise<void> => {
 
 		if (!(
 			message.guild === null
-            || getPermittedCommands(message).includes(executable.commandName)
-		) && !message.member!.hasPermission('ADMINISTRATOR', { checkAdmin: true, checkOwner: true })) {
+			|| getPermittedCommands(message).includes(executable.commandName)
+		) && !message.member!.permissions.has(
+			PermissionsBitField.Flags.Administrator, true
+		)) {
 			logger.verbose(`{${cmdId}} User ${message.author.tag}#${message.author.id} had not enough permissions to execute`);
 
 			await message.channel.send('This command is forbidden here!');

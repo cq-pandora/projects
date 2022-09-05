@@ -1,5 +1,5 @@
 import {
-	Client, Message, EmbedField, MessageEmbedOptions
+	Client, Message, EmbedField, EmbedBuilder
 } from 'discord.js';
 
 import { CommandResult } from '@cquest/entities';
@@ -22,7 +22,7 @@ export enum CommandCategory {
 	PROTECTED = 'Reserved',
 }
 
-export type CommandInfoResult = MessageEmbedOptions;
+export type CommandInfoResult = EmbedBuilder;
 
 export type CommandInfoResultField = EmbedField;
 

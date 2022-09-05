@@ -64,7 +64,7 @@ export default class DataProvider implements IDataProvider {
 		return this;
 	};
 
-	// @ts-expect-error Tempotatry ignore async function TS7022 error
+	// @ts-expect-error 7022
 	init = async (): Promise<this> => {
 		if (this.aliasProvider === undefined) {
 			throw new Error('Alias provider was not set!');

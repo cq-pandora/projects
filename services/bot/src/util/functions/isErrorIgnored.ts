@@ -13,7 +13,7 @@ const IGNORE_RAW = [
 export default function isErrorIgnored(error: unknown): boolean {
 	return (
 		error instanceof DiscordAPIError && (
-			IGNORED_ERROR_CODES.includes(error.code)
+			IGNORED_ERROR_CODES.includes(parseInt(String(error.code), 10))
 			|| IGNORE_RAW.includes(error.message)
 		)
 	);

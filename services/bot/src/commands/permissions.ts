@@ -53,7 +53,7 @@ export class PermissionsCommand extends BaseCommand {
 			};
 		}
 
-		if (!message.member!.hasPermission('MANAGE_GUILD', { checkAdmin: true, checkOwner: true })) {
+		if (!message.member!.permissions.has('Administrator', true)) {
 			await message.channel.send('You must be able to manage server in order to edit permissions!');
 
 			return {

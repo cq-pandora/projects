@@ -38,8 +38,7 @@
 		"@cquest/logger": "^1.0.0",
 		"pg": "^8.2.1",
 		"ts-node": "^8.10.2",
-		"typeorm": "^0.2.25",
-		"typescript": "3.9.7"
+		"typeorm": "^0.3.9"
 	},
 	"devDependencies": {},
 	"peerDependencies": {},

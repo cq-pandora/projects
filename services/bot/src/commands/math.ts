@@ -1,3 +1,5 @@
+import { EmbedBuilder } from 'discord.js';
+
 import { evaluate as mathjsEvaluate } from 'mathjs';
 
 import BaseCommand from './abstract/BaseCommand';
@@ -38,9 +40,10 @@ export class MathCommand extends BaseCommand {
 		}
 
 		await message.channel.send({
-			embed: {
-				description: result
-			},
+			embeds: [
+				new EmbedBuilder()
+					.setDescription(result)
+			],
 		});
 
 		return {
