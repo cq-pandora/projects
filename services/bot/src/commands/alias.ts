@@ -12,7 +12,8 @@ const commandArgs: CommandArguments = {
 	},
 	context: {
 		required: true,
-		description: `Command name, where this alias applies. Can be one of: ${ContextValues.join(', ')}`,
+		// description: `Command name, where this alias applies. Can be one of: ${ContextValues.join(', ')}`,
+		description: 'Command name, where this alias applies. Migrate to choice',
 	},
 	for: {
 		required: true,

@@ -4,44 +4,46 @@ import { spSkills, extractResult } from '@cquest/data-provider';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ArgumentType
 } from '../common-types';
 
 import { SPSkillEmbed } from '../embeds';
 
 import { parseQuery, parseGrade } from '../util';
 
-const cmdArgs: CommandArguments = {
-	name: {
+const cmdArgs = {
+	name: ArgumentType.string({
 		required: true,
 		description: 'Special skill name',
-	},
-	level: {
+	}),
+	level: ArgumentType.number({
 		required: false,
 		description: 'Skill level. Defaults to highest level',
-	}
+		default: null,
+	}),
 };
 
-export class SpSkillCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+export class SpSkillCommand extends BaseCommand<Arguments> {
 	readonly args = cmdArgs;
-	readonly argsOrderMatters = false;
 	readonly category = CommandCategory.DB;
 	readonly commandName = 'sp-skill';
 	readonly description = 'Get special skill info';
 	readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
+	async run(payload: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { args, reply } = payload;
 
-		if (!args.length) return this.sendUsageInstructions(payload);
+		const { level, name } = args;
 
-		const grade = parseGrade(args);
-		const name = parseQuery(args, [`${grade}`]);
+		// const grade = parseGrade(args);
+		// const name = parseQuery(args, [`${grade}`]);
 
 		const searchResult = spSkills.search(name);
 
 		if (!searchResult) {
-			await message.channel.send('Skill not found!');
+			await reply('Skill not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -52,14 +54,14 @@ export class SpSkillCommand extends BaseCommand {
 		const { result: skill, locales } = extractResult(searchResult);
 
 		let form: SpSkillForm | undefined;
-		if (grade) {
-			form = skill.forms.find(f => f.level === grade);
+		if (level) {
+			form = skill.forms.find(f => f.level === level);
 		} else {
 			form = skill.forms[skill.forms.length - 1];
 		}
 
 		if (!form) {
-			await message.channel.send('No such level for this skill!');
+			await reply('No such level for this skill!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_GRADE_NOT_FOUND,
@@ -69,16 +71,14 @@ export class SpSkillCommand extends BaseCommand {
 
 		const page = skill.forms.indexOf(form) + 1;
 
-		const embed = new SPSkillEmbed({
-			initialMessage: message, skill, page, locales
-		});
+		const embed = new SPSkillEmbed({ skill, page, locales });
 
 		await embed.send();
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,
 			target: skill.id,
-			args: JSON.stringify({ name, grade }),
+			args: JSON.stringify({ name, grade: level }),
 		};
 	}
 }

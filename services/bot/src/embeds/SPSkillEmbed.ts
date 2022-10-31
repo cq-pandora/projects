@@ -7,7 +7,7 @@ import PaginationEmbed from './PaginationEmbed';
 import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
 
 interface ISPSkillEmbedOptions {
-	initialMessage: Message;
+	initialMessage?: Message;
 	skill: SpSkill;
 	page: number | undefined;
 	locales: string[];

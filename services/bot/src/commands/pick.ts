@@ -43,7 +43,9 @@ type CollectionName = typeof CollectionValues[number];
 const cmdArgs: CommandArguments = {
 	collection: {
 		required: true,
-		description: `Collection to pick from.\nCan be one of ${CollectionValues.join(', ')}`,
+		// TODO migrate to choices
+		// description: `Collection to pick from.\nCan be one of ${CollectionValues.join(', ')}`,
+		description: 'Collection to pick from'
 	}
 };
 

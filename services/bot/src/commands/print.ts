@@ -1,17 +1,18 @@
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 
-const cmdArgs: CommandArguments = {
-	text: {
+const cmdArgs = {
+	text: ArgumentType.string({
 		required: true,
 		description: 'Text to print',
-	}
+	}),
 };
 
-export class PrintCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+export class PrintCommand extends BaseCommand<Arguments> {
 	readonly args = cmdArgs;
 	readonly argsOrderMatters = false;
 	readonly category = CommandCategory.MISC;
@@ -19,20 +20,14 @@ export class PrintCommand extends BaseCommand {
 	readonly description = 'Print text anonymously';
 	readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
+	async run({ reply, deleteOriginal, args }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { text } = args;
 
-		if (!args.length) return this.sendUsageInstructions(payload);
+		await deleteOriginal();
 
-		await message.delete();
-
-		const text = args.join(' ');
-
-		await message.channel.send({
-			embeds: [
-				{ description: text }
-			]
-		});
+		await reply([
+			{ description: text }
+		]);
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,

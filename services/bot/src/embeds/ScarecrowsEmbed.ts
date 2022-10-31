@@ -7,7 +7,7 @@ import PaginationEmbed from './PaginationEmbed';
 import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
 
 interface IScarecrowsEmbedOptions {
-	initialMessage: Message;
+	initialMessage?: Message;
 	scarecrows: Scarecrow | Scarecrow[];
 	locales: string[];
 }

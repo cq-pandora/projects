@@ -6,7 +6,7 @@ import preloadScripts from './preload';
 import config from './config';
 
 import unhandledRejection from './events/unhandledRejection';
-import message from './events/message';
+import interactionCreate from './events/interactionCreate';
 
 process.on('unhandledRejection', unhandledRejection);
 
@@ -36,7 +36,7 @@ process.on('unhandledRejection', unhandledRejection);
 
 	logger.verbose('Loading events...');
 
-	client.on('message', message(client));
+	client.on('interactionCreate', interactionCreate(client));
 	client.on('shardReconnecting', () => { logger.warn('Connection to Discord interrupted. Reconnecting...'); });
 	client.on('ready', () => {
 		logger.info(`Logged in as ${client.user!.tag}`);

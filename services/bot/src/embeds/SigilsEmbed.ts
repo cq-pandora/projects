@@ -12,7 +12,7 @@ import {
 import config from '../config';
 
 interface ISigilsEmbedOptions {
-	initialMessage: Message;
+	initialMessage?: Message;
 	sigs: Sigil | Sigil[];
 	locales: string[];
 }

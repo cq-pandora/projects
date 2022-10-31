@@ -123,15 +123,23 @@ actions['list-all'] = actions.list;
 const cmdArgs: CommandArguments = {
 	action: {
 		required: true,
-		description: `Action to perform.\nCan be one of ${Object.keys(actions).join(', ')}`,
+		// TODO migrate to subcommand
+		// description: `Action to perform.\nCan be one of ${Object.keys(actions).join(', ')}`,
+		description: 'Action to perform.',
 	},
 	field: {
 		required: false,
-		description: 'Field to translate.\nCan be block-name, block-description, passive-name, passive-description, lore, name, sbw-name or sbw-ability',
+		// TODO migrate to choices
+		// description: 'Field to translate.\nCan be block-name, block-description, passive-name,
+		// passive-description, lore, name, sbw-name or sbw-ability',
+		description: 'Field to translate.',
 	},
 	name: {
 		required: false,
-		description: 'Hero name.\n**Important**: this should be single word, so test if bot can find what you want to translate by that word',
+		// TODO migrate to own argument
+		// description: 'Hero name.\n**Important**:
+		// this should be single word, so test if bot can find what you want to translate by that word',
+		description: 'Hero name',
 	},
 	grade: {
 		required: false,
