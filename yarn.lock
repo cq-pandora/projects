@@ -2925,10 +2925,10 @@ google-play-scraper@^8.0.2:
     request "^2.88.0"
     throttled-request "^0.1.1"
 
-google-play-scraper@^9.1.0:
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/google-play-scraper/-/google-play-scraper-9.1.0.tgz#941bc6abf10cbe88726c4f1728994f3f46c94dda"
-  integrity sha512-vjcm9Q4423PvgxHpXqm1Zc8IvPqCfxce81JT5Z5zKqbKBZOTG0lw7RwJstT3SNoHXAez914YfUE2TmdVb7UEIg==
+google-play-scraper@^9.1.1:
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/google-play-scraper/-/google-play-scraper-9.1.1.tgz#ea27f551306e63f435dd8d707add460269fe9522"
+  integrity sha512-feolKsEk9lEVOpDVbxftoA6t3oG5xt9GgvkMDrC20yY9YYQt2r7blT1KRptW79hW63x746k21dE07QB0yf+MZw==
   dependencies:
     cheerio "^1.0.0-rc.10"
     debug "^2.2.0"
