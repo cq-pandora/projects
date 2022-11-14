@@ -17,7 +17,7 @@ const rewards: Record<string, string> = {
 };
 
 interface IFishesEmbedOptions {
-	initialMessage: Message;
+	initialMessage?: Message;
 	fishes: Fish | Fish[];
 	locales: string[];
 }

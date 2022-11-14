@@ -5,7 +5,7 @@ import { LocalizableMessageEmbed } from './LocalizableMessageEmbed';
 import { imageUrl, arraify } from '../util/functions';
 
 interface IHeroInheritanceEmbedOptions {
-	initialMessage: Message;
+	initialMessage?: Message;
 	portraits: string | string[];
 	page?: number;
 }

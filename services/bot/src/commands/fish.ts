@@ -3,19 +3,20 @@ import { fishes, extractResult } from '@cquest/data-provider';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 import { FishesEmbed } from '../embeds';
-import { parseQuery } from '../util';
 
-const cmdArgs: CommandArguments = {
-	name: {
+const cmdArgs = {
+	name: ArgumentType.string({
 		required: true,
 		description: 'Fish name',
-	}
+	}),
 };
 
-export class FishCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+export class FishCommand extends BaseCommand<Arguments> {
 	public readonly args = cmdArgs;
 	public readonly argsOrderMatters = false;
 	public readonly category = CommandCategory.DB;
@@ -23,16 +24,12 @@ export class FishCommand extends BaseCommand {
 	public readonly description = 'Get fish info';
 	public readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
-
-		if (!args.length) return this.sendUsageInstructions(payload);
-
-		const name = parseQuery(args);
+	async run({ reply, args }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { name } = args;
 		const { results: candidates, locales } = extractResult(fishes.searchAll(name));
 
 		if (!candidates.length) {
-			await message.channel.send('Fish not found!');
+			await reply('Fish not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -41,7 +38,7 @@ export class FishCommand extends BaseCommand {
 		}
 
 		const embed = new FishesEmbed({
-			initialMessage: message,
+			initialMessage: undefined,
 			fishes: candidates,
 			locales,
 		});

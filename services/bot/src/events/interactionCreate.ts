@@ -16,6 +16,10 @@ export default (client: Client): (interaction: Interaction) => Promise<void> => 
 		return Promise.resolve();
 	}
 
+	function editReply(msg: string | [any]): Promise<void> {
+		return Promise.resolve();
+	}
+
 	// parse message into command and arguments
 	const args = interaction.options.data.map(v => String(v.value));
 	const command = interaction.commandName;
@@ -77,7 +81,9 @@ export default (client: Client): (interaction: Interaction) => Promise<void> => 
 				client,
 				args: executable.parseArguments(interaction.options),
 				reply,
+				editReply,
 				author: interaction.user,
+				deleteOriginal: () => interaction.deleteReply(),
 			});
 
 			stat = {

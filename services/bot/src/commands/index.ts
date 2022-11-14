@@ -19,7 +19,6 @@ import manageAliases from './manage-aliases';
 import manageTranslations from './manage-translations';
 import math from './math';
 import pick from './pick';
-import ping from './ping';
 import portrait from './portrait';
 import print from './print';
 import pull from './pull';
@@ -36,7 +35,7 @@ import scarecrows from './scarecrows';
 
 const commands: ICommand<any>[] = [
 	about, alias, bait, berry, block, boss, champion, faction, fish, float, goddess, hero, inherit,
-	lenny, links, manageAliases, manageTranslations, math, pick, ping, portrait, print, pull, rod,
+	lenny, links, manageAliases, manageTranslations, math, pick, portrait, print, pull, rod,
 	sbwBlock, sbw, sigil, skin, spSkill, translate, waifu, interactions, scarecrows
 ];
 

@@ -13,7 +13,7 @@ import PaginationEmbed from '../PaginationEmbed';
 import { l, LocalizableMessageEmbed } from '../LocalizableMessageEmbed';
 
 interface IHeroInheritanceEmbedOptions {
-	initialMessage: Message;
+	initialMessage?: Message;
 	hero: Hero;
 	inherits: InheritanceLevel | InheritanceLevel[];
 	locales: string[];

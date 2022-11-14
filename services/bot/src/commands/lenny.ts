@@ -3,10 +3,10 @@ import { EmbedBuilder } from 'discord.js';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, NoCommandArguments
 } from '../common-types';
 
-export class LennyCommand extends BaseCommand {
+export class LennyCommand extends BaseCommand<NoCommandArguments> {
 	public readonly args = {};
 	public readonly argsOrderMatters = false;
 	public readonly category = CommandCategory.MISC;
@@ -14,12 +14,10 @@ export class LennyCommand extends BaseCommand {
 	public readonly description = '( ͡° ͜ʖ ͡°)';
 	public readonly protected = false;
 
-	async run({ message }: CommandPayload): Promise<Partial<CommandResult>> {
-		await message.channel.send({
-			embeds: [
-				new EmbedBuilder().setDescription('( ͡° ͜ʖ ͡°)')
-			]
-		});
+	async run({ reply }: CommandPayload<NoCommandArguments>): Promise<Partial<CommandResult>> {
+		await reply([
+			new EmbedBuilder().setDescription('( ͡° ͜ʖ ͡°)')
+		]);
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,

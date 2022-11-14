@@ -16,7 +16,7 @@ import {
 } from '../embeds';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 
 class Picker<T> {
@@ -28,7 +28,7 @@ class Picker<T> {
 		this.embed = embed;
 	}
 
-	pick(message: Message): PaginationEmbed {
+	pick(message?: Message): PaginationEmbed {
 		// eslint-disable-next-line new-cap
 		return new this.embed(message, this.collection[random(0, this.collection.length - 1)]);
 	}
@@ -40,16 +40,20 @@ const CollectionValues = stringTuple('berry', 'boss', 'champion', 'fish', 'fishi
 
 type CollectionName = typeof CollectionValues[number];
 
-const cmdArgs: CommandArguments = {
-	collection: {
+const cmdArgs = {
+	collection: ArgumentType.choice({
+		choices: CollectionValues.reduce((r, v) => ({
+			...r,
+			[v.replace('-', ' ')]: v
+		}), {}),
 		required: true,
-		// TODO migrate to choices
-		// description: `Collection to pick from.\nCan be one of ${CollectionValues.join(', ')}`,
-		description: 'Collection to pick from'
-	}
+		description: 'Collection to pick from',
+	}),
 };
 
-export class PickCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+export class PickCommand extends BaseCommand<Arguments> {
 	readonly args = cmdArgs;
 	readonly argsOrderMatters = false;
 	readonly category = CommandCategory.MISC;
@@ -84,19 +88,15 @@ export class PickCommand extends BaseCommand {
 		};
 	}
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
-
-		if (!args.length) return this.sendUsageInstructions(payload);
-
-		const collection = args[0].toLowerCase();
+	async run({ args, reply }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { collection } = args;
 
 		if (this.pickMapping === undefined) {
 			this.initializePickMapping();
 		}
 
 		if (!(collection in this.pickMapping!)) {
-			await message.channel.send('Collection not found!');
+			await reply('Collection not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -104,7 +104,7 @@ export class PickCommand extends BaseCommand {
 			};
 		}
 
-		await this.pickMapping![collection as CollectionName].pick(message).send();
+		await this.pickMapping![collection as CollectionName].pick(undefined).send();
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,

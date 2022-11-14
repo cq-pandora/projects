@@ -7,7 +7,7 @@ import PaginationEmbed from './PaginationEmbed';
 import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
 
 interface IBossesEmbedOptions {
-	initialMessage: Message;
+	initialMessage?: Message;
 	bosses: Boss | Boss[];
 	locales: string[];
 }

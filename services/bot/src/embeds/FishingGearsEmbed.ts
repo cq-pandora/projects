@@ -17,7 +17,7 @@ const currencies: Record<string, string> = {
 };
 
 export interface IFishingGearsEmbedOptions {
-	initialMessage: Message;
+	initialMessage?: Message;
 	gears: FishingGear | FishingGear[];
 	locales: string[];
 }

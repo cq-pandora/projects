@@ -1,5 +1,3 @@
-import { Message, TextChannel } from 'discord.js';
-
 import { translations, Translation } from '@cquest/db';
 import { HeroSBW, HeroForm } from '@cquest/entities';
 
@@ -9,10 +7,10 @@ import {
 
 import { LocalizableMessageEmbed } from '../embeds/LocalizableMessageEmbed';
 import {
-	splitText, chunk, parseGrade, getFieldKey
+	splitText, chunk, getFieldKey
 } from '../util';
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandReply, CommandResultCode, ArgumentType
 } from '../common-types';
 import { PaginationEmbed } from '../embeds';
 
@@ -56,62 +54,61 @@ type ActionArguments = {
 	id: string;
 };
 
-type Action = (message: Message, args: Partial<ActionArguments>) => Promise<void>;
+type Action = (reply: CommandReply, args: Partial<ActionArguments>) => Promise<void>;
 
 const actions: Record<string, Action> = {
-	list: async (message, { key }) => {
+	list: async (reply, { key }) => {
 		try {
 			const list = translationsToEmbeds(await translations.list(key));
 
 			if (!list.length) {
-				await message.channel.send('No pending translations!');
+				await reply('No pending translations!');
 				return;
 			}
 
-			const embed = new PaginationEmbed({ initialMessage: message })
+			const embed = new PaginationEmbed({ initialMessage: undefined })
 				.setArray(list)
-				.setChannel(message.channel)
 				.showPageIndicator(false)
 				.send();
 
 			await embed;
 		} catch (error) {
-			await message.channel.send('Unable to list submitted translations. Please, contact bot owner.');
+			await reply('Unable to list submitted translations. Please, contact bot owner.');
 
 			throw error;
 		}
 	},
-	accept: async (message, { id }) => {
+	accept: async (reply, { id }) => {
 		try {
 			const acceptedTranslation = await translations.accept(id!);
 
 			localizations[acceptedTranslation.locale][acceptedTranslation.key] = acceptedTranslation;
 
-			await message.channel.send('Translation accepted!');
+			await reply('Translation accepted!');
 		} catch (error) {
-			await message.channel.send('Unable to accept translation. Please, contact bot owner.');
+			await reply('Unable to accept translation. Please, contact bot owner.');
 
 			throw error;
 		}
 	},
-	decline: async (message, { id }) => {
+	decline: async (reply, { id }) => {
 		try {
 			await translations.decline(id!);
 
-			await message.channel.send('Translation declined!');
+			await reply('Translation declined!');
 		} catch (error) {
-			await message.channel.send('Unable to decline translation. Please, contact bot owner.');
+			await reply('Unable to decline translation. Please, contact bot owner.');
 
 			throw error;
 		}
 	},
-	clear: async (message, { key }) => {
+	clear: async (reply, { key }) => {
 		try {
 			await translations.declineAllUnaccepted(key!);
 
-			await message.channel.send('Translation cleared!');
+			await reply('Translation cleared!');
 		} catch (error) {
-			await message.channel.send('Unable to clear translations. Please, contact bot owner.');
+			await reply('Unable to clear translations. Please, contact bot owner.');
 
 			throw error;
 		}
@@ -120,38 +117,51 @@ const actions: Record<string, Action> = {
 
 actions['list-all'] = actions.list;
 
-const cmdArgs: CommandArguments = {
-	action: {
+const cmdArgs = {
+	action: ArgumentType.choice({
 		required: true,
-		// TODO migrate to subcommand
-		// description: `Action to perform.\nCan be one of ${Object.keys(actions).join(', ')}`,
+		choices: Object.keys(actions).reduce((r, v) => ({
+			...r,
+			[v]: v,
+		}), {}),
 		description: 'Action to perform.',
-	},
-	field: {
+	}),
+	field: ArgumentType.choice({
 		required: false,
-		// TODO migrate to choices
-		// description: 'Field to translate.\nCan be block-name, block-description, passive-name,
-		// passive-description, lore, name, sbw-name or sbw-ability',
+		choices: {
+			'Block name': 'block-name',
+			'Block description': 'block-description',
+			'Passive name': 'passive-name',
+			'Passive description': 'passive-description',
+			Lore: 'lore',
+			Name: 'name',
+			'SBW name': 'sbw-name',
+			'SBW description': 'sbw-ability',
+		},
+		default: null,
 		description: 'Field to translate.',
-	},
-	name: {
+	}),
+	name: ArgumentType.string({
 		required: false,
-		// TODO migrate to own argument
-		// description: 'Hero name.\n**Important**:
-		// this should be single word, so test if bot can find what you want to translate by that word',
+		default: null,
+		// TODO autocomplete
 		description: 'Hero name',
-	},
-	grade: {
+	}),
+	grade: ArgumentType.number({
 		required: false,
 		description: 'SBW or hero grade',
-	},
-	id: {
+		default: 6,
+	}),
+	id: ArgumentType.string({
 		required: false,
 		description: 'ID of translations to accept or decline',
-	}
+		default: null,
+	}),
 };
 
-export class ManageTranslationsCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+export class ManageTranslationsCommand extends BaseCommand<Arguments> {
 	readonly args = cmdArgs;
 	readonly argsOrderMatters = true;
 	readonly category = CommandCategory.PROTECTED;
@@ -159,15 +169,15 @@ export class ManageTranslationsCommand extends BaseCommand {
 	readonly description = 'Heroes info translations management';
 	readonly protected = true;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
+	async run({ args, reply }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const {
+			action: actionName,
+			field,
+			name: heroName,
+			grade,
+			id,
+		} = args;
 
-		if (!args.length) return this.sendUsageInstructions(payload);
-
-		const [actionNameRaw, field, heroName, gradeStr, id] = args;
-
-		const actionName = actionNameRaw.toLowerCase();
-		const grade = parseGrade([gradeStr]);
 		const action = actions[actionName];
 
 		if (!action) {
@@ -185,7 +195,7 @@ export class ManageTranslationsCommand extends BaseCommand {
 		}
 
 		if (['accept', 'decline', 'list-all'].includes(actionName)) {
-			await action(message, {
+			await action(reply, {
 				action: actionName,
 				id: field,
 			});
@@ -203,7 +213,7 @@ export class ManageTranslationsCommand extends BaseCommand {
 		const result = heroes.search(heroName);
 
 		if (!result) {
-			await message.channel.send('Hero not found!');
+			await reply('Hero not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -218,7 +228,7 @@ export class ManageTranslationsCommand extends BaseCommand {
 			sbw = hero.sbws.find(f => f.star === grade);
 
 			if (!sbw) {
-				await message.channel.send('Soulbound weapon grade not found!');
+				await reply('Soulbound weapon grade not found!');
 
 				return {
 					statusCode: CommandResultCode.ENTITY_GRADE_NOT_FOUND,
@@ -229,7 +239,7 @@ export class ManageTranslationsCommand extends BaseCommand {
 			form = hero.forms.find(f => f.star === grade);
 
 			if (!form) {
-				await message.channel.send('Hero grade not found!');
+				await reply('Hero grade not found!');
 
 				return {
 					statusCode: CommandResultCode.ENTITY_GRADE_NOT_FOUND,
@@ -241,7 +251,7 @@ export class ManageTranslationsCommand extends BaseCommand {
 		const key = getFieldKey(field, form, sbw);
 
 		if (!key) {
-			await message.channel.send('Unknown field!');
+			await reply('Unknown field!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -250,7 +260,7 @@ export class ManageTranslationsCommand extends BaseCommand {
 		}
 
 		if (['list', 'clear'].includes(actionName)) {
-			await action(message, {
+			await action(reply, {
 				action: actionName,
 				key
 			});

@@ -114,6 +114,8 @@ export type CommandArguments = {
 	[k: string]: BooleanCommandArgument | StringCommandArgument | NumberCommandArgument | ChoiceCommandArgument;
 };
 
+export type NoCommandArguments = {};
+
 export type CommandArgumentValues<Arguments extends CommandArguments> = {
 	[k in keyof Arguments]: ArgumentValueTypes[Arguments[k]['type']];
 	// FIXME take required into account
@@ -130,6 +132,7 @@ export type CommandPayload<Arguments extends CommandArguments> = {
 	client: Client;
 	args: CommandArgumentValues<Arguments>;
 	reply: CommandReply;
+	editReply: CommandReply;
 	author: CommandAuthor;
 	deleteOriginal: DeleteOriginalMessage;
 };
@@ -148,7 +151,8 @@ export interface ICommand<Arguments extends CommandArguments> {
 	slashCommand(): SlashCommandBuilder;
 	// FIXME array of what?
 	// FIXME name of arguments check
-	autocomplete<K extends keyof AutocompleteOnly<Arguments>>(name: K): Promise<ReadonlyArray<Arguments[K]>>;
+	autocomplete(name: any): Promise<any>;
+	// autocomplete<K extends keyof AutocompleteOnly<Arguments>>(name: K): Promise<ReadonlyArray<Arguments[K]>>;
 	parseArguments(source: CommandArgumentsSource): CommandArgumentValues<Arguments>;
 	run(payload: CommandPayload<Arguments>): Promise<Partial<CommandResult>>;
 }

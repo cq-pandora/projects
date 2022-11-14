@@ -9,7 +9,7 @@ import PaginationEmbed from './PaginationEmbed';
 import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
 
 interface IFactionsEmbedOptions {
-	initialMessage: Message;
+	initialMessage?: Message;
 	factions: Faction | Faction[];
 	locales: string[];
 }

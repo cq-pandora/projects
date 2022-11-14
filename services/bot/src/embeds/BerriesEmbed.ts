@@ -10,7 +10,7 @@ import PaginationEmbed from './PaginationEmbed';
 import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
 
 export interface IBerriesEmbedOptions {
-	initialMessage: Message;
+	initialMessage?: Message;
 	entities: Berry | Berry[];
 	locales: string[];
 }

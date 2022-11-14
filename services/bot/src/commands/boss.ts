@@ -3,19 +3,20 @@ import { bosses, extractResult } from '@cquest/data-provider';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 import { BossesEmbed } from '../embeds';
-import { parseQuery } from '../util';
 
-const cmdArgs: CommandArguments = {
-	name: {
+const cmdArgs = {
+	name: ArgumentType.string({
 		required: true,
 		description: 'Boss name',
-	}
+	}),
 };
 
-export class BossCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+export class BossCommand extends BaseCommand<Arguments> {
 	public readonly args = cmdArgs;
 	public readonly argsOrderMatters = false;
 	public readonly category = CommandCategory.DB;
@@ -23,17 +24,12 @@ export class BossCommand extends BaseCommand {
 	public readonly description = 'Get boss stats';
 	public readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
-
-		if (!args.length) return this.sendUsageInstructions(payload);
-
-		const name = parseQuery(args);
-
+	async run({ reply, args }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { name } = args;
 		const { results: entities, locales } = extractResult(bosses.searchAll(name));
 
 		if (!entities.length) {
-			await message.channel.send('Boss not found!');
+			await reply('Boss not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -41,7 +37,7 @@ export class BossCommand extends BaseCommand {
 		}
 
 		const embed = new BossesEmbed({
-			initialMessage: message,
+			initialMessage: undefined,
 			bosses: entities,
 			locales,
 		});

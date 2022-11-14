@@ -3,18 +3,20 @@ import { goddesses, extractResult } from '@cquest/data-provider';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ArgumentType
 } from '../common-types';
 import { GoddessesEmbed } from '../embeds';
 
-const cmdArgs: CommandArguments = {
-	name: {
+const cmdArgs = {
+	name: ArgumentType.string({
 		required: true,
 		description: 'Goddess name',
-	},
+	}),
 };
 
-export class GoddessCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+export class GoddessCommand extends BaseCommand<Arguments> {
 	public readonly args = cmdArgs;
 	public readonly argsOrderMatters = false;
 	public readonly category = CommandCategory.DB;
@@ -22,17 +24,11 @@ export class GoddessCommand extends BaseCommand {
 	public readonly description = 'Get goddess skill information';
 	public readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
-
-		if (!args.length) return this.sendUsageInstructions(payload);
-
-		const name = args.join(' ');
-
-		const { results: candidates, locales } = extractResult(goddesses.searchAll(name));
+	async run({reply, args}: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { results: candidates, locales } = extractResult(goddesses.searchAll(args.name));
 
 		if (!candidates.length) {
-			await message.channel.send('Goddess not found!');
+			await reply('Goddess not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -40,7 +36,7 @@ export class GoddessCommand extends BaseCommand {
 		}
 
 		const embed = new GoddessesEmbed({
-			initialMessage: message,
+			initialMessage: undefined,
 			goddesses: candidates,
 			locales,
 		});
@@ -50,7 +46,7 @@ export class GoddessCommand extends BaseCommand {
 		return {
 			statusCode: CommandResultCode.SUCCESS,
 			target: candidates.map(g => g.id).join(','),
-			args: JSON.stringify({ input: args.join(' ') }),
+			args: JSON.stringify(args),
 		};
 	}
 }
