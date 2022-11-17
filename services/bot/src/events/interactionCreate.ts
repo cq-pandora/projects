@@ -13,17 +13,18 @@ import { CommandArgumentsSource } from '../common-types';
 export default (client: Client): (interaction: Interaction) => Promise<void> => async (interaction): Promise<void> => {
 	if (!interaction.isCommand()) return;
 
-	async function reply(msg: string | [any]): Promise<void> {
-		if (interaction.isCommand()) {
-			if (typeof msg === 'string') {
-				await interaction.reply(msg);
-			} else {
-				await interaction.reply({
-					embeds: msg
-				});
-			}
+	// TODO better typing
+	async function reply(msg: string | [any] | object): Promise<void> {
+		if (!interaction.isCommand()) {
+			return;
 		}
-		return Promise.resolve();
+		if (Array.isArray(msg)) {
+			await interaction.reply({
+				embeds: msg
+			});
+		} else {
+			await interaction.reply(msg);
+		}
 	}
 
 	// parse message into command and arguments

@@ -1,4 +1,4 @@
-import { EmbedBuilder } from 'discord.js';
+import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
 
 import { HeroForm } from '@cquest/entities';
 import { heroes } from '@cquest/data-provider';
@@ -74,7 +74,7 @@ type PullType = typeof PullValues[number];
 const cmdArgs = {
 	type: ArgumentType.choice({
 		required: false,
-		description: `Pull type. Can be one of  ${PullValues.join(', ')}`,
+		description: 'Pull type',
 		default: 'contract',
 		choices: {
 			Contract: 'contract',
@@ -209,14 +209,12 @@ export class PullCommand extends BaseCommand<Arguments> {
 				chunks.map(chunk => ({ name: '\u200b', value: chunk.join('\n') }))
 			);
 
-		// FIXME another raw reply
-
-		// await reply({
-		// embeds: [embed],
-		// files: [
-		// new AttachmentBuilder(await canvas.getBufferAsync('image/png'), { name: 'pull.png' })
-		// ]
-		// });
+		await reply({
+			embeds: [embed],
+			files: [
+				new AttachmentBuilder(await canvas.getBufferAsync('image/png'), { name: 'pull.png' })
+			]
+		});
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,

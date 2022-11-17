@@ -93,9 +93,9 @@ export class InteractionsCommand extends BaseCommand<Arguments> {
 
 		for (const msg of msgs) {
 			// FIXME attachements
-			// await reply({
-			// files: msg.map(v => ({ attachment: v }))
-			// });
+			await reply({
+				files: msg.map(v => ({ attachment: v }))
+			});
 		}
 
 		return {

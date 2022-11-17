@@ -13,6 +13,7 @@ export type CommandReply = {
 	// TODO make this embeds
 	(embeds: [any]): Promise<void>;
 	(message: string): Promise<void>;
+	(raw: object): Promise<void>;
 };
 
 export enum CommandCategory {
