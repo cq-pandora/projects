@@ -24,9 +24,9 @@ export class FishCommand extends BaseCommand<Arguments> {
 	public readonly description = 'Get fish info';
 	public readonly protected = false;
 
-	async run({ reply, args }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { name } = args;
-		const { results: candidates, locales } = extractResult(fishes.searchAll(name));
+		const { results: candidates } = extractResult(fishes.searchAll(name));
 
 		if (!candidates.length) {
 			await reply('Fish not found!');
@@ -38,9 +38,7 @@ export class FishCommand extends BaseCommand<Arguments> {
 		}
 
 		const embed = new FishesEmbed({
-			initialMessage: undefined,
-			fishes: candidates,
-			locales,
+			initial, fishes: candidates
 		});
 
 		await embed.send();

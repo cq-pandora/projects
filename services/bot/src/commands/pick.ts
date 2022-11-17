@@ -35,8 +35,8 @@ class Picker<T> {
 }
 
 const CollectionValues = stringTuple('berry', 'boss', 'champion', 'fish', 'fishing-gear',
-	'rod', 'bait', 'float', 'goddess', 'faction', 'block', 'sbw', 'hero',
-	'skin', 'portrait', 'sigil', 'skill');
+	'rod', 'bait', 'float', 'goddess', 'faction',
+	'block', 'sbw', 'hero', 'skin', 'portrait', 'sigil', 'skill');
 
 type CollectionName = typeof CollectionValues[number];
 

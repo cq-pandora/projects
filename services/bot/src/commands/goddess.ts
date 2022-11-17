@@ -3,7 +3,7 @@ import { goddesses, extractResult } from '@cquest/data-provider';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ArgumentType
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 import { GoddessesEmbed } from '../embeds';
 
@@ -24,8 +24,8 @@ export class GoddessCommand extends BaseCommand<Arguments> {
 	public readonly description = 'Get goddess skill information';
 	public readonly protected = false;
 
-	async run({reply, args}: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
-		const { results: candidates, locales } = extractResult(goddesses.searchAll(args.name));
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { results: candidates } = extractResult(goddesses.searchAll(args.name));
 
 		if (!candidates.length) {
 			await reply('Goddess not found!');
@@ -36,9 +36,8 @@ export class GoddessCommand extends BaseCommand<Arguments> {
 		}
 
 		const embed = new GoddessesEmbed({
-			initialMessage: undefined,
+			initial,
 			goddesses: candidates,
-			locales,
 		});
 
 		await embed.send();

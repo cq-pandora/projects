@@ -3,37 +3,35 @@ import { Message } from 'discord.js';
 import {
 	Hero, HeroClassColors, InheritanceLevel, HeroForm
 } from '@cquest/entities';
-import { inheritance } from '@cquest/data-provider';
+import { inheritance, translate as l } from '@cquest/data-provider';
 
 import {
 	statsToString, imageUrl, sumStats, arraify
 } from '../../util/functions';
 
-import PaginationEmbed from '../PaginationEmbed';
-import { l, LocalizableMessageEmbed } from '../LocalizableMessageEmbed';
+import PaginationEmbed, { InitialMessageSource } from '../PaginationEmbed';
+import PandoraEmbed from '../PandoraEmbed';
 
 interface IHeroInheritanceEmbedOptions {
-	initialMessage?: Message;
+	initial: InitialMessageSource;
 	hero: Hero;
 	inherits: InheritanceLevel | InheritanceLevel[];
-	locales: string[];
 }
 
 export default class HeroInheritanceEmbed extends PaginationEmbed {
 	constructor({
-		initialMessage,
+		initial,
 		hero,
 		inherits,
-		locales
 	}: IHeroInheritanceEmbedOptions) {
-		super({ initialMessage, locales });
+		super({ initial });
 
 		const form = hero.forms.find(f => f.star === 6) as HeroForm;
 		const maxBerry = sumStats(form.maxBerries, form);
 
 		const embeds = arraify(inherits).map(inheritLvl => (
-			new LocalizableMessageEmbed()
-				.setTitle(l`${form.name} (${inheritLvl === 0 ? '+Berry' : `Lv. ${inheritLvl}`})`)
+			new PandoraEmbed()
+				.setTitle(`${l(form.name)} (${inheritLvl === 0 ? '+Berry' : `Lv. ${inheritLvl}`})`)
 				.setDescription(statsToString(
 					inheritLvl !== 0
 						? sumStats(inheritance[hero.clazz][inheritLvl], maxBerry)
@@ -41,6 +39,7 @@ export default class HeroInheritanceEmbed extends PaginationEmbed {
 				))
 				.setThumbnail(imageUrl(`heroes/${form.image}`))
 				.setColor(HeroClassColors[hero.clazz])
+				.toEmbed()
 		));
 
 		this.setArray(embeds)

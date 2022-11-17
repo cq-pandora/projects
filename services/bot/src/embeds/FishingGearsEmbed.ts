@@ -1,8 +1,8 @@
-import { Message } from 'discord.js';
 import { FishingGear } from '@cquest/entities';
+import { translate as l } from '@cquest/data-provider';
 
-import PaginationEmbed from './PaginationEmbed';
-import { LocalizableMessageEmbed, l } from './LocalizableMessageEmbed';
+import PaginationEmbed, { InitialMessageSource } from './PaginationEmbed';
+import PandoraEmbed from './PandoraEmbed';
 
 import {
 	capitalizeFirstLetter, imageUrl, toClearNumber, arraify
@@ -17,19 +17,18 @@ const currencies: Record<string, string> = {
 };
 
 export interface IFishingGearsEmbedOptions {
-	initialMessage?: Message;
+	initial: InitialMessageSource;
 	gears: FishingGear | FishingGear[];
-	locales: string[];
 }
 
 export default class FishingGearsEmbed extends PaginationEmbed {
-	constructor({ locales, initialMessage, gears }: IFishingGearsEmbedOptions) {
-		super({ initialMessage, locales });
+	constructor({ initial, gears }: IFishingGearsEmbedOptions) {
+		super({ initial });
 
 		const embeds = arraify(gears).map((gear) => {
-			const embed = new LocalizableMessageEmbed()
-				.setTitle(l`${gear.name} (${gear.grade}★)`)
-				.setDescription(l`${gear.description}`)
+			const embed = new PandoraEmbed()
+				.setTitle(`${l(gear.name)} (${gear.grade}★)`)
+				.setDescription(l(gear.description))
 				.addField(`${capitalizeFirstLetter(gear.habitat)} bonus`, gear.habitatBonus, true)
 				.addField('Bite chance', gear.biteChance, true)
 				.addField('Big fish chance', gear.bigChance, true)
@@ -40,7 +39,7 @@ export default class FishingGearsEmbed extends PaginationEmbed {
 				embed.addField('Event bonus', gear.eventChance);
 			}
 
-			return embed;
+			return embed.toEmbed();
 		});
 
 		this.setArray(embeds).showPageIndicator(false);

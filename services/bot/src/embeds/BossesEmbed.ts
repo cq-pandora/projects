@@ -1,25 +1,25 @@
-import { Message } from 'discord.js';
 import { Boss } from '@cquest/entities';
+import { translate as l } from '@cquest/data-provider';
 
 import { statsToString, imageUrl, arraify } from '../util/functions';
 
-import PaginationEmbed from './PaginationEmbed';
-import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
+import PaginationEmbed, { InitialMessageSource } from './PaginationEmbed';
+import PandoraEmbed from './PandoraEmbed';
 
 interface IBossesEmbedOptions {
-	initialMessage?: Message;
+	initial: InitialMessageSource;
 	bosses: Boss | Boss[];
-	locales: string[];
 }
 
 export default class BossesEmbed extends PaginationEmbed {
-	constructor({ initialMessage, locales, bosses }: IBossesEmbedOptions) {
-		super({ initialMessage, locales });
+	constructor({ initial, bosses }: IBossesEmbedOptions) {
+		super({ initial });
 
-		const embeds = arraify(bosses).map(boss => new LocalizableMessageEmbed()
-			.setTitle(l`${boss.name}`)
+		const embeds = arraify(bosses).map(boss => new PandoraEmbed()
+			.setTitle(l(boss.name))
 			.setDescription(statsToString(boss))
-			.setThumbnail(imageUrl(`heroes/${boss.image}`)));
+			.setThumbnail(imageUrl(`heroes/${boss.image}`))
+			.toEmbed());
 
 		this.setArray(embeds)
 			.showPageIndicator(false);

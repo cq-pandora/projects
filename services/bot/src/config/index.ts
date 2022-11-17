@@ -3,9 +3,7 @@ import { Deserialize } from 'cerialize';
 import prefixedEnv from '../util/functions/prefixedEnv';
 import loadRootConfig from '../util/functions/loadRootConfig';
 
-import {
-	Snowflake, PermissionMergeResult, PermissionTarget, ICommand, CommandArguments
-} from '../common-types';
+import { ICommand, CommandArguments } from '../common-types';
 
 import AliasesConfig from './AliasesConfig';
 import DBConfig from './DBConfig';
@@ -20,6 +18,7 @@ type Commands = {
 class Config {
 	public readonly token: string;
 	public readonly appId: string;
+	public readonly guildId: string;
 	public readonly prefix: string;
 	public readonly parsedData: string;
 	public readonly localImagePrefix: string;
@@ -40,6 +39,7 @@ class Config {
 
 		this.token = prefixedEnv('TOKEN', prefix);
 		this.appId = prefixedEnv('APPLICATION_ID', prefix);
+		this.guildId = prefixedEnv('GUILD_ID', prefix);
 		this.prefix = prefixedEnv('PREFIX', prefix);
 		this.parsedData = prefixedEnv('CQ_NORMALIZED_DATA_PATH', prefix);
 		this.localImagePrefix = prefixedEnv('LOCAL_IMAGES_PREFIX', prefix);

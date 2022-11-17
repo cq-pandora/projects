@@ -1,13 +1,13 @@
-import { Message } from 'discord.js';
 import { Fish } from '@cquest/entities';
+import { translate as l } from '@cquest/data-provider';
 
 import {
 	capitalizeFirstLetter, imageUrl, toClearNumber, arraify
 } from '../util/functions';
 import config from '../config';
 
-import PaginationEmbed from './PaginationEmbed';
-import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
+import PaginationEmbed, { InitialMessageSource } from './PaginationEmbed';
+import PandoraEmbed from './PandoraEmbed';
 
 const rewards: Record<string, string> = {
 	ITEM_FISHCOIN: config.emojis.fishcoin,
@@ -17,25 +17,25 @@ const rewards: Record<string, string> = {
 };
 
 interface IFishesEmbedOptions {
-	initialMessage?: Message;
+	initial: InitialMessageSource;
 	fishes: Fish | Fish[];
-	locales: string[];
 }
 
 export default class FishesEmbed extends PaginationEmbed {
-	constructor({ initialMessage, fishes, locales }: IFishesEmbedOptions) {
-		super({ initialMessage, locales });
+	constructor({ initial, fishes }: IFishesEmbedOptions) {
+		super({ initial });
 
-		const embeds = arraify(fishes).map(fish => new LocalizableMessageEmbed()
-			.setTitle(l`${fish.name} (${fish.grade}★)`)
-			.setDescription(l`${fish.description}`)
+		const embeds = arraify(fishes).map(fish => new PandoraEmbed()
+			.setTitle(`${l(fish.name)} (${fish.grade}★)`)
+			.setDescription(l(fish.description))
 			.addField('Exp', fish.exp, true)
 			.addField('Area type', capitalizeFirstLetter(fish.habitat), true)
 			.addField('Initial range', `${fish.startsFrom}m`, true)
 			.addField(`Reward${fish.rewards.length > 1 ? 's' : ''}`,
 				fish.rewards.map(r => `${r.amount > 1 ? toClearNumber(r.amount) : ''} ${rewards[r.type]}`).join('\n'),
 				true)
-			.setThumbnail(imageUrl(`fish/${fish.image}`)));
+			.setThumbnail(imageUrl(`fish/${fish.image}`))
+			.toEmbed());
 
 		this.setArray(embeds).showPageIndicator(false);
 	}

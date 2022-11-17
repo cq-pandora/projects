@@ -4,9 +4,8 @@ import { heroes, extractResult } from '@cquest/data-provider';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ArgumentType
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
-import { parseQuery, parseInheritance } from '../util';
 import { HeroInheritanceEmbed } from '../embeds';
 
 const cmdArgs = {
@@ -31,7 +30,7 @@ export class InheritCommand extends BaseCommand<Arguments> {
 	readonly description = 'Get hero inheritance stats for different levels or MAX Berried if level is 0';
 	readonly protected = false;
 
-	async run({ reply, args }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { name, inheritance } = args;
 
 		const searchResult = heroes.search(name);
@@ -44,7 +43,7 @@ export class InheritCommand extends BaseCommand<Arguments> {
 			};
 		}
 
-		const { result: hero, locales } = extractResult(searchResult);
+		const { result: hero } = extractResult(searchResult);
 
 		const form = hero.forms.find(f => f.star === 6);
 
@@ -63,10 +62,9 @@ export class InheritCommand extends BaseCommand<Arguments> {
 		) as InheritanceLevel[];
 
 		const embed = new HeroInheritanceEmbed({
-			initialMessage: undefined,
+			initial,
 			hero,
 			inherits: levels,
-			locales,
 		});
 
 		await embed.send();

@@ -1,8 +1,8 @@
-import { Message } from 'discord.js';
 import { Hero } from '@cquest/entities';
+import { InitialMessageSource } from '../PaginationEmbed';
 
 export default interface IHeroEmbedConstructorOptions {
-	initialMessage: Message;
+	initial: InitialMessageSource;
 	hero: Hero;
 	page?: number;
 	locales: string[];

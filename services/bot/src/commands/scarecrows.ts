@@ -1,6 +1,6 @@
 import { CommandResultCode, Scarecrow } from '@cquest/entities';
 import {
-	scarecrows, extractResult, locales as allLocales, Locale
+	scarecrows, extractResult,
 } from '@cquest/data-provider';
 
 import {
@@ -28,14 +28,11 @@ export class ScarecrowsCommand extends BaseCommand<Arguments> {
 	public readonly description: string = 'Get scarecrow stats and info';
 	public readonly protected: boolean = false;
 
-	public async run(payload: CommandPayload<typeof cmdArgs>): Promise<Partial<CommandResult>> {
-		const { reply, args } = payload;
-
+	public async run({ reply, args, initial }: CommandPayload<typeof cmdArgs>): Promise<Partial<CommandResult>> {
 		let entities: Scarecrow[];
-		let locales: Locale[];
 
 		if (args.name) {
-			const { results, locales: resultLocales } = extractResult(scarecrows.searchAll(args.name));
+			const { results } = extractResult(scarecrows.searchAll(args.name));
 
 			if (!results.length) {
 				await reply('Scarecrow not found!');
@@ -46,20 +43,12 @@ export class ScarecrowsCommand extends BaseCommand<Arguments> {
 			}
 
 			entities = results;
-			locales = resultLocales;
 		} else {
 			entities = scarecrows.list();
-			locales = allLocales;
 		}
 
 		const embed = new ScarecrowsEmbed({
-			locales: locales.sort((a, b) => {
-				if (a === 'en_us') return -1;
-
-				if (b === 'en_us') return 1;
-
-				return 0;
-			}),
+			initial,
 			scarecrows: entities,
 		});
 

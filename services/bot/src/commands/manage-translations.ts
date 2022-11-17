@@ -5,23 +5,24 @@ import {
 	heroes, heroKeysDescription, extractResult, localizations
 } from '@cquest/data-provider';
 
-import { LocalizableMessageEmbed } from '../embeds/LocalizableMessageEmbed';
 import {
 	splitText, chunk, getFieldKey
 } from '../util';
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandReply, CommandResultCode, ArgumentType
 } from '../common-types';
-import { PaginationEmbed } from '../embeds';
+import {
+	EmbedSource, InitialMessageSource, PaginationEmbed, PandoraEmbed
+} from '../embeds';
 
 import BaseCommand from './abstract/BaseCommand';
 
-function translationsToEmbeds(ts: Translation[]): LocalizableMessageEmbed[] {
-	const embeds: LocalizableMessageEmbed[] = [];
+function translationsToEmbeds(ts: Translation[]): EmbedSource[] {
+	const embeds: EmbedSource[] = [];
 
 	let i = 0;
 	for (const translationsChunk of chunk(ts, 10)) {
-		const embed = new LocalizableMessageEmbed()
+		const embed = new PandoraEmbed()
 			.setFooter(`Translations ${i * 10 + 1}-${i * 10 + translationsChunk.length}/${ts.length}`);
 
 		for (const translation of translationsChunk) {
@@ -39,7 +40,7 @@ function translationsToEmbeds(ts: Translation[]): LocalizableMessageEmbed[] {
 			}
 		}
 
-		embeds.push(embed);
+		embeds.push(embed.toEmbed());
 
 		i += 1;
 	}
@@ -54,10 +55,10 @@ type ActionArguments = {
 	id: string;
 };
 
-type Action = (reply: CommandReply, args: Partial<ActionArguments>) => Promise<void>;
+type Action = (reply: CommandReply, args: Partial<ActionArguments>, initial: InitialMessageSource) => Promise<void>;
 
 const actions: Record<string, Action> = {
-	list: async (reply, { key }) => {
+	list: async (reply, { key }, initial) => {
 		try {
 			const list = translationsToEmbeds(await translations.list(key));
 
@@ -66,7 +67,7 @@ const actions: Record<string, Action> = {
 				return;
 			}
 
-			const embed = new PaginationEmbed({ initialMessage: undefined })
+			const embed = new PaginationEmbed({ initial })
 				.setArray(list)
 				.showPageIndicator(false)
 				.send();
@@ -169,7 +170,7 @@ export class ManageTranslationsCommand extends BaseCommand<Arguments> {
 	readonly description = 'Heroes info translations management';
 	readonly protected = true;
 
-	async run({ args, reply }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+	async run({ args, reply, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const {
 			action: actionName,
 			field,
@@ -195,10 +196,14 @@ export class ManageTranslationsCommand extends BaseCommand<Arguments> {
 		}
 
 		if (['accept', 'decline', 'list-all'].includes(actionName)) {
-			await action(reply, {
-				action: actionName,
-				id: field,
-			});
+			await action(
+				reply,
+				{
+					action: actionName,
+					id: field,
+				},
+				initial,
+			);
 
 			return {
 				statusCode: CommandResultCode.SUCCESS,
@@ -260,10 +265,14 @@ export class ManageTranslationsCommand extends BaseCommand<Arguments> {
 		}
 
 		if (['list', 'clear'].includes(actionName)) {
-			await action(reply, {
-				action: actionName,
-				key
-			});
+			await action(
+				reply,
+				{
+					action: actionName,
+					key
+				},
+				initial,
+			);
 
 			return {
 				statusCode: CommandResultCode.SUCCESS,

@@ -24,9 +24,9 @@ class BerryCommand extends BaseCommand<Arguments> {
 	public readonly description = 'Get berry info';
 	public readonly protected = false;
 
-	async run({ reply, args }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { name } = args;
-		const { results: candidates, locales } = extractResult(berries.searchAll(name));
+		const { results: candidates } = extractResult(berries.searchAll(name));
 
 		if (!candidates.length) {
 			await reply('Berry not found!');
@@ -38,9 +38,7 @@ class BerryCommand extends BaseCommand<Arguments> {
 		}
 
 		const embed = new BerriesListEmbed({
-			initialMessage: undefined,
-			entities: candidates,
-			locales,
+			initial, entities: candidates,
 		});
 
 		await embed.send();

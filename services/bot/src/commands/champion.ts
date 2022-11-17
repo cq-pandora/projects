@@ -30,7 +30,7 @@ export class ChampionCommand extends BaseCommand<Arguments> {
 	public readonly description = 'Get champion info';
 	public readonly protected = false;
 
-	async run({ reply, args }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { name, grade } = args;
 		const searchResult = champions.search(name);
 
@@ -42,7 +42,7 @@ export class ChampionCommand extends BaseCommand<Arguments> {
 			};
 		}
 
-		const { result: champion, locales } = extractResult(searchResult);
+		const { result: champion } = extractResult(searchResult);
 
 		let form: ChampionForm | undefined;
 		if (grade) {
@@ -62,7 +62,7 @@ export class ChampionCommand extends BaseCommand<Arguments> {
 		const page = champion.forms.indexOf(form) + 1;
 
 		const embed = new ChampionEmbed({
-			initialMessage: undefined, champion, page, locales
+			initial, champion, page,
 		});
 
 		await embed.send();

@@ -1,28 +1,28 @@
 import { HeroClassColors } from '@cquest/entities';
+import { translate as l } from '@cquest/data-provider';
 
 import { imageUrl } from '../../util/functions';
 
 import PaginationEmbed from '../PaginationEmbed';
-import { l, LocalizableMessageEmbed } from '../LocalizableMessageEmbed';
+import PandoraEmbed from '../PandoraEmbed';
 
 import IHeroEmbedConstructorOptions from './IHeroEmbedConstructorOptions';
 
 export default class HeroSBWBlockEmbed extends PaginationEmbed {
 	constructor({
-		initialMessage,
+		initial,
 		hero,
 		page,
-		locales
 	}: IHeroEmbedConstructorOptions) {
-		super({ initialMessage, locales });
+		super({ initial });
 
 		const embeds = hero.forms.map((form) => {
 			const sbw = hero.sbws.find(s => form.star === s.star);
 
-			const embed = new LocalizableMessageEmbed()
-				.setTitle(l`${form.name} (${form.star}★)`)
+			const embed = new PandoraEmbed()
+				.setTitle(`${l(form.name)} (${form.star}★)`)
 				.setThumbnail(imageUrl(`skills/${form.blockImage}`))
-				.addField(l`${form.blockName} (Lv. ${form.skillLvl})`, l(form.blockDescription))
+				.addField(`${l(form.blockName)} (Lv. ${form.skillLvl})`, l(form.blockDescription))
 				.setColor(HeroClassColors[hero.clazz]);
 
 			if (form.passiveName) {
@@ -33,7 +33,7 @@ export default class HeroSBWBlockEmbed extends PaginationEmbed {
 				embed.addField('SBW effect', l(sbw.ability));
 			}
 
-			return embed;
+			return embed.toEmbed();
 		});
 
 		this.setArray(embeds)

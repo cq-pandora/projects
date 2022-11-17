@@ -4,12 +4,10 @@ import { spSkills, extractResult } from '@cquest/data-provider';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ArgumentType
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 
 import { SPSkillEmbed } from '../embeds';
-
-import { parseQuery, parseGrade } from '../util';
 
 const cmdArgs = {
 	name: ArgumentType.string({
@@ -32,9 +30,7 @@ export class SpSkillCommand extends BaseCommand<Arguments> {
 	readonly description = 'Get special skill info';
 	readonly protected = false;
 
-	async run(payload: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
-		const { args, reply } = payload;
-
+	async run({ args, reply, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { level, name } = args;
 
 		// const grade = parseGrade(args);
@@ -51,7 +47,7 @@ export class SpSkillCommand extends BaseCommand<Arguments> {
 			};
 		}
 
-		const { result: skill, locales } = extractResult(searchResult);
+		const { result: skill } = extractResult(searchResult);
 
 		let form: SpSkillForm | undefined;
 		if (level) {
@@ -71,7 +67,7 @@ export class SpSkillCommand extends BaseCommand<Arguments> {
 
 		const page = skill.forms.indexOf(form) + 1;
 
-		const embed = new SPSkillEmbed({ skill, page, locales });
+		const embed = new SPSkillEmbed({ skill, page, initial });
 
 		await embed.send();
 

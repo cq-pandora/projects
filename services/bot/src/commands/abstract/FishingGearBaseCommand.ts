@@ -4,10 +4,10 @@ import { extractResult, fishingGear } from '@cquest/data-provider';
 import BaseCommand from './BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ArgumentType
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../../common-types';
 import { FishingGearsEmbed } from '../../embeds';
-import { parseQuery, capitalizeFirstLetter } from '../../util';
+import { capitalizeFirstLetter } from '../../util';
 
 const cmdArgs = {
 	name: ArgumentType.string({
@@ -34,10 +34,10 @@ export default abstract class FishingGearBaseCommand extends BaseCommand<Argumen
 		this.type = `item_${name}` as FishingGearType;
 	}
 
-	async run({ reply, args }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { name } = args;
 		const candidates = fishingGear.searchAll(name);
-		const { results: fishingGears, locales } = extractResult(candidates.filter(b => b.result.type === this.type));
+		const { results: fishingGears } = extractResult(candidates.filter(b => b.result.type === this.type));
 
 		if (!fishingGears.length) {
 			await reply(`${capitalizeFirstLetter(this.commandName)} not found!`);
@@ -48,7 +48,7 @@ export default abstract class FishingGearBaseCommand extends BaseCommand<Argumen
 			};
 		}
 
-		const embed = new FishingGearsEmbed({ initialMessage: undefined, gears: fishingGears, locales });
+		const embed = new FishingGearsEmbed({ initial, gears: fishingGears });
 
 		await embed.send();
 

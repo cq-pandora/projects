@@ -23,7 +23,7 @@ export class PortraitCommand extends BaseCommand<Arguments> {
 	public readonly description = 'Get character portrait';
 	public readonly protected = false;
 
-	async run({ reply, args }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { name } = args;
 
 		const searchResult = portraits.search(name);
@@ -39,7 +39,7 @@ export class PortraitCommand extends BaseCommand<Arguments> {
 
 		const { result: portrait } = extractResult(searchResult);
 
-		const embed = new PortraitsEmbed({ portraits: portrait.keys });
+		const embed = new PortraitsEmbed({ initial, portraits: portrait.keys });
 
 		await embed.send();
 

@@ -5,7 +5,7 @@ import { evaluate as mathjsEvaluate } from 'mathjs';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ArgumentType
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 
 const cmdArgs = {

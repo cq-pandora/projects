@@ -8,6 +8,7 @@ import commands from '../commands';
 import config from '../config';
 
 const rest = new REST({ version: '10' }).setToken(config.token);
+const isDev = true;
 
 export default {
 	run: async (): Promise<void> => {
@@ -19,7 +20,9 @@ export default {
 		}
 
 		await rest.put(
-			Routes.applicationCommands(config.appId),
+			isDev
+				? Routes.applicationGuildCommands(config.appId, config.guildId)
+				: Routes.applicationCommands(config.appId),
 			{ body: slashCommands },
 		);
 

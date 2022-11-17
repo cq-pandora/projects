@@ -6,22 +6,24 @@ import {
 	CommandCategory, CommandResult, CommandPayload, CommandReply, CommandResultCode, ContextType, ArgumentType,
 	ContextValues,
 } from '../common-types';
-import { PaginationEmbed } from '../embeds';
-import { LocalizableMessageEmbed } from '../embeds/LocalizableMessageEmbed';
+import {
+	EmbedSource, InitialMessageSource, PaginationEmbed, PandoraEmbed
+} from '../embeds';
 
 import BaseCommand from './abstract/BaseCommand';
 
-const aliasesToEmbeds = (ts: Alias[]): LocalizableMessageEmbed[] => {
+const aliasesToEmbeds = (ts: Alias[]): EmbedSource[] => {
 	const strings = ts
 		.sort((a, b) => `${a.context}`.localeCompare(b.context))
 		.map(({ context, alias, for: fogh }) => `${context}: ${alias} => ${fogh}`)
 		.join('\n');
 
 	return splitText(strings, 1024, '\n').map((text: string, idx: number, total: string[]) => (
-		new LocalizableMessageEmbed()
+		new PandoraEmbed()
 			.setTitle('Aliases list')
 			.setFooter(`Page ${idx}/${total}`)
 			.addField('<context>: <alias> => <targer>', text)
+			.toEmbed()
 	));
 };
 
@@ -32,10 +34,10 @@ type ActionArguments = {
 	for: string;
 };
 
-type Action = (reply: CommandReply, args: ActionArguments) => Promise<void>;
+type Action = (reply: CommandReply, args: ActionArguments, initial: InitialMessageSource) => Promise<void>;
 
 const actions: Record<string, Action> = {
-	'list-pending': async (reply, { for: forr }) => {
+	'list-pending': async (reply, { for: forr }, initial) => {
 		try {
 			const fogh = forr || null;
 
@@ -46,7 +48,7 @@ const actions: Record<string, Action> = {
 				return;
 			}
 
-			const embed = new PaginationEmbed({ initialMessage: undefined })
+			const embed = new PaginationEmbed({ initial })
 				.setArray(aliasesToEmbeds(list))
 				// .setChannel(message.channel)
 				.showPageIndicator(false)
@@ -59,7 +61,7 @@ const actions: Record<string, Action> = {
 			throw error;
 		}
 	},
-	list: async (reply) => {
+	list: async (reply, _, initial) => {
 		try {
 			const list = await aliases.listAll();
 
@@ -68,7 +70,7 @@ const actions: Record<string, Action> = {
 				return;
 			}
 
-			const embed = new PaginationEmbed({ initialMessage: undefined })
+			const embed = new PaginationEmbed({ initial })
 				.setArray(aliasesToEmbeds(list))
 				// .setChannel(message.channel)
 				.showPageIndicator(false);
@@ -169,8 +171,13 @@ export class ManageAliasesCommand extends BaseCommand<Arguments> {
 	public readonly description = 'Cross-server aliases management commands';
 	public readonly protected = true;
 
-	async run({ args, reply }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
-		const { action: actionName, alias, context, for: forr } = args;
+	async run({ args, reply, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const {
+			action: actionName,
+			alias,
+			context,
+			for: forr
+		} = args;
 
 		const actionArgs: ActionArguments = {
 			action: actionName,
@@ -191,7 +198,7 @@ export class ManageAliasesCommand extends BaseCommand<Arguments> {
 			};
 		}
 
-		await action(reply, actionArgs);
+		await action(reply, actionArgs, initial);
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,

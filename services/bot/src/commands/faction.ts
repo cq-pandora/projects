@@ -24,9 +24,9 @@ export class FactionCommand extends BaseCommand<Arguments> {
 	public readonly description = 'Get faction hero list';
 	public readonly protected = false;
 
-	async run({ reply, args }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { name } = args;
-		const { results: candidates, locales } = extractResult(factions.searchAll(name));
+		const { results: candidates } = extractResult(factions.searchAll(name));
 
 		if (!candidates.length) {
 			await reply('Faction not found!');
@@ -36,7 +36,7 @@ export class FactionCommand extends BaseCommand<Arguments> {
 			};
 		}
 
-		const embed = new FactionsEmbed({ initialMessage: undefined, factions: candidates, locales });
+		const embed = new FactionsEmbed({ initial, factions: candidates });
 
 		await embed.send();
 

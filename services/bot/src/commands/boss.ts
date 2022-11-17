@@ -24,9 +24,9 @@ export class BossCommand extends BaseCommand<Arguments> {
 	public readonly description = 'Get boss stats';
 	public readonly protected = false;
 
-	async run({ reply, args }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { name } = args;
-		const { results: entities, locales } = extractResult(bosses.searchAll(name));
+		const { results: entities } = extractResult(bosses.searchAll(name));
 
 		if (!entities.length) {
 			await reply('Boss not found!');
@@ -37,9 +37,7 @@ export class BossCommand extends BaseCommand<Arguments> {
 		}
 
 		const embed = new BossesEmbed({
-			initialMessage: undefined,
-			bosses: entities,
-			locales,
+			initial, bosses: entities,
 		});
 
 		await embed.send();

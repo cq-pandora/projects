@@ -1,46 +1,40 @@
-import { Message } from 'discord.js';
 import { Champion } from '@cquest/entities';
+import { translate as l } from '@cquest/data-provider';
 
 import { imageUrl } from '../util/functions';
 
-import PaginationEmbed from './PaginationEmbed';
-import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
+import PaginationEmbed, { InitialMessageSource } from './PaginationEmbed';
+import PandoraEmbed from './PandoraEmbed';
 
 interface IChampionEmbedOptions {
-	initialMessage?: Message;
+	initial: InitialMessageSource;
 	champion: Champion;
 	page?: number;
-	locales: string[];
 }
 
 export default class ChampionEmbed extends PaginationEmbed {
-	constructor(options: IChampionEmbedOptions) {
-		super({
-			initialMessage: options.initialMessage,
-			locales: options.locales,
-		});
+	constructor({ initial, champion, page }: IChampionEmbedOptions) {
+		super({ initial });
 
-		const { champion, page } = options;
-
-		const embeds = options.champion.forms.map((form) => {
-			const embed = new LocalizableMessageEmbed()
-				.setTitle(l`${options.champion.name} (Lvl. ${form.grade})`)
+		const embeds = champion.forms.map((form) => {
+			const embed = new PandoraEmbed()
+				.setTitle(`${l(champion.name)} (Lvl. ${form.grade})`)
 				.setThumbnail(imageUrl(`heroes/${champion.image}`))
-				.setDescription(l`${champion.lore}`);
+				.setDescription(l(champion.lore));
 
 			if (form.active) {
-				embed.addField(l`${form.active.name} (Active)`, l`${form.active.description}`);
+				embed.addField(`${l(form.active.name)} (Active)`, l(form.active.description));
 			}
 
 			if (form.passive) {
-				embed.addField(l`${form.passive.name} (Passive)`, l`${form.passive.description}`);
+				embed.addField(`${l(form.passive.name)} (Passive)`, l(form.passive.description));
 			}
 
 			if (form.exclusive) {
-				embed.addField(l`${form.exclusive.name} (Exclusive)`, l`${form.exclusive.description}`);
+				embed.addField(`${l(form.exclusive.name)} (Exclusive)`, l(form.exclusive.description));
 			}
 
-			return embed;
+			return embed.toEmbed();
 		});
 
 		this.setArray(embeds)

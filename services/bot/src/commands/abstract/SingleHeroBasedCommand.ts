@@ -48,7 +48,7 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand<Argumen
 		this.checkGrade = checkGrade;
 	}
 
-	async run({ reply, args }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { star, name } = args;
 
 		const result = heroes.search(name);
@@ -97,8 +97,7 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand<Argumen
 
 		// eslint-disable-next-line new-cap
 		const embed = new this.embed({
-			// TODO fixme
-			initialMessage: {} as any,
+			initial,
 			hero,
 			page,
 			locales,

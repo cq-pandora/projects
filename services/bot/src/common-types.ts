@@ -1,6 +1,6 @@
 import {
 	Client, EmbedField, EmbedBuilder, SlashCommandBuilder,
-	CommandInteractionOptionResolver, CacheType, User,
+	CommandInteractionOptionResolver, CacheType, User, CommandInteraction,
 } from 'discord.js';
 
 import { CommandResult } from '@cquest/entities';
@@ -132,9 +132,9 @@ export type CommandPayload<Arguments extends CommandArguments> = {
 	client: Client;
 	args: CommandArgumentValues<Arguments>;
 	reply: CommandReply;
-	editReply: CommandReply;
 	author: CommandAuthor;
 	deleteOriginal: DeleteOriginalMessage;
+	initial: CommandInteraction<CacheType>;
 };
 
 export type AutocompleteOnly<A extends CommandArguments> = {

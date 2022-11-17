@@ -27,9 +27,19 @@ export default abstract class BaseCommand<A extends CommandArguments> implements
 			const argDefinition = this.args[key];
 
 			if (argDefinition.required) {
-				result[key] = source.get(key, true);
+				result[key] = source.get(key, true).value;
 			} else {
-				result[key] = source.get(key) || argDefinition.default;
+				result[key] = source.get(key)?.value || argDefinition.default;
+			}
+
+			// eslint-disable-next-line default-case
+			switch(argDefinition.type) {
+				case ArgumentType.BOOLEAN:
+					result[key] = result[key] === 'true';
+					break;
+				case ArgumentType.NUMBER:
+					result[key] = parseInt(result[key], 10);
+					break;
 			}
 		}
 

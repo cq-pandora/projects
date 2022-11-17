@@ -24,11 +24,9 @@ export class SigilCommand extends BaseCommand<Arguments> {
 	public readonly description = 'Get sigil info';
 	public readonly protected = false;
 
-	async run(payload: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
-		const { args, reply } = payload;
-
+	async run({ args, reply, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { name } = args;
-		const { results: candidates, locales } = extractResult(sigils.searchAll(name));
+		const { results: candidates } = extractResult(sigils.searchAll(name));
 
 		if (!candidates.length) {
 			await reply('Sigil not found!');
@@ -39,10 +37,7 @@ export class SigilCommand extends BaseCommand<Arguments> {
 			};
 		}
 
-		const embed = new SigilsEmbed({
-			sigs: candidates,
-			locales,
-		});
+		const embed = new SigilsEmbed({ sigs: candidates, initial });
 
 		await embed.send();
 

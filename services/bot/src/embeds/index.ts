@@ -1,6 +1,6 @@
 export { default as BerriesEmbed } from './BerriesEmbed';
 export { default as FishingGearsEmbed } from './FishingGearsEmbed';
-export { default as PaginationEmbed } from './PaginationEmbed';
+export { default as PaginationEmbed, EmbedSource, InitialMessageSource } from './PaginationEmbed';
 export { default as BossesEmbed } from './BossesEmbed';
 export { default as GoddessesEmbed } from './GoddessesEmbed';
 export { default as PortraitsEmbed } from './PortraitsEmbed';
@@ -10,4 +10,5 @@ export { default as FishesEmbed } from './FishesEmbed';
 export { default as SigilsEmbed } from './SigilsEmbed';
 export { default as FactionsEmbed } from './FactionsEmbed';
 export { default as ScarecrowsEmbed } from './ScarecrowsEmbed';
+export { default as PandoraEmbed } from './PandoraEmbed';
 export * from './hero';

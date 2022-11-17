@@ -8,15 +8,21 @@ import { commands as logger } from '@cquest/logger';
 
 import { isErrorIgnored } from '../util';
 import config from '../config';
+import { CommandArgumentsSource } from '../common-types';
 
 export default (client: Client): (interaction: Interaction) => Promise<void> => async (interaction): Promise<void> => {
-	if (!interaction.isChatInputCommand()) return;
+	if (!interaction.isCommand()) return;
 
-	function reply(msg: string | [any]): Promise<void> {
-		return Promise.resolve();
-	}
-
-	function editReply(msg: string | [any]): Promise<void> {
+	async function reply(msg: string | [any]): Promise<void> {
+		if (interaction.isCommand()) {
+			if (typeof msg === 'string') {
+				await interaction.reply(msg);
+			} else {
+				await interaction.reply({
+					embeds: msg
+				});
+			}
+		}
 		return Promise.resolve();
 	}
 
@@ -62,7 +68,7 @@ export default (client: Client): (interaction: Interaction) => Promise<void> => 
 		userId: interaction.user.id,
 		channelId: interaction.channelId,
 		server: serverId,
-		sentTo: interaction.channel?.type,
+		sentTo: interaction.channel?.type || '-',
 		content: '',
 	};
 
@@ -79,11 +85,11 @@ export default (client: Client): (interaction: Interaction) => Promise<void> => 
 		} else {
 			const response = await executable.run({
 				client,
-				args: executable.parseArguments(interaction.options),
+				args: executable.parseArguments(interaction.options as CommandArgumentsSource),
 				reply,
-				editReply,
 				author: interaction.user,
 				deleteOriginal: () => interaction.deleteReply(),
+				initial: interaction,
 			});
 
 			stat = {
@@ -118,7 +124,7 @@ export default (client: Client): (interaction: Interaction) => Promise<void> => 
 				totalStats.content,
 				totalStats.statusCode,
 				totalStats.command,
-				totalStats.target,
+				totalStats.target || '-',
 			)
 		);
 	} catch (error) {
