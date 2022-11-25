@@ -1,5 +1,3 @@
-import { MessageAttachment } from 'discord.js';
-
 import {
 	heroes, interactions, translate, extractResult
 } from '@cquest/data-provider';
@@ -9,18 +7,20 @@ import logger from '@cquest/logger';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 import { renderInteraction, chunk, allSettled } from '../util';
 
-const cmdArgs: CommandArguments = {
-	name: {
-		required: false,
+const cmdArgs = {
+	name: ArgumentType.string({
+		required: true,
 		description: 'Hero to filter by participation',
-	}
+	}),
 };
 
-export class InteractionsCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+export class InteractionsCommand extends BaseCommand<Arguments> {
 	readonly args = cmdArgs;
 	readonly argsOrderMatters = false;
 	readonly category = CommandCategory.DB;
@@ -28,15 +28,15 @@ export class InteractionsCommand extends BaseCommand {
 	readonly description = 'Get list of interactions';
 	readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
+	async run(payload: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { args, reply } = payload;
 
-		const name = args.join(' ');
+		const { name } = args;
 
 		const searchResult = heroes.search(name);
 
 		if (!searchResult) {
-			await message.channel.send('Hero not found!');
+			await reply('Hero not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -51,7 +51,7 @@ export class InteractionsCommand extends BaseCommand {
 		);
 
 		if (!heroInteractions.length) {
-			await message.channel.send('Hero has no interactions!');
+			await reply('Hero has no interactions!');
 
 			return {
 				statusCode: CommandResultCode.SUCCESS,
@@ -74,7 +74,7 @@ export class InteractionsCommand extends BaseCommand {
 		const succeededInts = [] as Buffer[];
 
 		if (!heroInteractions.length) {
-			await message.channel.send('Hero has no interactions!');
+			await reply('Hero has no interactions!');
 
 			return {
 				statusCode: CommandResultCode.SUCCESS,
@@ -92,13 +92,16 @@ export class InteractionsCommand extends BaseCommand {
 		const msgs = chunk(succeededInts, 10);
 
 		for (const msg of msgs) {
-			await message.channel.send(msg.map((v, idx) => new MessageAttachment(v, `${idx}.png`)));
+			// FIXME attachements
+			await reply({
+				files: msg.map(v => ({ attachment: v }))
+			});
 		}
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,
 			target: hero.id,
-			args: JSON.stringify({ name }),
+			args: JSON.stringify(args),
 		};
 	}
 }

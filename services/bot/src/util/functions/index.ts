@@ -19,8 +19,6 @@ export { default as localImagePath } from './localImagePath';
 export { default as createImage } from './createImage';
 export { default as makeInRange } from './makeInRange';
 export { default as pickGrade } from './pickGrade';
-export { default as extractMentions } from './extractMentions';
-export { default as getPermittedCommands } from './getPermittedCommands';
 export { default as formatPullChunks } from './formatPullChunks';
 export { default as arraify } from './arraify';
 export { default as groupBy } from './groupBy';

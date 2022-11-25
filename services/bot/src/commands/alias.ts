@@ -2,51 +2,49 @@ import { aliases } from '@cquest/db';
 
 import BaseCommand from './abstract/BaseCommand';
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ContextValues, ContextType
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ContextValues, ContextType, ArgumentType
 } from '../common-types';
 
-const commandArgs: CommandArguments = {
-	alias: {
+const cmdArgs = {
+	alias: ArgumentType.string({
 		required: true,
-		description: 'Suggested alias. **Important**: alias can be single word only',
-	},
-	context: {
+		description: 'Suggested alias',
+	}),
+	context: ArgumentType.choice({
 		required: true,
-		description: `Command name, where this alias applies. Can be one of: ${ContextValues.join(', ')}`,
-	},
-	for: {
+		choices: ContextValues.reduce((r, v) => ({
+			...r,
+			[v.replace('-', ' ')]: v
+		}), {}),
+		description: 'Command name, where this alias applies',
+	}),
+	for: ArgumentType.string({
 		required: true,
 		description: 'Alias target',
-	}
+	}),
 };
 
-export class AliasCommand extends BaseCommand {
-	public readonly args = commandArgs;
+type Arguments = typeof cmdArgs;
+
+export class AliasCommand extends BaseCommand<Arguments> {
+	public readonly args = cmdArgs;
 	public readonly argsOrderMatters = true;
 	public readonly category = CommandCategory.UTIL;
 	public readonly commandName = 'alias';
 	public readonly description = 'Create alias for command/entity (e.g. qt -> Fenrir)';
 	public readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { args, message } = payload;
-
-		if (args.length < 3) {
-			return this.sendUsageInstructions(payload);
-		}
-
-		const [alias, ctx, ...rest] = args;
-		const forr = rest.join(' ');
-
+	async run({ reply, args }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { alias, context, for: forr } = args;
 		try {
-			await aliases.submit(alias, forr, ctx as ContextType);
+			await aliases.submit(alias, forr, context as ContextType);
 		} catch (error) {
-			await message.channel.send('Unable to submit your alias. Please, contact bot owner.');
+			await reply('Unable to submit your alias. Please, contact bot owner.');
 
 			throw error;
 		}
 
-		await message.channel.send('Alias request submitted');
+		await reply('Alias request submitted');
 
 		return {
 			target: forr,

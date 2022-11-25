@@ -3,18 +3,20 @@ import { factions, extractResult } from '@cquest/data-provider';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 import { FactionsEmbed } from '../embeds';
 
-const cmdArgs: CommandArguments = {
-	name: {
+const cmdArgs = {
+	name: ArgumentType.string({
 		required: true,
 		description: 'Faction name',
-	}
+	}),
 };
 
-export class FactionCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+export class FactionCommand extends BaseCommand<Arguments> {
 	public readonly args = cmdArgs;
 	public readonly argsOrderMatters = false;
 	public readonly category = CommandCategory.DB;
@@ -22,24 +24,19 @@ export class FactionCommand extends BaseCommand {
 	public readonly description = 'Get faction hero list';
 	public readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
-
-		if (!args.length) return this.sendUsageInstructions(payload);
-
-		const name = args.join(' ');
-
-		const { results: candidates, locales } = extractResult(factions.searchAll(name));
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { name } = args;
+		const { results: candidates } = extractResult(factions.searchAll(name));
 
 		if (!candidates.length) {
-			await message.channel.send('Faction not found!');
+			await reply('Faction not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
 			};
 		}
 
-		const embed = new FactionsEmbed({ initialMessage: message, factions: candidates, locales });
+		const embed = new FactionsEmbed({ initial, factions: candidates });
 
 		await embed.send();
 

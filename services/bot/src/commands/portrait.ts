@@ -3,19 +3,19 @@ import { portraits, extractResult } from '@cquest/data-provider';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 import { PortraitsEmbed } from '../embeds';
-import { parseQuery } from '../util';
 
-const cmdArgs: CommandArguments = {
-	name: {
+const cmdArgs = {
+	name: ArgumentType.string({
 		required: true,
 		description: 'Name of character',
-	}
+	}),
 };
 
-export class PortraitCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+export class PortraitCommand extends BaseCommand<Arguments> {
 	public readonly args = cmdArgs;
 	public readonly argsOrderMatters = false;
 	public readonly category = CommandCategory.DB;
@@ -23,17 +23,13 @@ export class PortraitCommand extends BaseCommand {
 	public readonly description = 'Get character portrait';
 	public readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
-
-		if (!args.length) return this.sendUsageInstructions(payload);
-
-		const name = parseQuery(args);
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { name } = args;
 
 		const searchResult = portraits.search(name);
 
 		if (!searchResult) {
-			await message.channel.send('Portrait not found!');
+			await reply('Portrait not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -43,7 +39,7 @@ export class PortraitCommand extends BaseCommand {
 
 		const { result: portrait } = extractResult(searchResult);
 
-		const embed = new PortraitsEmbed({ initialMessage: message, portraits: portrait.keys });
+		const embed = new PortraitsEmbed({ initial, portraits: portrait.keys });
 
 		await embed.send();
 

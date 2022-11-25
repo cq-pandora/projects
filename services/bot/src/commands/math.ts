@@ -1,19 +1,23 @@
+import { EmbedBuilder } from 'discord.js';
+
 import { evaluate as mathjsEvaluate } from 'mathjs';
 
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 
-const cmdArgs: CommandArguments = {
-	expression: {
+const cmdArgs = {
+	expression: ArgumentType.string({
 		required: true,
 		description: 'Expression to evaluate. Visit http://mathjs.org/ for examples',
-	}
+	}),
 };
 
-export class MathCommand extends BaseCommand {
+type Arguemnts = typeof cmdArgs;
+
+export class MathCommand extends BaseCommand<Arguemnts> {
 	readonly args = cmdArgs;
 	readonly argsOrderMatters = false;
 	readonly category = CommandCategory.UTIL;
@@ -21,34 +25,30 @@ export class MathCommand extends BaseCommand {
 	readonly description = 'Evaluate math expression';
 	readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
-
-		if (!args.length) return this.sendUsageInstructions(payload);
-
-		const problem = args.join(' ');
+	async run({ args, reply }: CommandPayload<Arguemnts>): Promise<Partial<CommandResult>> {
+		const { expression } = args;
 
 		let err = false;
 		let result: string;
+
 		try {
-			result = mathjsEvaluate(problem).toString();
+			result = mathjsEvaluate(expression).toString();
 		} catch (error: any) {
 			result = error.toString();
 			err = true;
 		}
 
-		await message.channel.send({
-			embed: {
-				description: result
-			},
-		});
+		await reply([
+			new EmbedBuilder()
+				.setDescription(result)
+		]);
 
 		return {
 			statusCode: err
 				? CommandResultCode.UNKNOWN_ERROR
 				: CommandResultCode.SUCCESS,
 			target: 'math',
-			args: JSON.stringify({ problem }),
+			args: JSON.stringify({ expression }),
 		};
 	}
 }

@@ -27,3 +27,5 @@ shared/*/lib
 .idea/**
 
 services/bot/custom_translation_indices.json
+
+.direnv

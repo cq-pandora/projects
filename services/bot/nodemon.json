@@ -1,0 +1,5 @@
+{
+  "watch": ["lib", "node_modules"],
+  "ext": "cjs,js,json",
+  "exec": "node --harmony ./lib/index.js"
+}

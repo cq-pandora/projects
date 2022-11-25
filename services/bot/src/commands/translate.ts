@@ -3,33 +3,39 @@ import { translations } from '@cquest/db';
 import { heroes, extractResult } from '@cquest/data-provider';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 import { getFieldKey } from '../util';
 import config from '../config';
 
 import BaseCommand from './abstract/BaseCommand';
 
-const cmdArgs: CommandArguments = {
-	field: {
+const cmdArgs = {
+	field: ArgumentType.string({
 		required: true,
-		description: 'Field to translate.\nCan be block-name, block-description, passive-name, passive-description, lore, name, sbw-name or sbw-ability',
-	},
-	name: {
+		// TODO migrate to choices
+		// description: 'Field to translate.\nCan be block-name,
+		// block-description, passive-name, passive-description, lore, name, sbw-name or sbw-ability',
+		description: 'Field to translate',
+	}),
+	name: ArgumentType.string({
 		required: true,
-		description: 'Hero name.\n**Important**: this should be single word, so test if bot can find what you want to translate by that word',
-	},
-	grade: {
+		// TOOD fix with parameter or smth
+		description: 'Hero name',
+	}),
+	grade: ArgumentType.number({
 		required: true,
 		description: 'Hero or SBW grade',
-	},
-	translation: {
+	}),
+	text: ArgumentType.string({
 		required: true,
 		description: 'Full translation text'
-	}
+	}),
 };
 
-export class TranslateCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+export class TranslateCommand extends BaseCommand<Arguments> {
 	readonly args = cmdArgs;
 	readonly argsOrderMatters = true;
 	readonly category = CommandCategory.UTIL;
@@ -37,18 +43,17 @@ export class TranslateCommand extends BaseCommand {
 	readonly description = 'Submit translation request for hero or SBW field';
 	readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
+	async run(payload: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { args, reply } = payload;
 
-		if (args.length < 4) return this.sendUsageInstructions(payload);
-
-		const [field, name, gradeStr, ...rest] = args;
-		const grade = Number(gradeStr);
+		const {
+			field, name, grade, text
+		} = args;
 
 		const result = heroes.search(name);
 
 		if (!result) {
-			await message.channel.send('Hero not found!');
+			await reply('Hero not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -63,7 +68,7 @@ export class TranslateCommand extends BaseCommand {
 			sbw = hero.sbws.find(f => f.star === grade);
 
 			if (!sbw) {
-				await message.channel.send('Soulbound weapon grade not found!');
+				await reply('Soulbound weapon grade not found!');
 
 				return {
 					statusCode: CommandResultCode.ENTITY_GRADE_NOT_FOUND,
@@ -74,7 +79,7 @@ export class TranslateCommand extends BaseCommand {
 			form = hero.forms.find(f => f.star === grade);
 
 			if (!form) {
-				await message.channel.send('Hero grade not found!');
+				await reply('Hero grade not found!');
 
 				return {
 					statusCode: CommandResultCode.ENTITY_GRADE_NOT_FOUND,
@@ -86,7 +91,7 @@ export class TranslateCommand extends BaseCommand {
 		const key = getFieldKey(field, form, sbw);
 
 		if (!key) {
-			await message.channel.send('Unknown field!');
+			await reply('Unknown field!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -94,14 +99,12 @@ export class TranslateCommand extends BaseCommand {
 			};
 		}
 
-		const text = rest.filter(Boolean).join(' ');
-
 		try {
 			await translations.submit(key, text, config.gameVersion);
 
-			await message.channel.send('Translation request submitted!\nThanks for trying to make translations clearer');
+			await reply('Translation request submitted!\nThanks for trying to make translations clearer');
 		} catch (error) {
-			await message.channel.send('Unable to submit your translation. Please, contact bot owner.');
+			await reply('Unable to submit your translation. Please, contact bot owner.');
 
 			throw error;
 		}

@@ -83,8 +83,8 @@ export default abstract class AbstractDownloader {
 		while (++attempt <= 5) {
 			try {
 				await this.download(filepath, filename);
-			} catch (e: any) {
-				this.logger.warn(`${filename}: Attempt ${attempt} failed: ${e.message}`);
+			} catch (e) {
+				this.logger.warn(`${filename}: Attempt ${attempt} failed: ${(e as any).message}`);
 				continue;
 			}
 
@@ -130,8 +130,8 @@ export default abstract class AbstractDownloader {
 				try {
 					await this.downloadAsset(filename, targetHash);
 					this.logger.info(`${filename} downloaded successfully`);
-				} catch (err: any) {
-					this.logger.error(err.message);
+				} catch (err) {
+					this.logger.error((err as any).message);
 				}
 			}
 		});

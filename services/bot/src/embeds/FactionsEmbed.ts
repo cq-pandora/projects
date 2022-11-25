@@ -1,36 +1,31 @@
-import { Message } from 'discord.js';
-
 import { Faction } from '@cquest/entities';
-import { heroes } from '@cquest/data-provider';
+import { heroes, translate as l } from '@cquest/data-provider';
 
 import { imageUrl, arraify } from '../util/functions';
 
-import PaginationEmbed from './PaginationEmbed';
-import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
+import PaginationEmbed, { InitialMessageSource } from './PaginationEmbed';
+import PandoraEmbed from './PandoraEmbed';
 
 interface IFactionsEmbedOptions {
-	initialMessage: Message;
+	initial: InitialMessageSource;
 	factions: Faction | Faction[];
-	locales: string[];
 }
 
 export default class FactionsEmbed extends PaginationEmbed {
-	constructor({ initialMessage, factions, locales }: IFactionsEmbedOptions) {
-		super({ initialMessage, locales });
+	constructor({ initial, factions }: IFactionsEmbedOptions) {
+		super({ initial });
 
 		const embeds = arraify(factions).map((faction) => {
-			const heroesKeys = heroes
+			const heroesNames = heroes
 				.list()
 				.filter(h => h.domain === faction.ingameId)
-				.map(h => h.forms[0].name);
+				.map(h => l(h.forms[0].name));
 
-			return new LocalizableMessageEmbed()
+			return new PandoraEmbed()
 				.setTitle(l(faction.name))
 				.setThumbnail(imageUrl(`common/${faction.image}`))
-				.addField('\u200b', {
-					strings: new Array<string>(heroesKeys.length).fill('\n'),
-					keys: heroesKeys
-				});
+				.addField('\u200b', heroesNames.join('\n'))
+				.toEmbed();
 		});
 
 		this.setArray(embeds)

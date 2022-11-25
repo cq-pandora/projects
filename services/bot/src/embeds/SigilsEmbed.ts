@@ -1,10 +1,8 @@
-import { Message } from 'discord.js';
-
 import { Sigil } from '@cquest/entities';
-import { sigils } from '@cquest/data-provider';
+import { sigils, translate as l } from '@cquest/data-provider';
 
-import PaginationEmbed from './PaginationEmbed';
-import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
+import PaginationEmbed, { InitialMessageSource } from './PaginationEmbed';
+import PandoraEmbed from './PandoraEmbed';
 
 import {
 	statsToString, imageUrl, capitalizeFirstLetter, toClearNumber, arraify
@@ -12,22 +10,18 @@ import {
 import config from '../config';
 
 interface ISigilsEmbedOptions {
-	initialMessage: Message;
+	initial: InitialMessageSource;
 	sigs: Sigil | Sigil[];
-	locales: string[];
 }
 
 export default class SigilsEmbed extends PaginationEmbed {
-	constructor({ initialMessage, sigs, locales }: ISigilsEmbedOptions) {
-		super({
-			initialMessage,
-			locales,
-		});
+	constructor({ initial, sigs }: ISigilsEmbedOptions) {
+		super({ initial });
 
 		const embeds = arraify(sigs).map((sigil) => {
-			const embed = new LocalizableMessageEmbed()
+			const embed = new PandoraEmbed()
 				.setDescription(l(sigil.description))
-				.setTitle(l`${sigil.name} (${sigil.grade}★)`)
+				.setTitle(`${l(sigil.name)} (${sigil.grade}★)`)
 				.setThumbnail(imageUrl(`sigils/${sigil.image}`));
 
 			embed.addField('Stats', statsToString(sigil.stats), true);
@@ -39,13 +33,14 @@ export default class SigilsEmbed extends PaginationEmbed {
 					.addField('Set effect', l(sigil.set.effect), true)
 					.addField('Other piece', l(otherPiece?.name), true)
 					.addField('Other piece stats', statsToString(otherPiece.stats), true)
-					.setFooter(l`Set: ${sigil.set.name}`);
+					.setFooter(`Set: ${l(sigil.set.name)}`);
 			}
 
 			return embed.addBlankField()
 				.addField('Sell price', `${toClearNumber(sigil.sellCost)}${config.emojis.gold}`, true)
 				.addField('Extract cost', `${toClearNumber(sigil.extractCost)}${config.emojis.gold}`, true)
-				.addField('Rarity', capitalizeFirstLetter(sigil.rarity), true);
+				.addField('Rarity', capitalizeFirstLetter(sigil.rarity), true)
+				.toEmbed();
 		});
 
 		this.setArray(embeds).showPageIndicator(false);

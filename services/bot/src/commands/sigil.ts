@@ -3,19 +3,20 @@ import { sigils, extractResult } from '@cquest/data-provider';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType,
 } from '../common-types';
 import { SigilsEmbed } from '../embeds';
-import { parseQuery } from '../util';
 
-const cmdArgs: CommandArguments = {
-	name: {
+const cmdArgs = {
+	name: ArgumentType.string({
 		required: true,
 		description: 'Sigil name',
-	}
+	}),
 };
 
-export class SigilCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+export class SigilCommand extends BaseCommand<Arguments> {
 	public readonly args = cmdArgs;
 	public readonly argsOrderMatters = false;
 	public readonly category = CommandCategory.DB;
@@ -23,16 +24,12 @@ export class SigilCommand extends BaseCommand {
 	public readonly description = 'Get sigil info';
 	public readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
-
-		if (!args.length) return this.sendUsageInstructions(payload);
-
-		const name = parseQuery(args);
-		const { results: candidates, locales } = extractResult(sigils.searchAll(name));
+	async run({ args, reply, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { name } = args;
+		const { results: candidates } = extractResult(sigils.searchAll(name));
 
 		if (!candidates.length) {
-			await message.channel.send('Sigil not found!');
+			await reply('Sigil not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -40,11 +37,7 @@ export class SigilCommand extends BaseCommand {
 			};
 		}
 
-		const embed = new SigilsEmbed({
-			initialMessage: message,
-			sigs: candidates,
-			locales,
-		});
+		const embed = new SigilsEmbed({ sigs: candidates, initial });
 
 		await embed.send();
 

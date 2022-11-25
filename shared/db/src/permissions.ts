@@ -60,7 +60,7 @@ export async function list(serverId?: string): Promise<PermissionMergeResult[]> 
 		if (serverId) {
 			return await Permission
 				.find({
-					serverId
+					where: { serverId }
 				});
 		}
 

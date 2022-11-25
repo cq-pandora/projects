@@ -4,7 +4,7 @@ import { heroes, extractResult } from '@cquest/data-provider';
 import BaseCommand from './BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ArgumentType
 } from '../../common-types';
 
 import {
@@ -13,22 +13,24 @@ import {
 
 import { parseQuery, parseGrade } from '../../util';
 
-const cmdArgs: CommandArguments = {
-	name: {
+const cmdArgs = {
+	name: ArgumentType.string({
 		required: true,
 		description: 'Hero name',
-	},
-	star: {
+	}),
+	star: ArgumentType.number({
 		required: false,
 		description: 'Optional grade. Defaults to highest possible',
-	}
+		default: 0,
+	}),
 };
 
 type HeroBasedEmbeds =
 	typeof HeroBlockEmbed | typeof HeroFormsEmbed | typeof HeroSBWEmbed | typeof HeroSBWBlockEmbed |
 	typeof HeroSkinsEmbed;
 
-export default abstract class SingleHeroBasedCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+export default abstract class SingleHeroBasedCommand extends BaseCommand<Arguments> {
 	public readonly args = cmdArgs;
 	public readonly argsOrderMatters = false;
 	public readonly category = CommandCategory.DB;
@@ -46,18 +48,13 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand {
 		this.checkGrade = checkGrade;
 	}
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { args, message } = payload;
-
-		if (!args.length) { return this.sendUsageInstructions(payload); }
-
-		const grade = parseGrade(args);
-		const name = parseQuery(args, [`${grade}`]);
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { star, name } = args;
 
 		const result = heroes.search(name);
 
 		if (!result) {
-			await message.channel.send('Hero not found!');
+			await reply('Hero not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -67,12 +64,12 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand {
 		const { result: hero, locales } = extractResult(result);
 
 		if (this.checkSBW && !hero.sbws.length) {
-			await message.channel.send('Soulbound weapon not found for hero!');
+			await reply('Soulbound weapon not found for hero!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_GRADE_NOT_FOUND,
 				target: 'sbw',
-				args: JSON.stringify({ name, grade }),
+				args: JSON.stringify({ name, star }),
 			};
 		}
 
@@ -81,14 +78,14 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand {
 		if (this.checkGrade) {
 			let form: HeroForm | undefined;
 
-			if (grade) {
-				form = hero.forms.find(f => f.star === grade);
+			if (star) {
+				form = hero.forms.find(f => f.star === star);
 			} else {
 				form = hero.forms[hero.forms.length - 1];
 			}
 
 			if (!form) {
-				await message.channel.send('Hero grade not found!');
+				await reply('Hero grade not found!');
 
 				return {
 					statusCode: CommandResultCode.ENTITY_GRADE_NOT_FOUND,
@@ -100,7 +97,7 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand {
 
 		// eslint-disable-next-line new-cap
 		const embed = new this.embed({
-			initialMessage: message,
+			initial,
 			hero,
 			page,
 			locales,
@@ -111,7 +108,7 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand {
 		return {
 			statusCode: CommandResultCode.SUCCESS,
 			target: hero.id,
-			args: JSON.stringify({ name, grade }),
+			args: JSON.stringify({ name, star }),
 		};
 	}
 }

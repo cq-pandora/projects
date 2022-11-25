@@ -1,33 +1,28 @@
-import { Message } from 'discord.js';
 import { SpSkill, HeroClassColors } from '@cquest/entities';
+import { translate as l } from '@cquest/data-provider';
 
 import { imageUrl } from '../util/functions';
 
-import PaginationEmbed from './PaginationEmbed';
-import { l, LocalizableMessageEmbed } from './LocalizableMessageEmbed';
+import PaginationEmbed, { InitialMessageSource } from './PaginationEmbed';
+import PandoraEmbed from './PandoraEmbed';
 
 interface ISPSkillEmbedOptions {
-	initialMessage: Message;
+	initial: InitialMessageSource;
 	skill: SpSkill;
 	page: number | undefined;
-	locales: string[];
 }
 
 export default class SPSkillEmbed extends PaginationEmbed {
-	constructor({
-		initialMessage,
-		skill,
-		page,
-		locales
-	}: ISPSkillEmbedOptions) {
-		super({ initialMessage, locales });
+	constructor({ initial, skill, page }: ISPSkillEmbedOptions) {
+		super({ initial });
 
 		const embeds = skill.forms.map(form => (
-			new LocalizableMessageEmbed()
-				.setTitle(l`${skill.name} Lvl. ${form.level}`)
+			new PandoraEmbed()
+				.setTitle(`${l(skill.name)} Lvl. ${form.level}`)
 				.setDescription(l(form.description))
 				.setThumbnail(imageUrl(`skills/${form.image}`))
 				.setColor(HeroClassColors[skill.clazz])
+				.toEmbed()
 		));
 
 		this.setArray(embeds)

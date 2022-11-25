@@ -1,3 +1,5 @@
+import { EmbedBuilder } from 'discord.js';
+
 import { heroes } from '@cquest/data-provider';
 
 import { random, imageUrl } from '../util/functions';
@@ -7,7 +9,9 @@ import {
 	CommandCategory, CommandPayload, CommandResult, CommandResultCode
 } from '../common-types';
 
-export class WaifuCommand extends BaseCommand {
+type EmptyArgs = {};
+
+export class WaifuCommand extends BaseCommand<EmptyArgs> {
 	readonly args = {};
 	readonly argsOrderMatters = false;
 	readonly category = CommandCategory.MISC;
@@ -15,21 +19,16 @@ export class WaifuCommand extends BaseCommand {
 	readonly description = 'Get your waifu';
 	readonly protected = false;
 
-	async run({ message }: CommandPayload): Promise<Partial<CommandResult>> {
+	async run({ reply, author }: CommandPayload<EmptyArgs>): Promise<Partial<CommandResult>> {
 		const heroez = heroes.list();
 
 		const hero = heroez[random(0, heroez.length - 1)];
 
-		await message.channel.send({
-			embed: {
-				image: {
-					url: imageUrl(`heroes/${hero.forms[hero.forms.length - 1].image}`),
-				},
-				footer: {
-					text: `${message.author.username}#${message.author.discriminator}`,
-				}
-			}
-		});
+		await reply([
+			new EmbedBuilder()
+				.setImage(imageUrl(`heroes/${hero.forms[hero.forms.length - 1].image}`))
+				.setFooter({ text: `${author.username}#${author.tag}` })
+		]);
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,

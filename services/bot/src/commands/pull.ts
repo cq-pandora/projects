@@ -1,4 +1,4 @@
-import { MessageAttachment, MessageEmbed } from 'discord.js';
+import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
 
 import { HeroForm } from '@cquest/entities';
 import { heroes } from '@cquest/data-provider';
@@ -9,7 +9,7 @@ import {
 
 import BaseCommand from './abstract/BaseCommand';
 import {
-	CommandArguments, CommandCategory, CommandPayload, CommandResult, CommandResultCode, RollChances
+	CommandCategory, CommandPayload, CommandResult, CommandResultCode, RollChances, ArgumentType
 } from '../common-types';
 
 const reZeroPool: RollChances = {
@@ -71,20 +71,32 @@ const PullValues = stringTuple('gg1', 'gg2', 'rz', 'sh', 'contract', 'gs');
 
 type PullType = typeof PullValues[number];
 
-const cmdArgs: CommandArguments = {
-	type: {
+const cmdArgs = {
+	type: ArgumentType.choice({
 		required: false,
-		description: `Pull type. Can be one of  ${PullValues.join(', ')}`,
-	},
-	count: {
+		description: 'Pull type',
+		default: 'contract',
+		choices: {
+			Contract: 'contract',
+			'Guilty Gear 1': 'gg1',
+			'Guilty Gear 2': 'gg2',
+			ReZero: 'rz',
+			'Shield Hero': 'sh',
+			'Goblin Slayer': 'gs',
+		},
+	}),
+	count: ArgumentType.number({
 		required: false,
 		description: 'Contracts to pull. Defaults to 10 and capped at 20',
-	}
+		default: 10,
+	}),
 };
+
+type Arguments = typeof cmdArgs;
 
 // FIXME pull translations
 
-export class PullCommand extends BaseCommand {
+export class PullCommand extends BaseCommand<Arguments> {
 	readonly args = cmdArgs;
 	readonly argsOrderMatters = true;
 	readonly category = CommandCategory.MISC;
@@ -163,58 +175,51 @@ export class PullCommand extends BaseCommand {
 		};
 	}
 
-	async run({ message, args: [rawType, rawCount] }: CommandPayload): Promise<Partial<CommandResult>> {
-		let pullType: string;
-		let pullCountString: string;
-
-		if (typeof rawType === 'undefined' || !Number.isNaN(Number(rawType))) {
-			pullCountString = rawType;
-			pullType = 'contract';
-		} else {
-			pullCountString = rawCount;
-			pullType = rawType;
-		}
+	async run({ reply, args, author }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { count, type } = args;
 
 		if (this.pulls === undefined) {
 			this.initPulls();
 		}
 
-		if (!(pullType in this.pulls!)) {
-			await message.channel.send(`Unknown pull type. Can be ${PullValues.join(', ')}!`);
-			return {
-				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
-				target: 'pull',
-				args: JSON.stringify({ pullType, pullCount: pullCountString }),
-			};
-		}
+		// if (!(pullType in this.pulls!)) {
+		// await reply(`Unknown pull type. Can be ${PullValues.join(', ')}!`);
+		// return {
+		// statusCode: CommandResultCode.ENTITY_NOT_FOUND,
+		// target: 'pull',
+		// args: JSON.stringify({ pullType, pullCount: pullCountString }),
+		//  };
+		// }
 
-		const pullCount = makeInRange((Number(pullCountString) || 10), 1, 20);
+		const pullCount = makeInRange(count, 1, 20);
 
-		const pull = this.pulls![pullType as PullType](pullCount);
+		const pull = this.pulls![type as PullType](pullCount);
 
 		const canvas = await makePullImage(pull);
 
 		const chunks = formatPullChunks(pull);
 
-		const embed = new MessageEmbed()
-			.setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.avatarURL() || undefined)
-			.setImage('attachment://pull.png');
+		const embed = new EmbedBuilder()
+			.setAuthor({
+				name: `${author.username}#${author.tag}`,
+				iconURL: author.avatarURL() || undefined,
+			})
+			.setImage('attachment://pull.png')
+			.addFields(
+				chunks.map(chunk => ({ name: '\u200b', value: chunk.join('\n') }))
+			);
 
-		for (const chunk of chunks) {
-			embed.addField('\u200b', chunk.join('\n'));
-		}
-
-		await message.channel.send({
-			embed,
+		await reply({
+			embeds: [embed],
 			files: [
-				new MessageAttachment(await canvas.getBufferAsync('image/png'), 'pull.png')
+				new AttachmentBuilder(await canvas.getBufferAsync('image/png'), { name: 'pull.png' })
 			]
 		});
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,
 			target: 'pull',
-			args: JSON.stringify({ pullType, pullCount }),
+			args: JSON.stringify(args),
 		};
 	}
 }

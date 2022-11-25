@@ -1,63 +1,93 @@
-import { MessageEmbedOptions } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
 
 import {
-	CommandCategory, CommandPayload, CommandResult, CommandArguments, CommandInfoResultField,
-	ICommand, CommandResultCode,
+	CommandCategory, CommandPayload, CommandResult, CommandArguments, ICommand,
+	CommandArgumentsSource, ArgumentType, CommandArgumentValues, AutocompleteOnly,
 } from '../../common-types';
 
-import getPrefix from '../../util/functions/getPrefix';
-
-export default abstract class BaseCommand implements ICommand {
+export default abstract class BaseCommand<A extends CommandArguments> implements ICommand<A> {
 	public abstract readonly category: CommandCategory;
-	public abstract readonly args: CommandArguments;
-	public abstract readonly argsOrderMatters: boolean;
+	public abstract readonly args: A;
 	public abstract readonly description: string;
 	public abstract readonly commandName: string;
 	public abstract readonly protected: boolean;
+	public argsOrderMatters = false;
 
-	abstract run(payload: CommandPayload): Promise<Partial<CommandResult>>;
+	abstract run(payload: CommandPayload<A>): Promise<Partial<CommandResult>>;
 
-	protected async sendUsageInstructions(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const embed = await this.instructions(payload);
-
-		await payload.message.channel.send({ embed });
-
-		return {
-			statusCode: CommandResultCode.NOT_ENOUGH_ARGS,
-		};
+	autocomplete<K extends keyof AutocompleteOnly<A>>(name: K): Promise<ReadonlyArray<A[K]>> {
+		throw Error(`Command ${this.commandName} did not set-up autocompletion for field ${String(name)}`);
 	}
 
-	async instructions({ message }: CommandPayload): Promise<MessageEmbedOptions> {
-		const prefix = getPrefix(message);
+	parseArguments(source: CommandArgumentsSource): CommandArgumentValues<A> {
+		const result = {} as Record<string, any>;
 
-		const argsStrings: Array<string> = [];
-		const fields: Array<CommandInfoResultField> = [];
+		for (const key of Object.keys(this.args)) {
+			// TODO may be some kind of typechecks
+			const argDefinition = this.args[key];
 
-		for (const [name, { required, description }] of Object.entries(this.args)) {
-			let argName: string;
-
-			if (required) {
-				argName = `<${name}>`;
+			if (argDefinition.required) {
+				result[key] = source.get(key, true).value;
 			} else {
-				argName = `[${name}]`;
+				result[key] = source.get(key)?.value || argDefinition.default;
 			}
 
-			argsStrings.push(argName);
-			fields.push({
-				name: argName,
-				value: description,
-			} as CommandInfoResultField);
+			// eslint-disable-next-line default-case
+			switch(argDefinition.type) {
+				case ArgumentType.BOOLEAN:
+					result[key] = result[key] === 'true';
+					break;
+				case ArgumentType.NUMBER:
+					result[key] = parseInt(result[key], 10);
+					break;
+			}
 		}
 
-		const embed: MessageEmbedOptions = {
-			title: `${prefix}${this.commandName} ${argsStrings.join(' ')}`,
-			fields,
-		};
+		return result as CommandArgumentValues<A>;
+	}
 
-		if (this.argsOrderMatters) {
-			embed.footer = { text: 'Argument order matters!' };
+	slashCommand(): SlashCommandBuilder {
+		const cmd = new SlashCommandBuilder()
+			.setName(this.commandName)
+			.setDescription(this.description);
+
+		for (const [name, arg] of Object.entries(this.args)) {
+			const { required, description, type } = arg;
+			switch (type) {
+				case ArgumentType.BOOLEAN:
+					cmd.addBooleanOption(
+						option => option.setName(name)
+							.setDescription(description)
+							.setRequired(required)
+					);
+					break;
+				case ArgumentType.STRING:
+					cmd.addStringOption(
+						option => option.setName(name)
+							.setDescription(description)
+							.setRequired(required)
+					);
+					break;
+				case ArgumentType.NUMBER:
+					cmd.addNumberOption(
+						option => option.setName(name)
+							.setDescription(description)
+							.setRequired(required)
+					);
+					break;
+				case ArgumentType.CHOICE:
+					cmd.addStringOption(
+						option => option.setName(name)
+							.setDescription(description)
+							.setChoices(...Object.entries(arg.choices).map(([k, v]) => ({ name: k, value: String(v) })))
+							.setRequired(required)
+					);
+					break;
+				default:
+					throw new Error(`Bad argument type: ${type}`);
+			}
 		}
 
-		return embed;
+		return cmd;
 	}
 }

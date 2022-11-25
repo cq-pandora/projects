@@ -1,28 +1,29 @@
-import { Message } from 'discord.js';
-
 import { aliases, Alias } from '@cquest/db';
 
 import { splitText } from '../util';
 import config from '../config';
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ContextType
+	CommandCategory, CommandResult, CommandPayload, CommandReply, CommandResultCode, ContextType, ArgumentType,
+	ContextValues,
 } from '../common-types';
-import { PaginationEmbed } from '../embeds';
-import { LocalizableMessageEmbed } from '../embeds/LocalizableMessageEmbed';
+import {
+	EmbedSource, InitialMessageSource, PaginationEmbed, PandoraEmbed
+} from '../embeds';
 
 import BaseCommand from './abstract/BaseCommand';
 
-const aliasesToEmbeds = (ts: Alias[]): LocalizableMessageEmbed[] => {
+const aliasesToEmbeds = (ts: Alias[]): EmbedSource[] => {
 	const strings = ts
 		.sort((a, b) => `${a.context}`.localeCompare(b.context))
 		.map(({ context, alias, for: fogh }) => `${context}: ${alias} => ${fogh}`)
 		.join('\n');
 
 	return splitText(strings, 1024, '\n').map((text: string, idx: number, total: string[]) => (
-		new LocalizableMessageEmbed()
+		new PandoraEmbed()
 			.setTitle('Aliases list')
 			.setFooter(`Page ${idx}/${total}`)
 			.addField('<context>: <alias> => <targer>', text)
+			.toEmbed()
 	));
 };
 
@@ -31,128 +32,138 @@ type ActionArguments = {
 	alias: string;
 	context: ContextType;
 	for: string;
-	originalArgs: readonly string[];
 };
 
-type Action = (message: Message, args: ActionArguments) => Promise<void>;
+type Action = (reply: CommandReply, args: ActionArguments, initial: InitialMessageSource) => Promise<void>;
 
 const actions: Record<string, Action> = {
-	'list-pending': async (message: Message, { originalArgs }) => {
+	'list-pending': async (reply, { for: forr }, initial) => {
 		try {
-			const fogh = originalArgs.length ? originalArgs.join(' ') : null;
+			const fogh = forr || null;
 
 			const list = await aliases.list(fogh);
 
 			if (!list.length) {
-				await message.channel.send('No pending aliases!');
+				await reply('No pending aliases!');
 				return;
 			}
 
-			const embed = new PaginationEmbed({ initialMessage: message })
+			const embed = new PaginationEmbed({ initial })
 				.setArray(aliasesToEmbeds(list))
-				.setChannel(message.channel)
+				// .setChannel(message.channel)
 				.showPageIndicator(false)
 				.send();
 
 			await embed;
 		} catch (error) {
-			await message.channel.send('Unable to list aliases. Please, contact bot owner.');
+			await reply('Unable to list aliases. Please, contact bot owner.');
 
 			throw error;
 		}
 	},
-	list: async (message) => {
+	list: async (reply, _, initial) => {
 		try {
 			const list = await aliases.listAll();
 
 			if (!list.length) {
-				await message.channel.send('No aliases defined!');
+				await reply('No aliases defined!');
 				return;
 			}
 
-			const embed = new PaginationEmbed({ initialMessage: message })
+			const embed = new PaginationEmbed({ initial })
 				.setArray(aliasesToEmbeds(list))
-				.setChannel(message.channel)
+				// .setChannel(message.channel)
 				.showPageIndicator(false);
 
 			await embed.send();
 		} catch (error) {
-			await message.channel.send('Unable to list aliases. Please, contact bot owner.');
+			await reply('Unable to list aliases. Please, contact bot owner.');
 
 			throw error;
 		}
 	},
-	accept: async (message, { alias, context }) => {
+	accept: async (reply, { alias, context }) => {
 		try {
 			if (!context) {
-				await message.channel.send('Context may not be empty');
+				await reply('Context may not be empty');
 			}
 
 			const res = await aliases.accept(alias, context);
 
 			if (!res) {
-				await message.channel.send('Alias does not exist for specified context');
+				await reply('Alias does not exist for specified context');
 			} else {
 				config.aliases.set(res.context, res.alias, res.for);
 
-				await message.channel.send('Alias accepted!');
+				await reply('Alias accepted!');
 			}
 		} catch (error) {
-			await message.channel.send('Unable to accept alias. Please, contact bot owner.');
+			await reply('Unable to accept alias. Please, contact bot owner.');
 
 			throw error;
 		}
 	},
-	decline: async (message, { alias, context }) => {
+	decline: async (reply, { alias, context }) => {
 		try {
 			if (!context) {
-				await message.channel.send('Context may not be empty');
+				await reply('Context may not be empty');
 			}
 
 			await aliases.decline(alias, context);
 
-			await message.channel.send('Alias declined!');
+			await reply('Alias declined!');
 		} catch (error) {
-			await message.channel.send('Unable to alias translation. Please, contact bot owner.');
+			await reply('Unable to alias translation. Please, contact bot owner.');
 
 			throw error;
 		}
 	},
-	clear: async (message, { originalArgs: [fogh] }) => {
+	clear: async (reply, { for: forr }) => {
 		try {
-			await aliases.declineAllUnaccepted(fogh);
+			await aliases.declineAllUnaccepted(forr);
 
-			await message.channel.send('Aliases cleared!');
+			await reply('Aliases cleared!');
 		} catch (error) {
-			await message.channel.send('Unable to clear aliases. Please, contact bot owner.');
+			await reply('Unable to clear aliases. Please, contact bot owner.');
 
 			throw error;
 		}
 	}
 };
 
-const actionsText = Object.keys(actions).join(', ');
-
-const cmdArgs: CommandArguments = {
-	action: {
+const cmdArgs = {
+	action: ArgumentType.choice({
 		required: true,
-		description: `Action to perform.\nCan be ${actionsText}`,
-	},
-	alias: {
+		choices: Object.keys(actions).reduce((r, v) => ({
+			...r,
+			[v]: v,
+		}), {}),
+		description: 'Action to perform',
+	}),
+	alias: ArgumentType.string({
 		required: false,
-		description: 'Alias to work with. **Important**: alias should not contain space',
-	},
-	context: {
+		default: null,
+		description: 'Alias to work with',
+	}),
+	context: ArgumentType.choice({
 		required: false,
+		choices: ContextValues.reduce((r, v) => ({
+			...r,
+			[v.replace('-', ' ')]: v
+		}), {}),
+		default: null,
 		description: 'Command name, where this alias applies',
-	},
-	for: {
+	}),
+	for: ArgumentType.string({
 		required: false,
+		default: null,
 		description: 'Alias target',
-	}
+	}),
 };
 
-export class ManageAliasesCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+export class ManageAliasesCommand extends BaseCommand<Arguments> {
 	public readonly args = cmdArgs;
 	public readonly argsOrderMatters = true;
 	public readonly category = CommandCategory.PROTECTED;
@@ -160,26 +171,25 @@ export class ManageAliasesCommand extends BaseCommand {
 	public readonly description = 'Cross-server aliases management commands';
 	public readonly protected = true;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		if (!payload.args.length) return this.sendUsageInstructions(payload);
+	async run({ args, reply, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const {
+			action: actionName,
+			alias,
+			context,
+			for: forr
+		} = args;
 
-		const { message, args: [raw, alias, context, ...etc] } = payload;
-
-		const nameAction = raw.toLowerCase();
-		const forr = etc.join(' ');
-
-		const args: ActionArguments = {
-			action: nameAction,
+		const actionArgs: ActionArguments = {
+			action: actionName,
 			alias,
 			context: context as ContextType,
 			for: forr,
-			originalArgs: payload.args,
 		};
 
-		const action = actions[nameAction];
+		const action = actions[actionName];
 
 		if (!action) {
-			await message.channel.send('Unknown action!');
+			await reply('Unknown action!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -188,7 +198,7 @@ export class ManageAliasesCommand extends BaseCommand {
 			};
 		}
 
-		await action(message, args);
+		await action(reply, actionArgs, initial);
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,

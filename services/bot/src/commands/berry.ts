@@ -3,19 +3,20 @@ import { berries, extractResult } from '@cquest/data-provider';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 import BerriesListEmbed from '../embeds/BerriesEmbed';
-import { parseQuery } from '../util';
 
-const cmdArgs: CommandArguments = {
-	name: {
+const cmdArgs = {
+	name: ArgumentType.string({
 		required: true,
 		description: 'Berry name',
-	}
+	}),
 };
 
-class BerryCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+class BerryCommand extends BaseCommand<Arguments> {
 	public readonly args = cmdArgs;
 	public readonly argsOrderMatters = false;
 	public readonly category = CommandCategory.DB;
@@ -23,16 +24,12 @@ class BerryCommand extends BaseCommand {
 	public readonly description = 'Get berry info';
 	public readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
-
-		if (!args.length) return this.sendUsageInstructions(payload);
-
-		const name = parseQuery(args);
-		const { results: candidates, locales } = extractResult(berries.searchAll(name));
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { name } = args;
+		const { results: candidates } = extractResult(berries.searchAll(name));
 
 		if (!candidates.length) {
-			await message.channel.send('Berry not found!');
+			await reply('Berry not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
@@ -41,9 +38,7 @@ class BerryCommand extends BaseCommand {
 		}
 
 		const embed = new BerriesListEmbed({
-			initialMessage: message,
-			entities: candidates,
-			locales,
+			initial, entities: candidates,
 		});
 
 		await embed.send();

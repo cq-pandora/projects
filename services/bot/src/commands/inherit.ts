@@ -4,23 +4,25 @@ import { heroes, extractResult } from '@cquest/data-provider';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
-import { parseQuery, parseInheritance } from '../util';
 import { HeroInheritanceEmbed } from '../embeds';
 
-const cmdArgs: CommandArguments = {
-	name: {
+const cmdArgs = {
+	name: ArgumentType.string({
 		required: true,
 		description: 'Hero name',
-	},
-	inheritance: {
+	}),
+	inheritance: ArgumentType.number({
 		required: false,
 		description: 'Get specific inheritance level stats',
-	}
+		default: 0,
+	}),
 };
 
-export class InheritCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+export class InheritCommand extends BaseCommand<Arguments> {
 	readonly args = cmdArgs;
 	readonly argsOrderMatters = false;
 	readonly category = CommandCategory.DB;
@@ -28,45 +30,41 @@ export class InheritCommand extends BaseCommand {
 	readonly description = 'Get hero inheritance stats for different levels or MAX Berried if level is 0';
 	readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
-
-		if (!args.length) return this.sendUsageInstructions(payload);
-
-		const iLvl = parseInheritance(args);
-		const name = parseQuery(args, [iLvl]);
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { name, inheritance } = args;
 
 		const searchResult = heroes.search(name);
 
 		if (!searchResult) {
-			await message.channel.send('Hero not found!');
+			await reply('Hero not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
 			};
 		}
 
-		const { result: hero, locales } = extractResult(searchResult);
+		const { result: hero } = extractResult(searchResult);
 
 		const form = hero.forms.find(f => f.star === 6);
 
 		if (!form) {
-			await message.channel.send('Hero cannot be inherited!');
+			await reply('Hero cannot be inherited!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_GRADE_NOT_FOUND,
 			};
 		}
 
-		const levels = (iLvl || iLvl === 0)
-			? [iLvl]
-			: [0, 5, 10, 15, 20, 25, 30, 35] as InheritanceLevel[];
+		const levels = (
+			(inheritance === 0)
+				? [inheritance]
+				: [0, 5, 10, 15, 20, 25, 30, 35]
+		) as InheritanceLevel[];
 
 		const embed = new HeroInheritanceEmbed({
-			initialMessage: message,
+			initial,
 			hero,
 			inherits: levels,
-			locales,
 		});
 
 		await embed.send();
@@ -74,7 +72,7 @@ export class InheritCommand extends BaseCommand {
 		return {
 			statusCode: CommandResultCode.SUCCESS,
 			target: hero.id,
-			args: JSON.stringify({ name, inheritance: iLvl }),
+			args: JSON.stringify({ name, inheritance }),
 		};
 	}
 }

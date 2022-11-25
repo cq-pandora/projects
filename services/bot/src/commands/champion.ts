@@ -4,23 +4,25 @@ import { champions, extractResult } from '@cquest/data-provider';
 import BaseCommand from './abstract/BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 import { ChampionEmbed } from '../embeds';
-import { parseQuery, parseGrade } from '../util';
 
-const cmdArgs: CommandArguments = {
-	name: {
+const cmdArgs = {
+	name: ArgumentType.string({
 		required: true,
 		description: 'Champion name',
-	},
-	grade: {
+	}),
+	grade: ArgumentType.number({
 		required: false,
 		description: 'Champion level. Defaults to highest possible',
-	}
+		default: 0,
+	}),
 };
 
-export class ChampionCommand extends BaseCommand {
+type Arguments = typeof cmdArgs;
+
+export class ChampionCommand extends BaseCommand<Arguments> {
 	public readonly args = cmdArgs;
 	public readonly argsOrderMatters = false;
 	public readonly category = CommandCategory.DB;
@@ -28,25 +30,19 @@ export class ChampionCommand extends BaseCommand {
 	public readonly description = 'Get champion info';
 	public readonly protected = false;
 
-	async run(payload: CommandPayload): Promise<Partial<CommandResult>> {
-		const { message, args } = payload;
-
-		if (!args.length) return this.sendUsageInstructions(payload);
-
-		const grade = parseGrade(args);
-		const name = parseQuery(args, [`${grade}`]);
-
+	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+		const { name, grade } = args;
 		const searchResult = champions.search(name);
 
 		if (!searchResult) {
-			await message.channel.send('Champion not found!');
+			await reply('Champion not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_NOT_FOUND,
 			};
 		}
 
-		const { result: champion, locales } = extractResult(searchResult);
+		const { result: champion } = extractResult(searchResult);
 
 		let form: ChampionForm | undefined;
 		if (grade) {
@@ -56,7 +52,7 @@ export class ChampionCommand extends BaseCommand {
 		}
 
 		if (!form) {
-			await message.channel.send('Champion level not found!');
+			await reply('Champion level not found!');
 
 			return {
 				statusCode: CommandResultCode.ENTITY_GRADE_NOT_FOUND,
@@ -66,7 +62,7 @@ export class ChampionCommand extends BaseCommand {
 		const page = champion.forms.indexOf(form) + 1;
 
 		const embed = new ChampionEmbed({
-			initialMessage: message, champion, page, locales
+			initial, champion, page,
 		});
 
 		await embed.send();
