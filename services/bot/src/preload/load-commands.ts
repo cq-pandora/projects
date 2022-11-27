@@ -8,7 +8,7 @@ import commands from '../commands';
 import config from '../config';
 
 const rest = new REST({ version: '10' }).setToken(config.token);
-const isDev = true;
+const isDev = process.env.NODE_ENV !== 'production';
 
 export default {
 	run: async (): Promise<void> => {
