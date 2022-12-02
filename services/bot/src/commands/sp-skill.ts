@@ -25,6 +25,7 @@ type Arguments = typeof cmdArgs;
 
 export class SpSkillCommand extends BaseCommand<Arguments> {
 	readonly args = cmdArgs;
+	readonly aliases = ['sp', 'skill'];
 	readonly category = CommandCategory.DB;
 	readonly commandName = 'sp-skill';
 	readonly description = 'Get special skill info';

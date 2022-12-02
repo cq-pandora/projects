@@ -16,7 +16,12 @@ export default {
 
 		for (const command of commands) {
 			config.commands[command.commandName] = command;
-			slashCommands.push(command.slashCommand().toJSON());
+
+			for (const alias of command.aliases) {
+				config.commands[alias] = command;
+			}
+
+			slashCommands.push(...command.slashCommandJSON());
 		}
 
 		await rest.put(
@@ -26,7 +31,7 @@ export default {
 			{ body: slashCommands },
 		);
 
-		logger.verbose(`Loaded ${Object.keys(config.commands).length} commands`);
+		logger.verbose(`Loaded ${Object.keys(config.commands).length} commands to ${isDev ? 'guild' : 'global'} collection`);
 	},
 	errorCode: 4,
 } as IPreloadScript;

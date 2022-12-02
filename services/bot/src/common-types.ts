@@ -1,5 +1,5 @@
 import {
-	Client, EmbedField, EmbedBuilder, SlashCommandBuilder,
+	Client, EmbedField, EmbedBuilder, RESTPostAPIApplicationCommandsJSONBody,
 	CommandInteractionOptionResolver, CacheType, User, CommandInteraction,
 } from 'discord.js';
 
@@ -148,8 +148,9 @@ export interface ICommand<Arguments extends CommandArguments> {
 	readonly description: string;
 	readonly commandName: string;
 	readonly protected: boolean;
+	readonly aliases: string[];
 
-	slashCommand(): SlashCommandBuilder;
+	slashCommandJSON(): RESTPostAPIApplicationCommandsJSONBody[];
 	// FIXME array of what?
 	// FIXME name of arguments check
 	autocomplete(name: any): Promise<any>;

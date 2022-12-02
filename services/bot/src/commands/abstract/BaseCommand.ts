@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { RESTPostAPIApplicationCommandsJSONBody, SlashCommandBuilder } from 'discord.js';
 
 import {
 	CommandCategory, CommandPayload, CommandResult, CommandArguments, ICommand,
@@ -11,7 +11,7 @@ export default abstract class BaseCommand<A extends CommandArguments> implements
 	public abstract readonly description: string;
 	public abstract readonly commandName: string;
 	public abstract readonly protected: boolean;
-	public argsOrderMatters = false;
+	public readonly aliases: string[] = [];
 
 	abstract run(payload: CommandPayload<A>): Promise<Partial<CommandResult>>;
 
@@ -33,7 +33,7 @@ export default abstract class BaseCommand<A extends CommandArguments> implements
 			}
 
 			// eslint-disable-next-line default-case
-			switch(argDefinition.type) {
+			switch (argDefinition.type) {
 				case ArgumentType.BOOLEAN:
 					result[key] = result[key] === 'true';
 					break;
@@ -46,7 +46,9 @@ export default abstract class BaseCommand<A extends CommandArguments> implements
 		return result as CommandArgumentValues<A>;
 	}
 
-	slashCommand(): SlashCommandBuilder {
+	slashCommandJSON(): RESTPostAPIApplicationCommandsJSONBody[] {
+		const cmds: RESTPostAPIApplicationCommandsJSONBody[] = [];
+
 		const cmd = new SlashCommandBuilder()
 			.setName(this.commandName)
 			.setDescription(this.description);
@@ -88,6 +90,12 @@ export default abstract class BaseCommand<A extends CommandArguments> implements
 			}
 		}
 
-		return cmd;
+		cmds.push(cmd.toJSON());
+
+		for (const alias of this.aliases) {
+			cmds.push(cmd.setName(alias).toJSON());
+		}
+
+		return cmds;
 	}
 }

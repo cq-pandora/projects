@@ -29,6 +29,7 @@ export class InheritCommand extends BaseCommand<Arguments> {
 	readonly commandName = 'inherit';
 	readonly description = 'Get hero inheritance stats for different levels or MAX Berried if level is 0';
 	readonly protected = false;
+	readonly aliases = ['i'];
 
 	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { name, inheritance } = args;
@@ -56,9 +57,9 @@ export class InheritCommand extends BaseCommand<Arguments> {
 		}
 
 		const levels = (
-			(inheritance === 0)
+			(inheritance !== 0)
 				? [inheritance]
-				: [0, 5, 10, 15, 20, 25, 30, 35]
+				: [0, 5, 10, 15, 20, 25, 30, 35, 40]
 		) as InheritanceLevel[];
 
 		const embed = new HeroInheritanceEmbed({

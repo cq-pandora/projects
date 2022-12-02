@@ -4,6 +4,7 @@ import { HeroSBWBlockEmbed } from '../embeds';
 export class SBWBlockCommand extends SingleHeroBasedCommand {
 	public readonly commandName = 'sbw-block';
 	public readonly description = 'Get hero block and soulbound weapon info';
+	public readonly aliases = ['sb'];
 
 	constructor() {
 		super(HeroSBWBlockEmbed, true);
