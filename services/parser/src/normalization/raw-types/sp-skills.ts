@@ -34,6 +34,7 @@ export enum Class {
 	ClaPriest = "CLA_PRIEST",
 	ClaWarrior = "CLA_WARRIOR",
 	ClaWizard = "CLA_WIZARD",
+	Briseis = "BRISEIS",
 	Kof = "KOF",
 	LimitedEr05 = "LIMITED_ER_05",
 }
