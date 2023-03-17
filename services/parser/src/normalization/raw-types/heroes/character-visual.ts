@@ -37,6 +37,7 @@ export interface CharacterVisual {
 	subnumber:                 number;
 	ischaractercollectionhide: boolean;
 	id:                        string;
+	gachaspeech:               null | string;
 	stats: CharacterStat;
 }
 

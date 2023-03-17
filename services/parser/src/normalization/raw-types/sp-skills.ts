@@ -37,6 +37,9 @@ export enum Class {
 	Briseis = "BRISEIS",
 	Kof = "KOF",
 	LimitedEr05 = "LIMITED_ER_05",
+	LimitedBrsk05 = "LIMITED_BRSK_05",
+	LimitedBrsk02 = "LIMITED_BRSK_02",
+	LimitedBrsk04 = "LIMITED_BRSK_04",
 }
 
 export interface Costjson {

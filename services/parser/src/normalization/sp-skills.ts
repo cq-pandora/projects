@@ -12,11 +12,15 @@ function classMapper(clazz: Class): HeroClass {
 	switch (clazz) {
 		case Class.ClaArcher: return 'archer';
 		case Class.ClaWizard: return 'wizard';
-		case Class.ClaWarrior: return 'warrior';
 		case Class.ClaPriest: return 'priest';
 		case Class.ClaPaladin: return 'paladin';
 		case Class.ClaHunter: return 'hunter';
-		case Class.Briseis: return 'warrior';
+		case Class.Briseis:
+		case Class.LimitedBrsk02:
+		case Class.LimitedBrsk04:
+		case Class.LimitedBrsk05:
+		case Class.ClaWarrior:
+			return 'warrior';
 		default: throw new Error(`Unsupported SP skill class: ${clazz}`);
 	}
 }

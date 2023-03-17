@@ -29,6 +29,7 @@ export default class HeroFormsEmbed extends PaginationEmbed {
 			.addField('Type', capitalizeFirstLetter(hero.type), true)
 			.addField('Faction', l(faction), true)
 			.addField('Gender', capitalizeFirstLetter(hero.gender), true)
+			.addField('Recruit dialogue', l(form.recruitDialog), false)
 			.toEmbed());
 
 		this.setArray(embeds)

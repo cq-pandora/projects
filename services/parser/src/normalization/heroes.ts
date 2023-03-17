@@ -183,7 +183,8 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 				blockName: stats.skill_name!,
 				blockDescription: stats.skill_desc!,
 				passiveDescription: stats.skill_subdesc!,
-				maxBerries: maxBerriesStats[stats.addstatmaxid!]
+				maxBerries: maxBerriesStats[stats.addstatmaxid!],
+				recruitDialog: formRaw.gachaspeech!,
 			}));
 
 			const possibleSkinIds = heroToSkinsIds[formRaw.id];

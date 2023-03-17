@@ -59,6 +59,17 @@ const shPool: RollChances = {
 	CHA_WI_LIMITED_SH_4_06: 3,
 };
 
+const brskPool: RollChances = {
+	CHA_WA_LIMITED_BRSK_4_01: 1,
+	CHA_WA_LIMITED_BRSK_4_02: 1,
+	CHA_WI_LIMITED_BRSK_4_03: 2,
+	CHA_WA_LIMITED_BRSK_4_04: 2,
+	CHA_PA_LIMITED_BRSK_4_05: 2,
+	CHA_PR_LIMITED_BRSK_4_06: 2,
+	CHA_AR_LIMITED_BRSK_4_07: 2,
+	CHA_HU_LIMITED_BRSK_4_08: 2,
+};
+
 const HEROES_HIDDEN = [
 	'legendary',
 	'support',
@@ -67,7 +78,7 @@ const HEROES_HIDDEN = [
 
 type Puller = (count: number) => HeroForm[];
 
-const PullValues = stringTuple('gg1', 'gg2', 'rz', 'sh', 'contract', 'gs');
+const PullValues = stringTuple('gg1', 'gg2', 'rz', 'sh', 'contract', 'gs', 'brsk');
 
 type PullType = typeof PullValues[number];
 
@@ -172,6 +183,7 @@ export class PullCommand extends BaseCommand<Arguments> {
 					return sortedForms.guaranteed[random(0, sortedForms.guaranteed.length - 1)];
 				}),
 			gs: count => ggPull(count, gsPool),
+			brsk: count => ggPull(count, brskPool),
 		};
 	}
 
