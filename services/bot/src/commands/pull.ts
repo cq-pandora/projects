@@ -94,6 +94,7 @@ const cmdArgs = {
 			ReZero: 'rz',
 			'Shield Hero': 'sh',
 			'Goblin Slayer': 'gs',
+			Berserk: 'brsk',
 		},
 	}),
 	count: ArgumentType.number({
