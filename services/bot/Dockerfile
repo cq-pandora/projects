@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=node:16.0.0-alpine3.13
+ARG BASE_IMAGE=node:18.15.0-alpine3.17
 
 FROM $BASE_IMAGE
 WORKDIR /opt/cquest/
