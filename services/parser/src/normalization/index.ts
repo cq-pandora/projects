@@ -70,6 +70,7 @@ export default async function normalize(): Promise<void> {
 				`text2_${locale}_2`,
 				`text2_${locale}_3`,
 				`text3_${locale}_0`,
+				`text3_${locale}_1`,
 				`textdialogue1_${locale}_0`,
 				`textdialogue1_${locale}_1`,
 				`textdialogue1_${locale}_2`,
@@ -78,6 +79,8 @@ export default async function normalize(): Promise<void> {
 				`textdialogue2_${locale}_2`,
 				`textdialogue2_${locale}_3`,
 				`textdialogue3_${locale}_0`,
+				`textdialogue3_${locale}_1`,
+				`textdialogue3_${locale}_2`,
 			].map(absolute),
 		});
 
