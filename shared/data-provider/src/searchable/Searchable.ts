@@ -6,9 +6,7 @@ import {
 	Entities, Container, ISearchable, ISearchResult
 } from './common';
 
-export interface ISearchableAliasProvider {
-	(key: string): string;
-}
+export type ISearchableAliasProvider = (key: string) => string;
 
 export type PromiseResolvable<T> = Promise<T> | T;
 

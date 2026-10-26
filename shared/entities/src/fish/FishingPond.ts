@@ -9,9 +9,9 @@ export interface IFishingPondOptions {
 	name: string;
 	description: string;
 	minFR: number;
-	fish: Array<string>;
-	junk: Array<string>;
-	hero: Array<string>;
+	fish: string[];
+	junk: string[];
+	hero: string[];
 	habitat: FishHabitat;
 	boss: string;
 	reward: FishReward;
@@ -23,9 +23,9 @@ export class FishingPond {
 	@autoserialize public readonly name!: string;
 	@autoserialize public readonly description!: string;
 	@autoserializeAs('min_fr') public readonly minFR!: number;
-	@autoserialize public readonly fish!: Array<string>;
-	@autoserialize public readonly junk!: Array<string>;
-	@autoserialize public readonly hero!: Array<string>;
+	@autoserialize public readonly fish!: string[];
+	@autoserialize public readonly junk!: string[];
+	@autoserialize public readonly hero!: string[];
 	@autoserialize public readonly habitat!: FishHabitat;
 	@autoserialize public readonly boss!: string;
 	@autoserializeAs(FishReward) public readonly reward!: FishReward;
@@ -50,4 +50,4 @@ export class FishingPond {
 
 registerDeserializer(FishingPond, (input: string) => Deserialize(JSON.parse(input), FishingPond));
 
-export type FishingPonds = Array<FishingPond>;
+export type FishingPonds = FishingPond[];

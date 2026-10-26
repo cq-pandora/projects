@@ -27,19 +27,15 @@ export class Translation {
 	}
 }
 
-export type Translations = {
-	[k in TranslationKey]: Translation;
-};
+export type Translations = Record<TranslationKey, Translation>;
 
-type TranslationsRaw = {
-	[k in TranslationKey]: object;
-};
+type TranslationsRaw = Record<TranslationKey, object>;
 
 function parseTranslations(rawJson: string): Translations {
 	const json = JSON.parse(rawJson) as TranslationsRaw;
 
 	return Object.entries(json).reduce<Translations>((r, [idRaw, raw]) => {
-		const id = idRaw as TranslationKey;
+		const id = idRaw;
 
 		r[id] = Deserialize(raw, Translation) as Translation;
 		r[id].key = id;

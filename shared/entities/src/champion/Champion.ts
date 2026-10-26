@@ -15,7 +15,7 @@ export interface IChampionOptions {
 	image: string;
 	lore: string;
 	type: ChampionType;
-	forms: Array<ChampionForm>;
+	forms: ChampionForm[];
 }
 
 export class Champion {
@@ -25,7 +25,7 @@ export class Champion {
 	@autoserialize public readonly image!: string;
 	@autoserialize public readonly lore!: string;
 	@autoserialize public readonly type!: ChampionType;
-	@autoserializeAs(ChampionForm) public readonly forms!: Array<ChampionForm>;
+	@autoserializeAs(ChampionForm) public readonly forms!: ChampionForm[];
 
 	constructor(options: IChampionOptions) {
 		if (!options) return; // only for tests
@@ -43,4 +43,4 @@ export class Champion {
 registerDeserializer(Champion, (input: string) => Deserialize(JSON.parse(input), Champion));
 registerSerializer(Champion, (input: Champion | Champion[]) => Serialize(input, Champion));
 
-export type Champions = Array<Champion>;
+export type Champions = Champion[];

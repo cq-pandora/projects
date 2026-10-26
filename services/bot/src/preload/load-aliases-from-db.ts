@@ -1,7 +1,7 @@
 import { aliases } from '@cquest/db';
 import logger from '@cquest/logger';
 
-import { ContextType, IPreloadScript } from '../common-types';
+import { IPreloadScript } from '../common-types';
 
 import config from '../config';
 
@@ -15,7 +15,7 @@ export default {
 			if (!context) {
 				logger.warn(`Invalid alias without context: ${alias} => ${target}`);
 			} else {
-				config.aliases.set(context as ContextType, alias, target);
+				config.aliases.set(context, alias, target);
 				validAliases += 1;
 			}
 		}

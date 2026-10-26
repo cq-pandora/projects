@@ -3,13 +3,13 @@ import {
 	relative as pathRelative,
 	sep as pathSep,
 	posix as pathPosix
-} from 'path';
+} from 'node:path';
 import {
 	writeFileSync,
 	readFileSync,
 	readdirSync,
 	lstatSync
-} from 'fs';
+} from 'node:fs';
 
 enum ConfigFilename {
 	PACKAGE = 'package.json',

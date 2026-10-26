@@ -11,7 +11,9 @@ export default function splitText(text: string, l = 1024, c = ' '): string[] {
 
 		let i = str.indexOf(c, pos) + 1;
 
-		if (i < pos || i > pos + l) { i = pos; }
+		if (i < pos || i > pos + l) {
+			i = pos;
+		}
 
 		str = str.substring(i);
 	}

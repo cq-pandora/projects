@@ -5,8 +5,8 @@ import { TranslationKey } from '../common-types';
 import { registerSerializer } from '../Serializer';
 
 export type TranslationIndexSection =
-	'heroes' | 'breads' | 'berries' | 'sigils' | 'goddesses' | 'factions' | 'champions' | 'sp_skills' | 'bosses' |
-	'fishes' | 'fishing_gear' | 'portraits' | 'scarecrows' | 'accessories';
+	'heroes' | 'breads' | 'berries' | 'sigils' | 'goddesses' | 'factions' | 'champions' | 'sp_skills' | 'bosses'
+	| 'fishes' | 'fishing_gear' | 'portraits' | 'scarecrows' | 'accessories';
 
 export interface ITranslationIndicesOptions {
 	key: string;
@@ -37,19 +37,15 @@ export class TranslationIndex {
 	}
 }
 
-export type TranslationIndices = {
-	[k in TranslationIndexSection]: Array<TranslationIndex>;
-};
+export type TranslationIndices = Record<TranslationIndexSection, TranslationIndex[]>;
 
-type TranslationIndicesRaw = {
-	[k in TranslationIndexSection]: Array<object>;
-};
+type TranslationIndicesRaw = Record<TranslationIndexSection, object[]>;
 
 function parseTranslationIndices(rawJson: string): TranslationIndices {
 	const json = JSON.parse(rawJson) as TranslationIndicesRaw;
 
 	return Object.entries(json).reduce<TranslationIndices>((r, [idRaw, raw]) => {
-		r[idRaw as TranslationIndexSection] = Deserialize(raw, TranslationIndex) as Array<TranslationIndex>;
+		r[idRaw as TranslationIndexSection] = Deserialize(raw, TranslationIndex) as TranslationIndex[];
 
 		return r;
 	}, {} as TranslationIndices);

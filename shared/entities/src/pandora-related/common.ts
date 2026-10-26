@@ -18,7 +18,7 @@ export type PermissionMergeResult = {
 	serverId: Snowflake;
 	targetType: PermissionTarget;
 	targetId: Snowflake;
-	commands: Array<string>;
+	commands: string[];
 	mode: 0 | 1;
 	priority: number;
 };

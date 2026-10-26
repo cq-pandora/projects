@@ -61,7 +61,7 @@ export async function normalize(input: FishesNormalizationInput): Promise<Normal
 		if (f.sellvalue_2nd) {
 			rewards.push(new FishReward({
 				type: f.sellvalue_2nd,
-				amount: f.sellamount_2nd!,
+				amount: f.sellamount_2nd,
 			}));
 		}
 

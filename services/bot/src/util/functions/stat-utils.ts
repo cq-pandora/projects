@@ -4,9 +4,7 @@ import toClearNumber from './toClearNumber';
 
 export type StatsKey = Stats | HeroStats;
 
-export type StatsKeyTranslations = {
-	[key in StatsKey]: [string, boolean]
-};
+export type StatsKeyTranslations = Record<StatsKey, [string, boolean]>;
 
 const statsInfoMapping: StatsKeyTranslations = {
 	atk_power: ['Attack power', false],

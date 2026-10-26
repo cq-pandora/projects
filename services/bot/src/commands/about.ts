@@ -1,5 +1,3 @@
-import { User } from 'discord.js';
-
 import BaseCommand from './abstract/BaseCommand';
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, NoCommandArguments
@@ -15,7 +13,7 @@ export class AboutCommand extends BaseCommand<NoCommandArguments> {
 	public readonly protected = false;
 
 	async run({ client, reply }: CommandPayload<NoCommandArguments>): Promise<Partial<CommandResult>> {
-		const owner = await client.users.fetch(config.ownerId) as User;
+		const owner = await client.users.fetch(config.ownerId);
 
 		await reply([
 			{

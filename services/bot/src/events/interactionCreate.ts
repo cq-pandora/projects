@@ -11,7 +11,6 @@ import { commands as logger } from '@cquest/logger';
 
 import { isErrorIgnored } from '../util';
 import config from '../config';
-import { CommandArgumentsSource } from '../common-types';
 
 const CHANNEL_TARGETS: Partial<Record<ChannelType, MessageTargetChannel>> = {
 	[ChannelType.GuildText]: 'text',
@@ -98,7 +97,7 @@ export default (client: Client): (interaction: Interaction) => Promise<void> => 
 		} else {
 			const response = await executable.run({
 				client,
-				args: executable.parseArguments(interaction.options as CommandArgumentsSource),
+				args: executable.parseArguments(interaction.options),
 				reply,
 				author: interaction.user,
 				deleteOriginal: () => interaction.deleteReply(),

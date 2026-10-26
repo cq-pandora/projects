@@ -16,12 +16,12 @@ export default function allSettled<T>(promises: Promise<T>[]): Promise<PromiseSe
 			return {
 				status: 'fulfilled',
 				value: await p,
-			} as PromiseSucceeded<T>;
+			};
 		} catch (e) {
 			return {
 				status: 'rejected',
 				reason: e,
-			} as PromiseFailed;
+			};
 		}
 	}));
 }

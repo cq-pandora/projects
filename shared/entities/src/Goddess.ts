@@ -37,4 +37,4 @@ export class Goddess {
 registerDeserializer(Goddess, (input: string) => Deserialize(JSON.parse(input), Goddess));
 registerSerializer(Goddess, (input: Goddess | Goddess[]) => Serialize(input, Goddess));
 
-export type Goddesses = Array<Goddess>;
+export type Goddesses = Goddess[];

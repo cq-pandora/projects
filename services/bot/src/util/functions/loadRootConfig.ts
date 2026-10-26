@@ -1,5 +1,5 @@
-import { readFileSync } from 'fs';
-import { join as pathJoin } from 'path';
+import { readFileSync } from 'node:fs';
+import { join as pathJoin } from 'node:path';
 
 const defaultPath = pathJoin(__dirname, '../../../');
 

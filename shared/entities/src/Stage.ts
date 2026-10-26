@@ -39,19 +39,15 @@ export class Stage {
 	}
 }
 
-export type Stages = {
-	[k in StageId]: Stage;
-};
+export type Stages = Record<StageId, Stage>;
 
-type StagesRaw = {
-	[k in StageId]: object;
-};
+type StagesRaw = Record<StageId, object>;
 
 function parseStages(rawJson: string): Stages {
 	const json = JSON.parse(rawJson) as StagesRaw;
 
 	return Object.entries(json).reduce<Stages>((r, [idRaw, stageRaw]) => {
-		r[idRaw as StageId] = Deserialize(stageRaw, Stage) as Stage;
+		r[idRaw] = Deserialize(stageRaw, Stage) as Stage;
 
 		return r;
 	}, {} as Stages);

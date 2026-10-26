@@ -226,7 +226,11 @@ export class PullCommand extends BaseCommand<Arguments> {
 		const plainForms = forms.filter(f => f.hero.type !== 'secret' && f.hero.type !== 'collab');
 
 		const secretFormsById = secretForms.reduce(
-			(r, t) => { r[t.id] = t; return r; },
+			(r, t) => {
+				r[t.id] = t;
+
+				return r;
+			},
 			{} as Record<string, HeroForm>
 		);
 

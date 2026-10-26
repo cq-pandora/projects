@@ -5,7 +5,7 @@ import BaseCommand from './abstract/BaseCommand';
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
-import BerriesListEmbed from '../embeds/BerriesEmbed';
+import BerriesEmbed from '../embeds/BerriesEmbed';
 
 const cmdArgs = {
 	name: ArgumentType.string({
@@ -37,7 +37,7 @@ class BerryCommand extends BaseCommand<Arguments> {
 			};
 		}
 
-		const embed = new BerriesListEmbed({
+		const embed = new BerriesEmbed({
 			initial, entities: candidates,
 		});
 

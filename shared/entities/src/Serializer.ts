@@ -4,9 +4,7 @@ type Entities = any;
 
 export type Serializer<T> = (input: T | T[]) => object | object[];
 
-const registered: {
-	[className: string]: Serializer<Entities>;
-} = {};
+const registered: Record<string, Serializer<Entities>> = {};
 
 export function registerSerializer<T extends Entities>(
 	ctor: GenericConstructor<T> | string,

@@ -112,9 +112,9 @@ export interface IHeroOptions {
 	type: HeroType;
 	gender: HeroGender;
 	domain: string;
-	forms: Array<HeroForm>;
-	sbws: Array<HeroSBW>;
-	skins: Array<HeroSkin>;
+	forms: HeroForm[];
+	sbws: HeroSBW[];
+	skins: HeroSkin[];
 	profile?: HeroProfile;
 }
 
@@ -125,9 +125,9 @@ export class Hero {
 	@autoserialize public readonly type!: HeroType;
 	@autoserialize public readonly gender!: HeroGender;
 	@autoserialize public readonly domain!: string;
-	@autoserializeAs(HeroForm) public readonly forms!: Array<HeroForm>;
-	@autoserializeAs(HeroSBW) public readonly sbws!: Array<HeroSBW>;
-	@autoserializeAs(HeroSkin) public readonly skins!: Array<HeroSkin>;
+	@autoserializeAs(HeroForm) public readonly forms!: HeroForm[];
+	@autoserializeAs(HeroSBW) public readonly sbws!: HeroSBW[];
+	@autoserializeAs(HeroSkin) public readonly skins!: HeroSkin[];
 	@autoserializeAs(HeroProfile) public readonly profile?: HeroProfile;
 
 	public static OnDeserialized(instance: Hero): void {
@@ -155,4 +155,4 @@ export class Hero {
 registerDeserializer(Hero, (input: string) => Deserialize(JSON.parse(input), Hero));
 registerSerializer(Hero, (input: Hero | Hero[]) => Serialize(input, Hero));
 
-export type Heroes = Array<Hero>;
+export type Heroes = Hero[];

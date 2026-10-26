@@ -17,16 +17,12 @@ export class Portrait {
 	}
 }
 
-export type Portraits = {
-	[K in TranslationKey]: Portrait;
-};
+export type Portraits = Record<TranslationKey, Portrait>;
 
-type PortraitsRaw = {
-	[K in TranslationKey]: {
-		keys: string[];
-		id: string;
-	};
-};
+type PortraitsRaw = Record<TranslationKey, {
+	keys: string[];
+	id: string;
+}>;
 
 function parsePortraits(rawJson: string): Portraits {
 	const json = JSON.parse(rawJson) as PortraitsRaw;

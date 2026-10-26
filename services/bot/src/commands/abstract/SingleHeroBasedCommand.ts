@@ -24,8 +24,8 @@ const cmdArgs = {
 };
 
 type HeroBasedEmbeds =
-	typeof HeroBlockEmbed | typeof HeroFormsEmbed | typeof HeroSBWEmbed | typeof HeroSBWBlockEmbed |
-	typeof HeroSkinsEmbed;
+	typeof HeroBlockEmbed | typeof HeroFormsEmbed | typeof HeroSBWEmbed | typeof HeroSBWBlockEmbed
+	| typeof HeroSkinsEmbed;
 
 type Arguments = typeof cmdArgs;
 export default abstract class SingleHeroBasedCommand extends BaseCommand<Arguments> {

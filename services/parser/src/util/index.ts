@@ -1,9 +1,9 @@
 import { IStatsHolder, Stats } from '@cquest/entities';
 import { resolveVersion } from '@cquest/version-resolver';
 
-import { promisify } from 'util';
-import { readFile } from 'fs';
-import { resolve as pathResolve } from 'path';
+import { promisify } from 'node:util';
+import { readFile } from 'node:fs';
+import { resolve as pathResolve } from 'node:path';
 
 import { paths } from '../config';
 import ReadableStream = NodeJS.ReadableStream;
@@ -34,7 +34,7 @@ export async function gameVersion(): Promise<string> {
 		gameVersionCached = versionJson.version[0].data;
 	}
 
-	return gameVersionCached as string;
+	return gameVersionCached;
 }
 
 let apkVersionCached: string | undefined;

@@ -14,8 +14,8 @@ export interface IPaginationEmbedOptions {
 }
 
 type MessageReply = {
-	embeds: EmbedBuilder[],
-	components: ActionRowBuilder<any>[],
+	embeds: EmbedBuilder[];
+	components: ActionRowBuilder<any>[];
 };
 
 const BUTTONS = {
@@ -134,7 +134,9 @@ export default class PaginationEmbed {
 		collector.on('collect', async (collectedInteraction) => {
 			if (
 				!collectedInteraction.isButton()
-			) { return; }
+			) {
+				return;
+			}
 
 			if (!this.authorizedUsers.includes(collectedInteraction.user.id)) {
 				return;
@@ -171,7 +173,7 @@ export default class PaginationEmbed {
 	}
 
 	protected buildMessageOptions(embed: EmbedSource): MessageReply {
-		const buttons:ButtonBuilder[] = [];
+		const buttons: ButtonBuilder[] = [];
 
 		if (this.array.length > 1) {
 			const nextButton = new ButtonBuilder()
@@ -179,14 +181,18 @@ export default class PaginationEmbed {
 				.setCustomId(BUTTONS.NEXT)
 				.setStyle(this.buttonStyle);
 
-			if (this.isLastPage()) { nextButton.setDisabled(true); }
+			if (this.isLastPage()) {
+				nextButton.setDisabled(true);
+			}
 
 			const previousButton = new ButtonBuilder()
 				.setLabel('Previous')
 				.setCustomId(BUTTONS.PREV)
 				.setStyle(this.buttonStyle);
 
-			if (this.isFirstPage()) { previousButton.setDisabled(true); }
+			if (this.isFirstPage()) {
+				previousButton.setDisabled(true);
+			}
 
 			buttons.push(nextButton, previousButton);
 		}

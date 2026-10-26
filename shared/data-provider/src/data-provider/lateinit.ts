@@ -2,9 +2,7 @@ const initializedKey = Symbol.for('initialized');
 const initializerKey = Symbol.for('initializer');
 const origKey = Symbol.for('orig');
 
-export type InitializerFunction<T extends object> = {
-	(this: T, instance: T): Promise<unknown> | unknown;
-};
+export type InitializerFunction<T extends object> = (this: T, instance: T) => Promise<unknown> | unknown;
 
 export type LateInit<T extends object> = {
 	[initializedKey]: boolean;

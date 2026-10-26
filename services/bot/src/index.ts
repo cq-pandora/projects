@@ -1,7 +1,7 @@
 import { ActivityType, Client } from 'discord.js';
 import logger from '@cquest/logger';
 
-import preloadScripts from './preload';
+import scripts from './preload';
 
 import config from './config';
 
@@ -19,12 +19,14 @@ process.on('unhandledRejection', unhandledRejection);
 
 	logger.verbose('Executing preload scripts');
 
-	for (const script of preloadScripts) {
+	for (const script of scripts) {
 		try {
 			await script.run();
 		} catch (e) {
 			logger.error('Unable to start app: ', e);
 
+			// Startup failure: each preload script has its own exit code
+			// eslint-disable-next-line n/no-process-exit
 			process.exit(script.errorCode);
 		}
 	}
@@ -37,7 +39,9 @@ process.on('unhandledRejection', unhandledRejection);
 	logger.verbose('Loading events...');
 
 	client.on('interactionCreate', interactionCreate(client));
-	client.on('shardReconnecting', () => { logger.warn('Connection to Discord interrupted. Reconnecting...'); });
+	client.on('shardReconnecting', () => {
+		logger.warn('Connection to Discord interrupted. Reconnecting...');
+	});
 	client.on('ready', () => {
 		logger.info(`Logged in as ${client.user!.tag}`);
 		client.user!.setActivity('with Slash Commands!', { type: ActivityType.Playing });

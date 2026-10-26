@@ -54,7 +54,7 @@ export default class DataProvider implements IDataProvider {
 		generateLocalesInitializer(this),
 	);
 	readonly localizations: LateInit<Localizations> = lateinit(
-		{} as Localizations,
+		{},
 		generateLocalizationsInitializer(this),
 	);
 	readonly translationIndices: LateInit<TranslationIndices> = lateinit(

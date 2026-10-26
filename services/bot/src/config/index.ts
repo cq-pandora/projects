@@ -11,9 +11,7 @@ import EmojisConfig from './EmojisConfig';
 import PackageConfig from './PackageConfig';
 import LinksField from './LinksField';
 
-type Commands = {
-	[commandName: string]: ICommand<CommandArguments>;
-};
+type Commands = Record<string, ICommand<CommandArguments>>;
 
 class Config {
 	public readonly token: string;

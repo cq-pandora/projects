@@ -28,4 +28,4 @@ export class HeroSkin {
 	}
 }
 
-export type HeroSkins = Array<HeroSkin>;
+export type HeroSkins = HeroSkin[];

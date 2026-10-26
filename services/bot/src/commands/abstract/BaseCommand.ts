@@ -15,7 +15,7 @@ export default abstract class BaseCommand<A extends CommandArguments> implements
 
 	abstract run(payload: CommandPayload<A>): Promise<Partial<CommandResult>>;
 
-	autocomplete<K extends keyof AutocompleteOnly<A>>(name: K): Promise<ReadonlyArray<A[K]>> {
+	autocomplete<K extends keyof AutocompleteOnly<A>>(name: K): Promise<readonly A[K][]> {
 		throw Error(`Command ${this.commandName} did not set-up autocompletion for field ${String(name)}`);
 	}
 

@@ -14,7 +14,7 @@ import BaseCommand from './abstract/BaseCommand';
 
 const aliasesToEmbeds = (ts: Alias[]): EmbedSource[] => {
 	const strings = ts
-		.sort((a, b) => `${a.context}`.localeCompare(b.context))
+		.sort((a, b) => a.context.localeCompare(b.context))
 		.map(({ context, alias, for: fogh }) => `${context}: ${alias} => ${fogh}`)
 		.join('\n');
 

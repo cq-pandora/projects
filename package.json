@@ -7,19 +7,15 @@
 	],
 	"devDependencies": {
 		"@eslint/js": "^9.39.5",
-		"@stylistic/eslint-plugin": "^5.10.0",
 		"@types/jest": "^30.0.0",
 		"@types/node": "^24.19.2",
 		"eslint": "^9.39.5",
 		"eslint-config-airbnb-extended": "^3.3.0",
-		"eslint-import-resolver-typescript": "^4.4.5",
-		"eslint-plugin-import": "^2.32.0",
 		"globals": "^17.13.0",
 		"jest": "^30.5.2",
 		"ts-jest": "^29.4.15",
 		"tsx": "^4.23.15",
-		"typescript": "~6.0.3",
-		"typescript-eslint": "^8.72.0"
+		"typescript": "~6.0.3"
 	},
 	"scripts": {
 		"build": "yarn run typescript:build",
@@ -34,7 +30,7 @@
 		"update:tsconfig": "tsx scripts/update-package-tsconfig.ts"
 	},
 	"engines": {
-		"node": ">=24"
+		"node": ">=24.8"
 	},
 	"packageManager": "yarn@4.18.1+sha512.b2e1e7524f654f2749d32b4ebcb4622473cb5bcbc485df2007e12a154e50162a4d795526768bc5f5b8f81717bfd79deb2472813d86fb5ae2eb551fa9c872b08f"
 }

@@ -16,7 +16,7 @@ import {
 
 import { Weapon, WeaponClassID } from './raw-types/heroes/weapons';
 
-import { CharacterVisual } from './raw-types/heroes/character-visual';
+import { CharacterVisual, Type as CharacterType } from './raw-types/heroes/character-visual';
 import { CostumeStat } from './raw-types/heroes/skins';
 
 import { HeroesNormalizationInput } from './input';
@@ -278,7 +278,7 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 	};
 
 	const heroesSorted = Object.entries(
-		groupBy(characterVisualRaw.character_visual.filter(c => c.type === 'HERO'), 'classid')
+		groupBy(characterVisualRaw.character_visual.filter(c => c.type === CharacterType.Hero), 'classid')
 	).reduce((res, [classid, classidHeroes]) => {
 		res[classid] = Object.entries(groupBy(classidHeroes, 'rarity')).reduce(
 			(rarityRes, [rarity, rarityHeroes]) => {

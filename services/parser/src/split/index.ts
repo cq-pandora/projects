@@ -1,4 +1,4 @@
-import * as path from 'path';
+import * as path from 'node:path';
 
 import extractSprites from './sprites';
 import { images, paths } from '../config';

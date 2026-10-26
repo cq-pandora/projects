@@ -8,9 +8,7 @@ type TranslationsKey = 'text1' | 'text2' | 'text3' | 'text_dialogue1' | 'text_di
 const TranslationsValues = ['text1', 'text2', 'text3', 'text_dialogue1', 'text_dialogue2', 'text_dialogue3'] as TranslationsKey[];
 
 type TranslationRaw = Record<string, string>;
-type TranslationDataStructure = {
-	[key in TranslationsKey]?: TranslationRaw[];
-};
+type TranslationDataStructure = Partial<Record<TranslationsKey, TranslationRaw[]>>;
 
 export async function normalize(input: TranslationsNormalizationInput): Promise<Translations> {
 	const version = await gameVersion();

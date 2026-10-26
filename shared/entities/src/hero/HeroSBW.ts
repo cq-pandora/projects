@@ -37,4 +37,4 @@ export class HeroSBW {
 	}
 }
 
-export type HeroSBWs = Array<HeroSBW>;
+export type HeroSBWs = HeroSBW[];

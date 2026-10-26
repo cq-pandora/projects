@@ -1,7 +1,7 @@
 import { crc32 } from 'crc';
 
-import { promises as fsPromises } from 'fs';
-import { resolve as pathResolve } from 'path';
+import { promises as fsPromises } from 'node:fs';
+import { resolve as pathResolve } from 'node:path';
 
 import AbstractDownloader from './AbstractDownloader';
 import { paths } from '../config';
@@ -10,7 +10,7 @@ import { streamToString } from '../util';
 const { readFile } = fsPromises;
 
 export interface IDataDownloaderOptions {
-	baseUrl: string
+	baseUrl: string;
 }
 
 export default class DataDownloader extends AbstractDownloader {

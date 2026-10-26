@@ -1,6 +1,6 @@
 import { Stats } from '../common-types';
 
-export default interface IStatsHolder extends Record<Stats, number>{
+export default interface IStatsHolder extends Record<Stats, number> {
 	all: number;
 	accuracy: number;
 	armor: number;

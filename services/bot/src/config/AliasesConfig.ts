@@ -1,16 +1,8 @@
 import { ContextType } from '../common-types';
 
-type Aliases = {
-	[T in ContextType]?: {
-		[k: string]: string;
-	}
-};
+type Aliases = Partial<Record<ContextType, Record<string, string>>>;
 
-type ReverseAliases = {
-	[T in ContextType]?: {
-		[k: string]: string[];
-	}
-};
+type ReverseAliases = Partial<Record<ContextType, Record<string, string[]>>>;
 
 export default class AliasesConfig {
 	private aliases: Aliases = {};
@@ -44,7 +36,9 @@ export default class AliasesConfig {
 		const alias = aliasRaw.toLowerCase();
 		const target = ctxAliases[alias];
 
-		if (!target) { return false; }
+		if (!target) {
+			return false;
+		}
 
 		delete ctxAliases[alias];
 

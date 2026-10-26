@@ -9,11 +9,11 @@ import { HeroClass } from './hero';
 
 export const MAX_INHERITANCE = 40;
 
-export type InheritanceLevel = 0 |
-1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
-11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
-21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 |
-31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40;
+export type InheritanceLevel = 0
+| 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+| 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20
+| 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30
+| 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40;
 
 export function isInheritanceLevel(inp: number | string): inp is InheritanceLevel {
 	const res = parseInt(inp as string, 10);
@@ -87,13 +87,9 @@ type InheritanceStatsRaw = {
 	crit_chance_reduction: number;
 };
 
-type InheritanceStructure<S> = {
-	[C in HeroClass]: S;
-};
+type InheritanceStructure<S> = Record<HeroClass, S>;
 
-type InheritanceLevelsStructure<H> = {
-	[I in InheritanceLevel]: H;
-};
+type InheritanceLevelsStructure<H> = Record<InheritanceLevel, H>;
 
 type InheritanceLevelsRaw = InheritanceLevelsStructure<InheritanceStatsRaw>;
 type InheritanceRaw = InheritanceStructure<InheritanceLevelsRaw>;

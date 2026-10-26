@@ -7031,19 +7031,15 @@ __metadata:
   resolution: "pandora@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.39.5"
-    "@stylistic/eslint-plugin": "npm:^5.10.0"
     "@types/jest": "npm:^30.0.0"
     "@types/node": "npm:^24.19.2"
     eslint: "npm:^9.39.5"
     eslint-config-airbnb-extended: "npm:^3.3.0"
-    eslint-import-resolver-typescript: "npm:^4.4.5"
-    eslint-plugin-import: "npm:^2.32.0"
     globals: "npm:^17.13.0"
     jest: "npm:^30.5.2"
     ts-jest: "npm:^29.4.15"
     tsx: "npm:^4.23.15"
     typescript: "npm:~6.0.3"
-    typescript-eslint: "npm:^8.72.0"
   languageName: unknown
   linkType: soft
 
@@ -8565,7 +8561,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript-eslint@npm:^8.71.0, typescript-eslint@npm:^8.72.0":
+"typescript-eslint@npm:^8.71.0":
   version: 8.72.0
   resolution: "typescript-eslint@npm:8.72.0"
   dependencies:

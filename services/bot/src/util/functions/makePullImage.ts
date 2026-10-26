@@ -1,6 +1,6 @@
 import { Jimp, JimpInstance } from 'jimp';
 import { HeroForm } from '@cquest/entities';
-import { resolve as pathResolve } from 'path';
+import { resolve as pathResolve } from 'node:path';
 
 import chunk from './chunk';
 import createImage from './createImage';

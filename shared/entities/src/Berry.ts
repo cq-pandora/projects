@@ -61,4 +61,4 @@ export class Berry {
 registerDeserializer(Berry, (input: string) => Deserialize(JSON.parse(input), Berry));
 registerSerializer(Berry, (input: Berry | Berry[]) => Serialize(input, Berry));
 
-export type Berries = Array<Berry>;
+export type Berries = Berry[];

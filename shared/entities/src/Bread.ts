@@ -45,4 +45,4 @@ export class Bread {
 registerDeserializer(Bread, (input: string) => Deserialize(JSON.parse(input), Bread));
 registerSerializer(Bread, (input: Bread | Bread[]) => Serialize(input, Bread));
 
-export type Breads = Array<Bread>;
+export type Breads = Bread[];

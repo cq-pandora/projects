@@ -56,10 +56,10 @@ export async function normalize(input: ChampionsNormalizationInput): Promise<Nor
 				].filter(el => !!el);
 
 				return new ChampionForm({
-					active: mapSkill(skills.filter(s => s.type.toLowerCase() === 'active')[0])!,
-					passive: mapSkill(skills.filter(s => s.type.toLowerCase() === 'passive')[0]),
+					active: mapSkill(skills.find(s => s.type.toLowerCase() === 'active'))!,
+					passive: mapSkill(skills.find(s => s.type.toLowerCase() === 'passive')),
 					// Bond-era champions use EXCLUSIVE, older ones EXCLUSIVE_PASSIVE
-					exclusive: mapSkill(skills.filter(s => ['exclusive', 'exclusive_passive'].includes(s.type.toLowerCase()))[0]),
+					exclusive: mapSkill(skills.find(s => ['exclusive', 'exclusive_passive'].includes(s.type.toLowerCase()))),
 					grade: form.level,
 				});
 			});
@@ -77,7 +77,9 @@ export async function normalize(input: ChampionsNormalizationInput): Promise<Nor
 			return res;
 		}, [] as Champion[]);
 
-	champions.forEach((champ: Champion, idx: number) => { championsTranslationsIndex[champ.name] = idx; });
+	champions.forEach((champ: Champion, idx: number) => {
+		championsTranslationsIndex[champ.name] = idx;
+	});
 
 	return {
 		entities: champions,

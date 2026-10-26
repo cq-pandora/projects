@@ -37,9 +37,9 @@ export async function normalize(input: SpSkillNormalizationInput): Promise<Norma
 		const spTree = [s];
 
 		for (
-			let skill = spSkillsRaw.sp_skill.filter(c => c.unlockcond.next_id === spTree[spTree.length - 1].id)[0];
+			let skill = spSkillsRaw.sp_skill.find(c => c.unlockcond.next_id === spTree[spTree.length - 1].id);
 			skill;
-			[skill] = spSkillsRaw.sp_skill.filter(c => c.unlockcond.next_id === spTree[spTree.length - 1].id)
+			skill = spSkillsRaw.sp_skill.find(c => c.unlockcond.next_id === spTree[spTree.length - 1].id)
 		) {
 			spTree.push(skill);
 		}
@@ -59,7 +59,9 @@ export async function normalize(input: SpSkillNormalizationInput): Promise<Norma
 		});
 	});
 
-	spSkills.forEach((skill, idx) => { spSkillsTranslationIndex[skill.name] = idx; });
+	spSkills.forEach((skill, idx) => {
+		spSkillsTranslationIndex[skill.name] = idx;
+	});
 
 	return {
 		entities: spSkills,

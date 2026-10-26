@@ -1,5 +1,5 @@
-import { readdirSync, writeFile, mkdirSync } from 'fs';
-import { promisify } from 'util';
+import { readdirSync, writeFile, mkdirSync } from 'node:fs';
+import { promisify } from 'node:util';
 
 import {
 	Hero, Berry, Champion, SpSkill, Boss, Bread, Sigil, Goddess, Faction, Fish, FishingGear, TranslationIndexSection,
@@ -7,7 +7,7 @@ import {
 	Scarecrow, Accessory, ChampionBond
 } from '@cquest/entities';
 
-import { resolve as pathResolve } from 'path';
+import { resolve as pathResolve } from 'node:path';
 
 import { paths } from '../config';
 import { gameVersion } from '../util';

@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 
-import { promises as fsPromises, createWriteStream } from 'fs';
+import { promises as fsPromises, createWriteStream } from 'node:fs';
 
 import { makeLogger, Logger } from '../logger';
 

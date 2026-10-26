@@ -1,7 +1,7 @@
 import { Blowfish } from 'egoroof-blowfish';
-import { readFile } from 'fs/promises';
-import { gunzip } from 'zlib';
-import { promisify } from 'util';
+import { readFile } from 'node:fs/promises';
+import { gunzip } from 'node:zlib';
+import { promisify } from 'node:util';
 
 import { crypto } from '../config';
 

@@ -64,4 +64,4 @@ export class FishingGear {
 registerSerializer(FishingGear, (input: FishingGear | FishingGear[]) => Serialize(input, FishingGear));
 registerDeserializer(FishingGear, (input: string) => Deserialize(JSON.parse(input), FishingGear));
 
-export type FishingGears = Array<FishingGear>;
+export type FishingGears = FishingGear[];

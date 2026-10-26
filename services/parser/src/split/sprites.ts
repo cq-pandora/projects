@@ -1,7 +1,7 @@
-import { spawn } from 'child_process';
-import { globSync, mkdirSync } from 'fs';
-import * as path from 'path';
-import { createInterface } from 'readline';
+import { spawn } from 'node:child_process';
+import { globSync, mkdirSync } from 'node:fs';
+import * as path from 'node:path';
+import { createInterface } from 'node:readline';
 import { Logger } from 'winston';
 
 import { cryptoPath } from '../config';

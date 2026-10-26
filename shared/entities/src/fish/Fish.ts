@@ -59,4 +59,4 @@ export class Fish {
 registerDeserializer(Fish, (input: string) => Deserialize(JSON.parse(input), Fish));
 registerSerializer(Fish, (input: Fish | Fish[]) => Serialize(input, Fish));
 
-export type Fishes = Array<Fish>;
+export type Fishes = Fish[];

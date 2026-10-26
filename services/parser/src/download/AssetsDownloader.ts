@@ -1,8 +1,8 @@
 import { Entry as ZipEntry, Parse as ZipParse } from 'unzipper';
 
-import { createWriteStream } from 'fs';
-import { resolve as pathResolve, matchesGlob } from 'path';
-import { Readable } from 'stream';
+import { createWriteStream } from 'node:fs';
+import { resolve as pathResolve, matchesGlob } from 'node:path';
+import { Readable } from 'node:stream';
 
 import AbstractDownloader from './AbstractDownloader';
 import { images, paths } from '../config';
@@ -29,7 +29,7 @@ for (const [, types] of Object.entries(images)) {
 }
 
 export interface IAssetsDownloaderOptions {
-	baseUrl: string
+	baseUrl: string;
 }
 
 export default class AssetsDownloader extends AbstractDownloader {
@@ -51,7 +51,7 @@ export default class AssetsDownloader extends AbstractDownloader {
 	}
 
 	getFilePath(filename: string): string {
-		return pathResolve(paths.gameCachePath, 'files', 'Assets', `${filename}`);
+		return pathResolve(paths.gameCachePath, 'files', 'Assets', filename);
 	}
 
 	getTargetFolder(): string {

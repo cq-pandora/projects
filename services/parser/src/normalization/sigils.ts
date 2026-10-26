@@ -1,5 +1,5 @@
 import {
-	Sigil, SigilStats, SigilRarity, SigilPair, IStatsHolder
+	Sigil, SigilStats, SigilRarity, SigilPair
 } from '@cquest/entities';
 
 import { NormalizationResult } from './common-types';
@@ -36,7 +36,7 @@ export async function normalize(input: SigilsNormalizationInput): Promise<Normal
 		let set = undefined as SigilPair | undefined;
 
 		if (raw.setid && sigilsSets[raw.setid]) {
-			const setRaw = sigilsSets[raw.setid!];
+			const setRaw = sigilsSets[raw.setid];
 
 			set = {
 				name: setRaw.name,
@@ -64,7 +64,7 @@ export async function normalize(input: SigilsNormalizationInput): Promise<Normal
 					lifesteal: stat.vamprate,
 					resistance: stat.rst,
 					resistancePenetration: stat.penetraterst,
-				} as IStatsHolder;
+				};
 			})
 			.reduce((res, el) => sumStats(res, el));
 

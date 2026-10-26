@@ -2,7 +2,7 @@ import {
 	ColorResolvable, EmbedAuthorData, EmbedBuilder, EmbedField, EmbedFooterData,
 } from 'discord.js';
 
-import { splitText } from '../util/functions/index';
+import { splitText } from '../util/functions';
 
 export default class PandoraEmbed {
 	private fields: EmbedField[] = [];

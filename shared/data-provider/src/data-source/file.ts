@@ -1,5 +1,5 @@
-import { promises } from 'fs';
-import { join as pathJoin } from 'path';
+import { promises } from 'node:fs';
+import { join as pathJoin } from 'node:path';
 
 import {
 	IDataSource, DataType, DataTypeLocator, TranslationsDataType
@@ -18,7 +18,7 @@ export default class FileDataSource implements IDataSource {
 
 	public async get(type: DataTypeLocator): Promise<string> {
 		if (type instanceof TranslationsDataType) {
-			const tr = type as TranslationsDataType;
+			const tr = type;
 
 			return readText(pathJoin(this.dataRoot, pathJoin('translations', `${tr.getLocale()}.json`)));
 		}

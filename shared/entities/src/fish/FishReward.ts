@@ -17,4 +17,4 @@ export class FishReward {
 	}
 }
 
-export type FishRewards = Array<FishReward>;
+export type FishRewards = FishReward[];

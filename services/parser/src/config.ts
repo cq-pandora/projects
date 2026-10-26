@@ -1,5 +1,5 @@
-import { resolve } from 'path';
-import { readFileSync } from 'fs';
+import { resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
 
 function readJSON(cfg: string): any {
 	return JSON.parse(readFileSync(resolve(process.cwd(), `${cfg}.json`), 'utf-8'));

@@ -1,6 +1,6 @@
 import {
 	Client, EmbedField, EmbedBuilder, RESTPostAPIApplicationCommandsJSONBody,
-	CommandInteractionOptionResolver, CacheType, User, CommandInteraction,
+	CommandInteractionOptionResolver, User, CommandInteraction,
 } from 'discord.js';
 
 import { CommandResult } from '@cquest/entities';
@@ -24,7 +24,7 @@ export enum CommandCategory {
 	PROTECTED = 'Reserved',
 }
 
-export type CommandArgumentsSource = Omit<CommandInteractionOptionResolver<CacheType>, 'getMessage' | 'getFocused'>;
+export type CommandArgumentsSource = Omit<CommandInteractionOptionResolver, 'getMessage' | 'getFocused'>;
 
 export type CommandInfoResult = EmbedBuilder;
 
@@ -86,7 +86,7 @@ type RequiredBase<ValueType extends ArgumentType> = {
 	required: true;
 } | {
 	required: false;
-	default: ArgumentValueTypes[ValueType] | null
+	default: ArgumentValueTypes[ValueType] | null;
 };
 
 type BaseCommandArgument<ValueType extends ArgumentType> = {
@@ -100,19 +100,19 @@ type BooleanArgumentTypeGenerator = BaseArgumentTypeGenerator<ArgumentType.BOOLE
 type StringArgumentTypeGenerator = BaseArgumentTypeGenerator<ArgumentType.STRING>;
 type NumberArgumentTypeGenerator = BaseArgumentTypeGenerator<ArgumentType.NUMBER>;
 type ChoiceArgumentTypeGenerator = BaseArgumentTypeGenerator<ArgumentType.CHOICE> & {
-	choices: { [k: string]: string };
+	choices: Record<string, string>;
 };
 
 type BooleanCommandArgument = BaseCommandArgument<ArgumentType.BOOLEAN>;
 type StringCommandArgument = BaseCommandArgument<ArgumentType.STRING>;
 type NumberCommandArgument = BaseCommandArgument<ArgumentType.NUMBER>;
 type ChoiceCommandArgument = BaseCommandArgument<ArgumentType.CHOICE> & {
-	choices: { [k: string]: string };
+	choices: Record<string, string>;
 };
 
-export type CommandArguments = {
-	[k: string]: BooleanCommandArgument | StringCommandArgument | NumberCommandArgument | ChoiceCommandArgument;
-};
+export type CommandArguments = Record<
+	string, BooleanCommandArgument | StringCommandArgument | NumberCommandArgument | ChoiceCommandArgument
+>;
 
 export type NoCommandArguments = {};
 
@@ -134,7 +134,7 @@ export type CommandPayload<Arguments extends CommandArguments> = {
 	reply: CommandReply;
 	author: CommandAuthor;
 	deleteOriginal: DeleteOriginalMessage;
-	initial: CommandInteraction<CacheType>;
+	initial: CommandInteraction;
 };
 
 export type AutocompleteOnly<A extends CommandArguments> = {

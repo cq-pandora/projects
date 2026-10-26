@@ -31,4 +31,4 @@ export class Faction {
 registerDeserializer(Faction, (input: string) => Deserialize(JSON.parse(input), Faction));
 registerSerializer(Faction, (input: Faction | Faction[]) => Serialize(input, Faction));
 
-export type Factions = Array<Faction>;
+export type Factions = Faction[];

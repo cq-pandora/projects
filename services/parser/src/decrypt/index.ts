@@ -1,6 +1,6 @@
-import { readdir, writeFile } from 'fs';
-import { promisify } from 'util';
-import { resolve as pathResolve, basename, extname } from 'path';
+import { readdir, writeFile } from 'node:fs';
+import { promisify } from 'node:util';
+import { resolve as pathResolve, basename, extname } from 'node:path';
 
 import { decrypt as decryptBlowfish } from './blowfish';
 import { paths } from '../config';
