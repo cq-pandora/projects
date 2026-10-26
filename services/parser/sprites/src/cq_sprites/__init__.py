@@ -22,6 +22,8 @@ embedded typetree; no hand-written tk2d layout is needed.
 from __future__ import annotations
 
 import argparse
+import json
+import struct
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -30,9 +32,62 @@ import UnityPy
 from PIL import Image, ImageDraw
 from UnityPy.classes import Material, Texture2D
 
-# Bundles flagged "x": "1" in bundlelist.txt carry this custom header and are
-# encrypted with a scheme implemented inside the (packed) game binary.
+# Bundles flagged "x": "1" in bundlelist.txt carry an 11-byte header ("LCABX", "SV", then a
+# little-endian uint32, 0x1ADA6D36 in every current bundle) followed by the real Unity bundle
+# encrypted with RC4 (confirmed by disassembling the game's
+# AssetBundleManager.LoadAssetBundleFromEncryptedFileInternal: standard RC4 KSA + PRGA + XOR).
+# The RC4 key is a byte[] looked up in a per-seed table, where seed = headerUint ^ 0x1ADA6D37;
+# every current bundle uses seed 1. The keys come from the "lcabx" map (seed -> hex key) in the
+# parser's crypto.json, which is not shipped; see the README for how to recover them.
 ENCRYPTED_MAGIC = b"LCABX"
+ENCRYPTED_HEADER_LEN = 11
+LCABXK = 0x1ADA6D37
+UNITYFS_MAGIC = b"UnityFS"
+
+
+def load_rc4_keys(crypto_path: Path) -> dict[int, bytes]:
+    """RC4 keys per seed from the "lcabx" map in crypto.json. Missing file or map -> no keys."""
+    if not crypto_path.is_file():
+        return {}
+    lcabx = json.loads(crypto_path.read_text()).get("lcabx", {})
+    return {int(seed): bytes.fromhex(key) for seed, key in lcabx.items()}
+
+
+def rc4(key: bytes, length: int) -> bytes:
+    """RC4 keystream of `length` bytes, matching the game's KSA + PRGA."""
+    s = list(range(256))
+    j = 0
+    for i in range(256):
+        j = (j + s[i] + key[i % len(key)]) & 0xFF
+        s[i], s[j] = s[j], s[i]
+    out = bytearray(length)
+    i = j = 0
+    for n in range(length):
+        i = (i + 1) & 0xFF
+        j = (j + s[i]) & 0xFF
+        s[i], s[j] = s[j], s[i]
+        out[n] = s[(s[i] + s[j]) & 0xFF]
+    return bytes(out)
+
+
+def decrypt_bundle(raw: bytes, keys: dict[int, bytes]) -> bytes:
+    seed = struct.unpack_from("<I", raw, 7)[0] ^ LCABXK
+    key = keys.get(seed)
+    if key is None:
+        if not keys:
+            raise ValueError("encrypted bundle (LCABX header); no RC4 key available")
+        raise ValueError(
+            f"encrypted bundle uses RC4 key seed {seed}, which is not in the key table; "
+            f"recover that seed's key (known seeds: {sorted(keys)})"
+        )
+    body = raw[ENCRYPTED_HEADER_LEN:]
+    out = bytes(b ^ k for b, k in zip(body, rc4(key, len(body))))
+    if out[: len(UNITYFS_MAGIC)] != UNITYFS_MAGIC:
+        raise ValueError(
+            "decrypted LCABX bundle is not a UnityFS archive; the RC4 key for this seed is wrong "
+            "(game re-keyed or changed the scheme) and must be re-recovered"
+        )
+    return out
 
 
 @dataclass
@@ -139,12 +194,12 @@ def is_sprite_collection(obj) -> bool:
     return script is not None and script.m_ClassName == "tk2dSpriteCollectionData"
 
 
-def process_bundle(path: Path, output: Path, scale: float, stats: Stats) -> None:
-    with path.open("rb") as handle:
-        if handle.read(len(ENCRYPTED_MAGIC)) == ENCRYPTED_MAGIC:
-            raise ValueError("encrypted bundle (LCABX header), not supported")
+def process_bundle(path: Path, output: Path, scale: float, stats: Stats, keys: dict[int, bytes]) -> None:
+    raw = path.read_bytes()
+    if raw[: len(ENCRYPTED_MAGIC)] == ENCRYPTED_MAGIC:
+        raw = decrypt_bundle(raw, keys)
 
-    env = UnityPy.load(str(path))
+    env = UnityPy.load(raw)
     objects = env.objects
     collections = [obj for obj in objects if is_sprite_collection(obj)]
 
@@ -192,6 +247,10 @@ def main() -> None:
     parser.add_argument("--output", required=True, type=Path, help="directory for the PNG files")
     parser.add_argument("--scale", type=float, default=1.0, help="output scale (nearest neighbour)")
     parser.add_argument("--files", type=Path, help="file with one bundle path per line")
+    parser.add_argument(
+        "--crypto", type=Path, default=Path("crypto.json"),
+        help='parser crypto.json with the "lcabx" RC4 keys (default: ./crypto.json)',
+    )
     parser.add_argument("bundles", nargs="*", type=Path, help="bundle files")
     args = parser.parse_args()
 
@@ -200,11 +259,12 @@ def main() -> None:
         bundles += [Path(line) for line in args.files.read_text().splitlines() if line.strip()]
 
     args.output.mkdir(parents=True, exist_ok=True)
+    keys = load_rc4_keys(args.crypto)
     stats = Stats()
     for bundle in bundles:
         log(f"Processing {bundle}")
         try:
-            process_bundle(bundle, args.output, args.scale, stats)
+            process_bundle(bundle, args.output, args.scale, stats, keys)
         except Exception as error:
             stats.failed.append(f"{bundle.name}: {error}")
             log(f"  failed: {error}")

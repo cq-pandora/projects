@@ -31,8 +31,13 @@ export const paths: IPaths = {
 };
 
 interface ICrypto {
-	readonly key: string;
-	readonly iv: string;
+	readonly blowfish: {
+		readonly key: string;
+		readonly iv: string;
+	};
 }
 
 export const crypto = readJSON('crypto') as ICrypto;
+
+// Also read by the sprites tool for its "lcabx" RC4 keys (seed -> hex key)
+export const cryptoPath = resolve(process.cwd(), 'crypto.json');

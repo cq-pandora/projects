@@ -7,8 +7,8 @@ import { crypto } from '../config';
 
 const gunzipAsync = promisify(gunzip);
 
-const bf = new Blowfish(Buffer.from(crypto.key, 'hex'), Blowfish.MODE.CBC);
-bf.setIv(Buffer.from(crypto.iv, 'hex'));
+const bf = new Blowfish(Buffer.from(crypto.blowfish.key, 'hex'), Blowfish.MODE.CBC);
+bf.setIv(Buffer.from(crypto.blowfish.iv, 'hex'));
 
 function bfDecrypt(content: Buffer): Uint8Array {
 	return bf.decode(content, Blowfish.TYPE.UINT8_ARRAY);

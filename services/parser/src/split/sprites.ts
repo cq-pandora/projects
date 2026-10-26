@@ -4,6 +4,8 @@ import * as path from 'path';
 import { createInterface } from 'readline';
 import { Logger } from 'winston';
 
+import { cryptoPath } from '../config';
+
 // uv project with the UnityPy based sprite extractor (services/parser/sprites)
 const spritesProject = path.resolve(__dirname, '../../sprites');
 
@@ -50,7 +52,10 @@ export default async function extractSprites(options: ExtractOptions): Promise<v
 	logger.verbose(`Started processing ${description}`);
 
 	try {
-		const code = await runSpritesTool(['--output', outputDir, '--scale', String(scale), ...files], logger);
+		const code = await runSpritesTool(
+			['--output', outputDir, '--scale', String(scale), '--crypto', cryptoPath, ...files],
+			logger
+		);
 
 		if (code === 0) {
 			logger.verbose(`Finished processing ${description}`);
