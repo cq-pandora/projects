@@ -10,14 +10,14 @@ import { streamToString } from '../util';
 const { readFile } = fsPromises;
 
 export interface IDataDownloaderOptions {
-	versionUrl: string
+	baseUrl: string
 }
 
 export default class DataDownloader extends AbstractDownloader {
-	constructor({ versionUrl }: IDataDownloaderOptions) {
+	constructor({ baseUrl }: IDataDownloaderOptions) {
 		super({
 			loggerName: 'download.data',
-			baseUrl: `http://${versionUrl}DataSheet/`,
+			baseUrl,
 		});
 	}
 

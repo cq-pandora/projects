@@ -1,12 +1,10 @@
 import axios, { AxiosInstance } from 'axios';
-import mkdirp from 'mkdirp';
-import asyncPool from 'tiny-async-pool';
 
 import { promises as fsPromises, createWriteStream } from 'fs';
 
 import { makeLogger, Logger } from '../logger';
 
-const { access } = fsPromises;
+const { access, mkdir } = fsPromises;
 
 interface IDownloaderOptions {
 	loggerName: string;
@@ -33,7 +31,7 @@ export default abstract class AbstractDownloader {
 			responseType: 'stream',
 			headers: {
 				'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 9; SM-G960F Build/R16NW)',
-				'X-Unity-Version': '2018.4.31f1',
+				'X-Unity-Version': '6000.0.59f2',
 				'Accept-Encoding': 'gzip'
 			},
 		});
@@ -103,37 +101,47 @@ export default abstract class AbstractDownloader {
 	async execute(): Promise<void> {
 		const fileHashes = await this.loadHashes();
 
-		mkdirp.sync(this.getTargetFolder());
+		await mkdir(this.getTargetFolder(), { recursive: true });
 
-		await asyncPool(this.poolSize, Object.entries(fileHashes), async ([filename, targetHash]) => {
-			if (filename === 'id') return;
+		const queue = Object.entries(fileHashes);
 
-			const filepath = this.getFilePath(filename);
+		const worker = async (): Promise<void> => {
+			for (let entry = queue.shift(); entry; entry = queue.shift()) {
+				await this.processFile(...entry);
+			}
+		};
 
-			let needsDownload = false;
+		await Promise.all(Array.from({ length: this.poolSize }, worker));
+	}
 
-			if (await this.exists(filepath)) {
-				const hash = await this.calculateHash(filepath);
+	private async processFile(filename: string, targetHash: string): Promise<void> {
+		if (filename === 'id') return;
 
-				if (hash !== targetHash) {
-					this.logger.info(`${filename} hash mismatch. Downloading...`);
-					needsDownload = true;
-				} else {
-					this.logger.verbose(`${filename} hash matches. Ignoring...`);
-				}
-			} else {
-				this.logger.info(`${filename} does not exist. Downloading...`);
+		const filepath = this.getFilePath(filename);
+
+		let needsDownload = false;
+
+		if (await this.exists(filepath)) {
+			const hash = await this.calculateHash(filepath);
+
+			if (hash !== targetHash) {
+				this.logger.info(`${filename} hash mismatch. Downloading...`);
 				needsDownload = true;
+			} else {
+				this.logger.verbose(`${filename} hash matches. Ignoring...`);
 			}
+		} else {
+			this.logger.info(`${filename} does not exist. Downloading...`);
+			needsDownload = true;
+		}
 
-			if (needsDownload) {
-				try {
-					await this.downloadAsset(filename, targetHash);
-					this.logger.info(`${filename} downloaded successfully`);
-				} catch (err) {
-					this.logger.error((err as any).message);
-				}
+		if (needsDownload) {
+			try {
+				await this.downloadAsset(filename, targetHash);
+				this.logger.info(`${filename} downloaded successfully`);
+			} catch (err) {
+				this.logger.error((err as Error).message);
 			}
-		});
+		}
 	}
 }

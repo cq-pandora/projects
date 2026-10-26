@@ -1,9 +1,8 @@
 import { Entry as ZipEntry, Parse as ZipParse } from 'unzipper';
-import glob from 'glob';
-import streamToParts from 'stream-to-array';
 
 import { createWriteStream } from 'fs';
-import { resolve as pathResolve } from 'path';
+import { resolve as pathResolve, matchesGlob } from 'path';
+import { Readable } from 'stream';
 
 import AbstractDownloader from './AbstractDownloader';
 import { images, paths } from '../config';
@@ -30,14 +29,14 @@ for (const [, types] of Object.entries(images)) {
 }
 
 export interface IAssetsDownloaderOptions {
-	versionUrl: string
+	baseUrl: string
 }
 
 export default class AssetsDownloader extends AbstractDownloader {
-	constructor({ versionUrl }: IAssetsDownloaderOptions) {
+	constructor({ baseUrl }: IAssetsDownloaderOptions) {
 		super({
 			loggerName: 'download.assets',
-			baseUrl: `http://${versionUrl}Android/`,
+			baseUrl,
 			skipHashCheck: true,
 		});
 	}
@@ -62,19 +61,19 @@ export default class AssetsDownloader extends AbstractDownloader {
 	protected async download(path: string, filename: string): Promise<void> {
 		const writer = createWriteStream(path);
 
-		const response = await this.fileDownloadInstance.get(this.getDownloadFileName(filename));
-		const parts = await streamToParts(response.data);
+		const response = await this.fileDownloadInstance.get<Readable>(this.getDownloadFileName(filename));
 
-		const responseBuffer = Buffer.concat(parts.map(p => Buffer.from(p)));
+		const parts: Buffer[] = [];
+		for await (const part of response.data) {
+			parts.push(Buffer.from(part));
+		}
+
+		const responseBuffer = Buffer.concat(parts);
 
 		// const ungzipped = await ungzip(responseBuffer);
 
 		writer.write(responseBuffer);
 		writer.close();
-	}
-
-	private getRegexes(): RegExp[] {
-		return patterns.map(pattern => new glob.Glob(pattern).minimatch.makeRe());
 	}
 
 	async loadHashes(): Promise<Record<string, string>> {
@@ -95,12 +94,8 @@ export default class AssetsDownloader extends AbstractDownloader {
 
 			const res = {} as Record<string, string>;
 
-			const matchers = this.getRegexes();
-
 			for (const [filename, hashObj] of Object.entries(map)) {
-				const isNeeded = matchers.some(r => r.test(filename));
-
-				if (!isNeeded) continue;
+				if (!patterns.some(pattern => matchesGlob(filename, pattern))) continue;
 
 				const { h, c, x } = hashObj as any;
 

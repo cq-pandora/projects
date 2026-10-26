@@ -1,3 +1,0 @@
-db/*
-migrations/*
-shared/db/ormconfig.js

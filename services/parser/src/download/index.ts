@@ -1,31 +1,31 @@
 import DataDownloader from './DataDownloader';
 import AssetsDownloader from './AssetsDownloader';
-import { getRootDownloadPath } from './utils';
+import { getGameUrls, GameUrls } from './utils';
 import { makeLogger } from '../logger';
 import { apkVersion } from '../util';
 
-let rootUrl: string | undefined;
+let urls: GameUrls | undefined;
 const logger = makeLogger('data.init');
+
+function gameUrls(): GameUrls {
+	if (!urls) {
+		throw new Error('Game URLs not initialized');
+	}
+
+	return urls;
+}
 
 export async function initData(): Promise<void> {
 	const version = await apkVersion();
-	rootUrl = await getRootDownloadPath();
+	urls = await getGameUrls();
 
-	logger.info(`Using game version ${version} with url ${rootUrl}`);
+	logger.info(`Using game version ${version} with data ${urls.dataSheet} and assets ${urls.assets}`);
 }
 
 export async function downloadData(): Promise<void> {
-	if (!rootUrl) {
-		throw new Error('Root URL not initialized');
-	}
-
-	await new DataDownloader({ versionUrl: rootUrl }).execute();
+	await new DataDownloader({ baseUrl: gameUrls().dataSheet }).execute();
 }
 
 export async function downloadAssets(): Promise<void> {
-	if (!rootUrl) {
-		throw new Error('Root URL not initialized');
-	}
-
-	await new AssetsDownloader({ versionUrl: rootUrl }).execute();
+	await new AssetsDownloader({ baseUrl: `${gameUrls().assets}Android/` }).execute();
 }
