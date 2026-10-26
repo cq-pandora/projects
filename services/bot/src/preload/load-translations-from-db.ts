@@ -1,4 +1,4 @@
-import compare from 'compare-versions';
+import { compareVersions } from 'compare-versions';
 
 import logger from '@cquest/logger';
 import { translations } from '@cquest/db';
@@ -19,7 +19,7 @@ export default {
 
 			const { version: accumulatorVersion } = trans[key];
 
-			if (compare(version, accumulatorVersion) >= 0) {
+			if (compareVersions(version, accumulatorVersion) >= 0) {
 				trans[key] = translation;
 				validTranslations += 1;
 			} else {

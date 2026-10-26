@@ -1,8 +1,9 @@
-import { FindManyOptions, getConnection, IsNull } from 'typeorm';
+import { FindManyOptions, IsNull } from 'typeorm';
+import type { PostgresDataSourceOptions } from 'typeorm/driver/postgres/PostgresDataSourceOptions';
 
 import { db as logger } from '@cquest/logger';
 
-import { Translation } from './models';
+import { Translation, getDataSource } from './models';
 
 function getLatestTranslationsQuery(schema: string): string {
 	return `SELECT t1.* FROM ${schema}.translations t1
@@ -58,7 +59,7 @@ export async function decline(id: string): Promise<void> {
 
 export async function declineAllUnaccepted(key: string): Promise<void> {
 	try {
-		await getConnection()
+		await getDataSource()
 			.createQueryBuilder()
 			.update(Translation)
 			.set({ status: false })
@@ -106,10 +107,9 @@ export async function get(key?: string | null): Promise<Translation[]> {
 			});
 		}
 
-		const connection = await getConnection();
+		const connection = getDataSource();
 
-		// @ts-expect-error Will exist in used DB
-		const { schema } = connection.options;
+		const { schema = 'public' } = connection.options as PostgresDataSourceOptions;
 
 		const rows = await connection.query(getLatestTranslationsQuery(schema));
 

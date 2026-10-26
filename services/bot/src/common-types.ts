@@ -32,7 +32,6 @@ export type CommandInfoResultField = EmbedField;
 
 export type Snowflake = string;
 
-// eslint-disable-next-line import/export
 export enum ArgumentType {
 	BOOLEAN = 'boolean',
 	STRING = 'string',
@@ -40,7 +39,7 @@ export enum ArgumentType {
 	CHOICE = 'choice',
 }
 
-// eslint-disable-next-line @typescript-eslint/no-namespace, import/export
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace ArgumentType {
 	export function string(args: StringArgumentTypeGenerator): StringCommandArgument {
 		return {

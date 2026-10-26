@@ -67,7 +67,7 @@ export class InteractionsCommand extends BaseCommand<Arguments> {
 
 				const img = await renderInteraction(actors);
 
-				return img.getBufferAsync('image/png');
+				return img.getBuffer('image/png');
 			}
 		));
 

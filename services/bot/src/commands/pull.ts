@@ -78,6 +78,7 @@ const HEROES_HIDDEN = [
 
 type Puller = (count: number) => HeroForm[];
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- kept for the commented-out "unknown pull type" reply
 const PullValues = stringTuple('gg1', 'gg2', 'rz', 'sh', 'contract', 'gs', 'brsk');
 
 type PullType = typeof PullValues[number];
@@ -225,7 +226,7 @@ export class PullCommand extends BaseCommand<Arguments> {
 		await reply({
 			embeds: [embed],
 			files: [
-				new AttachmentBuilder(await canvas.getBufferAsync('image/png'), { name: 'pull.png' })
+				new AttachmentBuilder(await canvas.getBuffer('image/png'), { name: 'pull.png' })
 			]
 		});
 

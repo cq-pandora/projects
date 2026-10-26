@@ -1,11 +1,11 @@
-import Blowfish from 'egoroof-blowfish';
-import { ungzip } from 'node-gzip';
-import { readFile } from 'fs';
+import { Blowfish } from 'egoroof-blowfish';
+import { readFile } from 'fs/promises';
+import { gunzip } from 'zlib';
 import { promisify } from 'util';
 
 import { crypto } from '../config';
 
-const readFileAsync = promisify(readFile);
+const gunzipAsync = promisify(gunzip);
 
 const bf = new Blowfish(Buffer.from(crypto.key, 'hex'), Blowfish.MODE.CBC);
 bf.setIv(Buffer.from(crypto.iv, 'hex'));
@@ -21,7 +21,7 @@ export async function decrypt(absoluteFilename: string | string[]): Promise<stri
 		return Promise.all(absoluteFilename.map(decrypt).map(p => p.catch(e => e)));
 	}
 
-	const encrypted = await readFileAsync(absoluteFilename);
-	const jsonBuffer = await ungzip(bfDecrypt(encrypted));
+	const encrypted = await readFile(absoluteFilename);
+	const jsonBuffer = await gunzipAsync(bfDecrypt(encrypted));
 	return JSON.stringify(JSON.parse(jsonBuffer.toString()), null, 4);
 }

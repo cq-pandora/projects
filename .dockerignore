@@ -18,3 +18,6 @@ services/*/lib
 shared/*/lib
 
 services/bot/custom_translation_indices.json
+
+.yarn
+services/parser/sprites/.venv

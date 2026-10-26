@@ -12,7 +12,6 @@ export const connectionSource = new DataSource({
 	schema: env(ENV_KEYS.schema),
 	migrationsTableName: 'typeorm_migrations',
 	migrations: ['migrations/*.ts'],
-	entities: ['src/models/*.ts'],
-	// migrationsDir: 'migrations',
-	// entitiesDir: 'src/models'
+	// Compiled entities: tsx (esbuild) does not emit decorator metadata the models rely on, run `yarn build` first
+	entities: ['lib/models/*.js'],
 });

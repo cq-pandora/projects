@@ -34,16 +34,11 @@
 		}
 	],
 	"dependencies": {
-		"@cquest/entities": "^1.1.0",
-		"@cquest/logger": "^1.0.0",
-		"array-unique": "^0.3.2",
-		"fuzzysort": "^1.1.4"
+		"@cquest/entities": "workspace:^",
+		"@cquest/logger": "workspace:^",
+		"fuzzysort": "^4.0.2"
 	},
-	"devDependencies": {},
-	"peerDependencies": {},
 	"scripts": {
-		"migrate:create": "node --harmony --require ts-node/register ../../node_modules/typeorm/cli.js migration:create -n",
-		"migrate:up": "node --harmony --require ts-node/register ../../node_modules/typeorm/cli.js migration:run",
-		"migrate:down": "node --harmony --require ts-node/register ../../node_modules/typeorm/cli.js migration:revert"
+		"build": "tsc --build ./tsconfig.package.json"
 	}
 }

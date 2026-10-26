@@ -2,7 +2,7 @@
 	"extends": "./tsconfig.base.json",
 	"compilerOptions": {
 		"noEmit": true,
-		"baseUrl": ".",
+		"types": ["node", "jest"],
 		"paths": {
 			"@cquest/*": [
 				"./shared/*/src",

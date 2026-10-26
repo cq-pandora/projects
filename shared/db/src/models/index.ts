@@ -1,4 +1,4 @@
-import { createConnection, Logger as ORMLogger } from 'typeorm';
+import { DataSource, Logger as ORMLogger } from 'typeorm';
 
 import { db } from '@cquest/logger';
 
@@ -46,8 +46,18 @@ export interface IDBInitOptions {
 	schema: string;
 }
 
+let dataSource: DataSource | undefined;
+
+export function getDataSource(): DataSource {
+	if (!dataSource) {
+		throw new Error('Database was not initialized');
+	}
+
+	return dataSource;
+}
+
 export async function init(options: IDBInitOptions): Promise<void> {
-	await createConnection({
+	dataSource = await new DataSource({
 		type: 'postgres',
 		host: options.host,
 		port: options.port,
@@ -57,7 +67,7 @@ export async function init(options: IDBInitOptions): Promise<void> {
 		schema: options.schema,
 		logger: new TypeORMLogger(),
 		entities: [Alias, Translation, Stats, Permission],
-	});
+	}).initialize();
 }
 
 export { default as Alias } from './Alias';

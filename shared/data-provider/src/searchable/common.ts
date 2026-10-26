@@ -1,5 +1,3 @@
-import uniq from 'array-unique';
-
 import { TranslationIndexSection, ContextType } from '@cquest/entities';
 
 import { Locale } from '../common';
@@ -54,14 +52,14 @@ export function extractResult<T>(
 			} as IExtractedResult<T>
 		);
 
-		res.locales = uniq(res.locales);
+		res.locales = [...new Set(res.locales)];
 
 		return res;
 	}
 
 	return {
 		result: result.result,
-		locales: uniq(result.locales),
+		locales: [...new Set(result.locales)],
 	};
 }
 

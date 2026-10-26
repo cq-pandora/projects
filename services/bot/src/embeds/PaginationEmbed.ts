@@ -1,7 +1,7 @@
 import {
 	CommandInteraction, Channel, TextChannel, User,
 	GuildMember, EmbedBuilder, ButtonBuilder, ActionRowBuilder,
-	InteractionReplyOptions, Message, ComponentType,
+	Message, ComponentType,
 	InteractionCollector, Snowflake, ButtonStyle,
 } from 'discord.js';
 
@@ -84,15 +84,16 @@ export default class PaginationEmbed {
 	protected async setMessage(): Promise<void> {
 		const target = this.initial;
 
-		const messageOptions = {
-			...this.buildMessageOptions(this.currentPateEmbed()),
-			fetchReply: true,
-		} as InteractionReplyOptions;
+		const messageOptions = this.buildMessageOptions(this.currentPateEmbed());
 
 		if (target instanceof CommandInteraction) {
-			this.message = (target.deferred
-				? await target.editReply(messageOptions) as Message
-				: await target.reply(messageOptions)) as Message;
+			if (target.deferred) {
+				this.message = await target.editReply(messageOptions);
+			} else {
+				const response = await target.reply({ ...messageOptions, withResponse: true });
+
+				this.message = response.resource!.message!;
+			}
 		} else {
 			throw Error('Unimplemented yet :(');
 			// message = await target.send(messageOptions);
@@ -161,11 +162,9 @@ export default class PaginationEmbed {
 		collector.on('end', async () => {
 			if (this.initial instanceof CommandInteraction) {
 				await this.initial.editReply({ components: [] })
-				// eslint-disable-next-line @typescript-eslint/no-empty-function
 					.catch(() => {});
 			} else {
 				await this.message.edit({ components: [] })
-				// eslint-disable-next-line @typescript-eslint/no-empty-function
 					.catch(() => {});
 			}
 		});

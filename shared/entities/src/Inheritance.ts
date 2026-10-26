@@ -72,25 +72,18 @@ export class InheritanceStats implements IStatsHolder {
 }
 
 type InheritanceStatsRaw = {
-	// eslint-disable-next-line camelcase
 	atk_power: number;
 	hp: number;
-	// eslint-disable-next-line camelcase
 	crit_chance: number;
 	armor: number;
 	resistance: number;
-	// eslint-disable-next-line camelcase
 	crit_dmg: number;
 	accuracy: number;
 	evasion: number;
-	// eslint-disable-next-line camelcase
 	armor_pen: number;
-	// eslint-disable-next-line camelcase
 	resistance_pen: number;
-	// eslint-disable-next-line camelcase
 	dmg_reduction: number;
 	lifesteal: number;
-	// eslint-disable-next-line camelcase
 	crit_chance_reduction: number;
 };
 

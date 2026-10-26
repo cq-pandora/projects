@@ -1,4 +1,4 @@
-import { FindManyOptions, FindOneOptions, IsNull } from 'typeorm';
+import { FindManyOptions, IsNull } from 'typeorm';
 
 import { db as logger } from '@cquest/logger';
 import { ContextType } from '@cquest/entities';

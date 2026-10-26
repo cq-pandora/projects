@@ -1,5 +1,4 @@
-import { REST } from '@discordjs/rest';
-import { Routes } from 'discord.js';
+import { REST, Routes } from 'discord.js';
 
 import logger from '@cquest/logger';
 
@@ -35,5 +34,3 @@ export default {
 	},
 	errorCode: 4,
 } as IPreloadScript;
-
-module.exports.errorCode = 4;

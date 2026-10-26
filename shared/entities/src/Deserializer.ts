@@ -1,10 +1,9 @@
 import { arraify } from './utils';
 import { GenericConstructor } from './common-types';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Entities = any;
 
-export type Deserializer<Entities> = (input: string) => [Entities] | Entities;
+export type Deserializer<T> = (input: string) => [T] | T;
 
 const registered: {
 	[className: string]: Deserializer<Entities>;

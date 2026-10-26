@@ -8,8 +8,8 @@ const loggingFormat = format.printf((info) => {
 		timestamp, label, level, message, ...extra
 	} = info;
 
-	let msg = message;
-	const splat = extra[SPLAT] || [];
+	let msg = String(message);
+	const splat = (extra[SPLAT] ?? []) as unknown[];
 
 	let splatText = '';
 

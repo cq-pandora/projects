@@ -20,7 +20,7 @@ export function lateinit<T extends object>(obj: T, initializer: InitializerFunct
 			[initializerKey]: initializer,
 			[origKey]: obj,
 			[initializedKey]: false,
-		}) as LateInit<T>;
+		}) as unknown as LateInit<T>; // the array copy carries no T items until init
 	} else {
 		late = {
 			[initializerKey]: initializer,

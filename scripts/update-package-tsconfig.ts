@@ -1,6 +1,8 @@
 import {
 	join as pathJoin,
-	relative as pathRelative
+	relative as pathRelative,
+	sep as pathSep,
+	posix as pathPosix
 } from 'path';
 import {
 	writeFileSync,
@@ -15,6 +17,11 @@ enum ConfigFilename {
 	PACKAGE_TSCONFIG = 'tsconfig.package.json',
 	PROJECT_TSCONFIG = 'tsconfig.project.json'
 }
+
+// Paths inside tsconfig files always use forward slashes, regardless of the OS that generated them
+const configPath = (from: string, to: string, filename: ConfigFilename): string => (
+	pathPosix.join(pathRelative(from, to).split(pathSep).join('/'), filename)
+);
 
 const TSCONFIG_HEADER = '// File generated automatically, use yarn update:tsconfig for update\n';
 
@@ -110,10 +117,7 @@ for (const [packageName, packagePath] of packagePathMap.entries()) {
 	);
 
 	const tsconfigData = {
-		extends: pathJoin(
-			pathRelative(packagePath, rootPath),
-			ConfigFilename.BASE_TSCONFIG
-		),
+		extends: configPath(packagePath, rootPath, ConfigFilename.BASE_TSCONFIG),
 		compilerOptions: {
 			outDir: './lib',
 			rootDir: './src',
@@ -125,10 +129,7 @@ for (const [packageName, packagePath] of packagePathMap.entries()) {
 			const dependencyPath = packagePathMap.get(dependencyName)!;
 
 			return {
-				path: pathJoin(
-					pathRelative(packagePath, dependencyPath),
-					ConfigFilename.PACKAGE_TSCONFIG
-				)
+				path: configPath(packagePath, dependencyPath, ConfigFilename.PACKAGE_TSCONFIG)
 			};
 		})
 	};
@@ -145,10 +146,7 @@ const tsconfigProjectData = {
 			const dependencyPath = packagePathMap.get(dependencyName)!;
 
 			return {
-				path: pathJoin(
-					pathRelative(rootPath, dependencyPath),
-					ConfigFilename.PACKAGE_TSCONFIG
-				)
+				path: configPath(rootPath, dependencyPath, ConfigFilename.PACKAGE_TSCONFIG)
 			};
 		})
 };

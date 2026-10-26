@@ -1,3 +1,3 @@
-import Jimp from 'jimp';
+import { Jimp, JimpInstance } from 'jimp';
 
-export default async (width: number, height: number): Promise<Jimp> => new Jimp(width, height, 0x0);
+export default async (width: number, height: number): Promise<JimpInstance> => new Jimp({ width, height, color: 0x0 });

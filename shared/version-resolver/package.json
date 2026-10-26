@@ -34,10 +34,8 @@
 		}
 	],
 	"dependencies": {
-		"google-play-scraper": "^9.1.1"
+		"google-play-scraper": "^10.1.4"
 	},
-	"devDependencies": {},
-	"peerDependencies": {},
 	"scripts": {
 		"build": "tsc --build ./tsconfig.package.json"
 	}

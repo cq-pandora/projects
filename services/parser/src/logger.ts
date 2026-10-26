@@ -11,9 +11,9 @@ const loggingFormat = format.printf((info) => {
 		timestamp, label, level, message, ...extra
 	} = info;
 
-	const splat = extra.splat || [];
+	const splat = (extra.splat ?? []) as unknown[];
 
-	return `${timestamp} [${label}:${level}] ${message} ${splat.map((s: any) => formatExtra(s)).join('\n')}`;
+	return `${timestamp} [${label}:${level}] ${message} ${splat.map(s => formatExtra(s)).join('\n')}`;
 });
 
 export { Logger } from 'winston';

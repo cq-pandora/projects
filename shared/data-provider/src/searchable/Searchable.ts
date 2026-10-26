@@ -1,5 +1,4 @@
-import fuzzysort from 'fuzzysort';
-import uniq from 'array-unique';
+import fuzzysort, { SnapshotKey } from 'fuzzysort';
 
 import { TranslationIndex } from '@cquest/entities';
 
@@ -23,11 +22,6 @@ const DEFAULT_LOCALE = 'en_us';
 
 type RawStructure<E> = Record<string, { entity: E; locales: string[]; score: number }>;
 
-type Cooked<T> = {
-	prepared: Fuzzysort.Prepared;
-	original: T;
-};
-
 interface IHasScore {
 	score: number;
 }
@@ -35,29 +29,19 @@ interface IHasScore {
 const arraySortingFunction = (a: IHasScore, b: IHasScore): number => b.score - a.score;
 
 export class Searchable<T extends Entities, C extends Container<T>> implements ISearchable<T, C> {
-	private searcher?: Fuzzysort.Fuzzysort;
 	private entities?: C;
 	private alias?: ISearchableAliasProvider;
 	private entitiesList?: T[];
-	private cooked?: Cooked<TranslationIndex>[];
+	private snapshot?: SnapshotKey<TranslationIndex>;
 	private initialized = false;
 
 	async init(resolvable: PromiseResolvable<ISearchableOptions<T, C>>): Promise<void> {
 		const options = await resolvable;
 
-		this.searcher = fuzzysort.new({
-			threshold: -1000,
-			limit: Infinity,
-			allowTypo: true,
-		});
-
 		this.entities = options.entities;
 		this.alias = options.alias;
 		this.entitiesList = Array.isArray(this.entities) ? this.entities : Object.values(this.entities);
-		this.cooked = options.index.map(e => ({
-			original: e,
-			prepared: fuzzysort.prepare(e.text)!
-		}));
+		this.snapshot = fuzzysort.snapshot(options.index, { key: 'text' });
 
 		this.initialized = true;
 	}
@@ -91,20 +75,19 @@ export class Searchable<T extends Entities, C extends Container<T>> implements I
 
 		const query = this.alias!(rawQuery);
 
-		// const queryResult = this.fuse!.search<TranslationIndex, true>(query);
-		const queryResult = this.searcher!.go(query, this.cooked!, {
-			key: 'prepared'
-		});
+		// fuzzysort returns every target for an empty query
+		if (!query) return [];
+
+		// Default threshold (0.5) matches closest what fuzzysort 1 returned with `threshold: -1000`; 0 = no limit
+		const queryResult = fuzzysort.go(query, this.snapshot!, { limit: 0 });
 
 		const rawResults = {} as RawStructure<T>;
 
 		for (const q of queryResult) {
 			const {
 				obj: {
-					original: {
-						path: paths,
-						locale,
-					},
+					path: paths,
+					locale,
 				},
 				score,
 			} = q;
@@ -129,7 +112,7 @@ export class Searchable<T extends Entities, C extends Container<T>> implements I
 		const cookedResults = Object.values(rawResults)
 			.map(r => ({
 				result: r.entity,
-				locales: uniq(r.locales).sort(
+				locales: [...new Set(r.locales)].sort(
 					(a, b) => Number(b === DEFAULT_LOCALE) - Number(a === DEFAULT_LOCALE)
 				),
 				score: r.score,

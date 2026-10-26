@@ -34,17 +34,17 @@
 		}
 	],
 	"dependencies": {
-		"@cquest/entities": "^1.1.0",
-		"@cquest/logger": "^1.0.0",
-		"pg": "^8.8.0",
-		"ts-node": "^8.10.2",
-		"typeorm": "^0.3.9"
+		"@cquest/entities": "workspace:^",
+		"@cquest/logger": "workspace:^",
+		"pg": "^8.23.1",
+		"tsx": "^4.23.15",
+		"typeorm": "^1.1.2"
 	},
-	"devDependencies": {},
-	"peerDependencies": {},
 	"scripts": {
-		"migrate:create": "node --harmony --require ts-node/register ../../node_modules/typeorm/cli.js migration:create -n",
-		"migrate:up": "node --harmony --require ts-node/register ../../node_modules/typeorm/cli.js migration:run",
-		"migrate:down": "node --harmony --require ts-node/register ../../node_modules/typeorm/cli.js migration:revert"
+		"build": "tsc --build ./tsconfig.package.json",
+		"typeorm": "tsx ../../node_modules/typeorm/cli.js",
+		"migrate:create": "yarn typeorm migration:create",
+		"migrate:up": "yarn typeorm migration:run -d ./ormconfig.ts",
+		"migrate:down": "yarn typeorm migration:revert -d ./ormconfig.ts"
 	}
 }

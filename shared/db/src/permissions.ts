@@ -1,9 +1,7 @@
-import { getConnection } from 'typeorm';
-
 import { db as logger } from '@cquest/logger';
 import { Snowflake, PermissionMergeResult } from '@cquest/entities';
 
-import { Permission } from './models';
+import { Permission, getDataSource } from './models';
 
 export async function set(serverId: Snowflake, toInsert: PermissionMergeResult[]): Promise<PermissionMergeResult[]> {
 	try {
@@ -36,7 +34,7 @@ export async function set(serverId: Snowflake, toInsert: PermissionMergeResult[]
 
 export async function clear(toClear: PermissionMergeResult[]): Promise<PermissionMergeResult[]> {
 	try {
-		await getConnection()
+		await getDataSource()
 			.createQueryBuilder()
 			.delete()
 			.from(Permission)

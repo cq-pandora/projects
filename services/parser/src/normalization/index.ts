@@ -1,6 +1,4 @@
-import { sync as mkdirp } from 'mkdirp';
-
-import { writeFile } from 'fs';
+import { writeFile, mkdirSync } from 'fs';
 import { promisify } from 'util';
 
 import {
@@ -55,7 +53,7 @@ export default async function normalize(): Promise<void> {
 
 	logger.verbose('Started translations normalization');
 
-	mkdirp(pathResolve(paths.informationOutputDir, 'translations'));
+	mkdirSync(pathResolve(paths.informationOutputDir, 'translations'), { recursive: true });
 
 	const localizations = { default: 'en_us' } as Localizations;
 

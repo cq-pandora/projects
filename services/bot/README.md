@@ -31,9 +31,13 @@ Invite her to your server using [this link](https://discordapp.com/oauth2/author
 ## Usage
 
 ### Initialization
+
+Requires Node.js 24 or newer. Yarn 4 is provided through corepack (`corepack enable`).
+
 ```
 git clone https://github.com/cq-pandora/projects.git cq-pandora
 cd cq-pandora
+corepack enable
 yarn install
 yarn build
 ```
@@ -42,7 +46,7 @@ yarn build
 
 #### Before first run
 - Create database 
-- Migrate database using `yarn workspaces @cquest/db migrate:up`
+- Build the project (`yarn build`), then migrate the database using `yarn workspace @cquest/db migrate:up`
 
 #### General start
 Running configuration is set through environment variables. Best to be used with pm2.
@@ -75,4 +79,4 @@ module.exports = {
 
 ```
 
-Or, you can set all required environment variables in any other way and run bot using `yarn workspaces @cquest/bot start`
+Or, you can set all required environment variables in any other way and run bot using `yarn workspace @cquest/pandora start`

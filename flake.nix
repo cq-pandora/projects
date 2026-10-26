@@ -2,14 +2,11 @@
   description = "virtual environments";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     devshell = {
       url = "github:numtide/devshell";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -20,11 +17,11 @@
     nixpkgs,
   }:
     flake-utils.lib.eachDefaultSystem (system: {
-      devShell = let
+      devShells.default = let
         pkgs = import nixpkgs {
           inherit system;
 
-          overlays = [devshell.overlay];
+          overlays = [devshell.overlays.default];
         };
 
         pkgWithCategory = category: package: {inherit package category;};
@@ -97,7 +94,7 @@
               name = "migrate";
               help = "migrate database";
               category = "database";
-              command = "yarn workspace @cquest/db migrate:up -d $PRJ_ROOT/shared/db/ormconfig.ts";
+              command = "yarn workspace @cquest/db migrate:up";
             }
             {
               name = "watch";
@@ -166,7 +163,7 @@
             }
           ];
 
-          packages = with pkgs; [nodejs-18_x yarn postgresql_12];
+          packages = with pkgs; [nodejs_24 corepack_24 postgresql uv];
         };
     });
 }

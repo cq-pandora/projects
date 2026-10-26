@@ -64,7 +64,6 @@ export default class DataProvider implements IDataProvider {
 		return this;
 	};
 
-	// @ts-expect-error 7022
 	init = async (): Promise<this> => {
 		if (this.aliasProvider === undefined) {
 			throw new Error('Alias provider was not set!');

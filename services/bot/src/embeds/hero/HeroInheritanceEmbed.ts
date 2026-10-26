@@ -1,5 +1,3 @@
-import { Message } from 'discord.js';
-
 import {
 	Hero, HeroClassColors, InheritanceLevel, HeroForm
 } from '@cquest/entities';

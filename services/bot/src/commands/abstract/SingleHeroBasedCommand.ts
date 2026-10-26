@@ -4,14 +4,12 @@ import { heroes, extractResult } from '@cquest/data-provider';
 import BaseCommand from './BaseCommand';
 
 import {
-	CommandCategory, CommandResult, CommandPayload, CommandResultCode, CommandArguments, ArgumentType
+	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../../common-types';
 
 import {
 	HeroBlockEmbed, HeroFormsEmbed, HeroSBWEmbed, HeroSBWBlockEmbed, HeroSkinsEmbed
 } from '../../embeds';
-
-import { parseQuery, parseGrade } from '../../util';
 
 const cmdArgs = {
 	name: ArgumentType.string({

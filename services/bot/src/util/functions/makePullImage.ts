@@ -1,4 +1,4 @@
-import Jimp from 'jimp';
+import { Jimp, JimpInstance } from 'jimp';
 import { HeroForm } from '@cquest/entities';
 import { resolve as pathResolve } from 'path';
 
@@ -11,7 +11,7 @@ const HEIGHT_GAP = 5;
 
 const cacheStarImage = Jimp.read(pathResolve(__dirname, '../../../assets', 'hero_star.png'));
 
-async function getStarsImage(count: number): Promise<Jimp> {
+async function getStarsImage(count: number): Promise<JimpInstance> {
 	const starImage = await cacheStarImage;
 
 	const container = await createImage(starImage.bitmap.width * count, starImage.bitmap.height);
@@ -26,7 +26,7 @@ async function getStarsImage(count: number): Promise<Jimp> {
 	return container;
 }
 
-async function renderForm(form: HeroForm): Promise<Jimp> {
+async function renderForm(form: HeroForm): Promise<JimpInstance> {
 	const [sprite, stars] = await Promise.all([
 		Jimp.read(localImagePath(`heroes/${form.image}`)),
 		getStarsImage(form.star)
@@ -44,7 +44,7 @@ async function renderForm(form: HeroForm): Promise<Jimp> {
 	return canvas;
 }
 
-async function createRow(sprites: Jimp[], targetSpriteWidth: number): Promise<Jimp> {
+async function createRow(sprites: JimpInstance[], targetSpriteWidth: number): Promise<JimpInstance> {
 	const height = Math.max(...(sprites.map(s => s.bitmap.height)));
 
 	const container = await createImage(
@@ -67,7 +67,7 @@ async function createRow(sprites: Jimp[], targetSpriteWidth: number): Promise<Ji
 	return container;
 }
 
-export default async (forms: HeroForm[]): Promise<Jimp> => {
+export default async (forms: HeroForm[]): Promise<JimpInstance> => {
 	const sprites = await Promise.all(forms.map(renderForm));
 	const per5Sprites = chunk(sprites, 5);
 

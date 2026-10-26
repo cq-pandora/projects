@@ -1,8 +1,11 @@
 import {
-	Client, Interaction,
+	ChannelType, Client, Interaction,
 } from 'discord.js';
 
-import { CommandResultCode, CommandResult } from '@cquest/entities';
+import {
+	CommandResultCode, CommandResult, MessageTargetChannel,
+} from '@cquest/entities';
+
 import { stats } from '@cquest/db';
 import { commands as logger } from '@cquest/logger';
 
@@ -10,12 +13,21 @@ import { isErrorIgnored } from '../util';
 import config from '../config';
 import { CommandArgumentsSource } from '../common-types';
 
+const CHANNEL_TARGETS: Partial<Record<ChannelType, MessageTargetChannel>> = {
+	[ChannelType.GuildText]: 'text',
+	[ChannelType.DM]: 'dm',
+	[ChannelType.GuildVoice]: 'voice',
+	[ChannelType.GroupDM]: 'group',
+	[ChannelType.GuildCategory]: 'category',
+	[ChannelType.GuildAnnouncement]: 'news',
+};
+
 export default (client: Client): (interaction: Interaction) => Promise<void> => async (interaction): Promise<void> => {
-	if (!interaction.isCommand()) return;
+	if (!interaction.isChatInputCommand()) return;
 
 	// TODO better typing
 	async function reply(msg: string | [any] | object): Promise<void> {
-		if (!interaction.isCommand()) {
+		if (!interaction.isChatInputCommand()) {
 			return;
 		}
 		if (Array.isArray(msg)) {
@@ -69,7 +81,7 @@ export default (client: Client): (interaction: Interaction) => Promise<void> => 
 		userId: interaction.user.id,
 		channelId: interaction.channelId,
 		server: serverId,
-		sentTo: interaction.channel?.type || '-',
+		sentTo: (interaction.channel && CHANNEL_TARGETS[interaction.channel.type]) || 'unknown',
 		content: '',
 	};
 
