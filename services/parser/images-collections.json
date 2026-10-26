@@ -1,5 +1,6 @@
 {
     "2": {
+        "accessories": ["spritecollection_allaccessorycollection"],
         "berries": ["spritecollection_alladdstatcollection"],
         "books": ["spritecollection_allinheritbookcollection"],
         "breads": ["spritecollection_allbreadcollection"],

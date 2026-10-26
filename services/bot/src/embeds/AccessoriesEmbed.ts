@@ -1,7 +1,9 @@
 import { Accessory, AccessoryOption } from '@cquest/entities';
 import { translate as l } from '@cquest/data-provider';
 
-import { arraify, capitalizeFirstLetter, chunk } from '../util/functions';
+import {
+	arraify, capitalizeFirstLetter, chunk, imageUrl
+} from '../util/functions';
 import config from '../config';
 
 import PaginationEmbed, { InitialMessageSource } from './PaginationEmbed';
@@ -36,6 +38,7 @@ export default class AccessoriesEmbed extends PaginationEmbed {
 
 		const infoPages = list.map(accessory => new PandoraEmbed()
 			.setTitle(`${l(accessory.name)} (${accessory.grade}★ ${accessory.type})`)
+			.setThumbnail(imageUrl(`accessories/${accessory.image}`))
 			.setDescription(l(accessory.description))
 			.addField('Rarity', capitalizeFirstLetter(accessory.rarity), true)
 			.addField('Options', `up to ${accessory.maxOptions}`, true)
