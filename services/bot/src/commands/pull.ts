@@ -70,6 +70,86 @@ const brskPool: RollChances = {
 	CHA_HU_LIMITED_BRSK_4_08: 2,
 };
 
+// Banner rates below are not published by the game, so every hero has the same chance
+const uniformPool = (formIds: string[]): RollChances => Object.fromEntries(formIds.map(id => [id, 1]));
+
+const kof1Pool = uniformPool([
+	'CHA_PA_LIMITED_KOF1_4_BILLY',
+	'CHA_WI_LIMITED_KOF1_4_CHIZURU',
+	'CHA_WA_LIMITED_KOF1_4_IORI',
+	'CHA_WA_LIMITED_KOF1_4_KYO',
+	'CHA_HU_LIMITED_KOF1_4_LEONA',
+	'CHA_WA_LIMITED_KOF1_4_RUGAL',
+	'CHA_PR_LIMITED_KOF1_4_KENSOU',
+]);
+
+const kof2Pool = uniformPool([
+	'CHA_PR_LIMITED_KOF2_4_ATHENA',
+	'CHA_WA_LIMITED_KOF2_4_CHRIS',
+	'CHA_PA_LIMITED_KOF2_4_KIM',
+	'CHA_AR_LIMITED_KOF2_4_MAI',
+	'CHA_WI_LIMITED_KOF2_4_SHERMIE',
+	'CHA_PA_LIMITED_KOF2_4_TERRY',
+]);
+
+const ys8Pool = uniformPool([
+	'CHA_WA_LIMITED_YS8_4_ADOL',
+	'CHA_WA_LIMITED_YS8_4_DANA',
+	'CHA_HU_LIMITED_YS8_4_HUMMEL',
+	'CHA_WA_LIMITED_YS8_4_LAXIA',
+	'CHA_PA_LIMITED_YS8_4_RICOTTA',
+	'CHA_PA_LIMITED_YS8_4_SAHAD',
+]);
+
+const rwbyPool = uniformPool([
+	'CHA_WA_LIMITED_RB_4_BLAKE',
+	'CHA_HU_LIMITED_RB_4_NORA',
+	'CHA_PA_LIMITED_RB_4_PYRRHA',
+	'CHA_HU_LIMITED_RB_4_RUBY',
+	'CHA_WA_LIMITED_RB_4_WEISS',
+	'CHA_PA_LIMITED_RB_4_YANG',
+	'CHA_AR_LIMITED_RB2_4_01',
+	'CHA_WA_LIMITED_RB2_4_02',
+]);
+
+const octopathPool = uniformPool([
+	'CHA_PR_LIMITED_OT_4_01',
+	'CHA_WI_LIMITED_OT_4_02',
+	'CHA_HU_LIMITED_OT_4_03',
+	'CHA_WA_LIMITED_OT_4_04',
+	'CHA_AR_LIMITED_OT_4_05',
+	'CHA_PA_LIMITED_OT_4_06',
+	'CHA_WA_LIMITED_OT_4_07',
+	'CHA_AR_LIMITED_OT_4_08',
+]);
+
+const etoRangersPool = uniformPool([
+	'CHA_WA_LIMITED_ER_4_01',
+	'CHA_PA_LIMITED_ER_4_02',
+	'CHA_PA_LIMITED_ER_4_03',
+	'CHA_PR_LIMITED_ER_4_04',
+	'CHA_WI_LIMITED_ER_4_05',
+	'CHA_PR_LIMITED_ER_4_06',
+	'CHA_AR_LIMITED_ER_4_07',
+	'CHA_PR_LIMITED_ER_4_08',
+	'CHA_PA_LIMITED_ER_4_09',
+	'CHA_PA_LIMITED_ER_4_10',
+	'CHA_WA_LIMITED_ER_4_11',
+	'CHA_PA_LIMITED_ER_4_12',
+	'CHA_WI_LIMITED_ER_4_21',
+]);
+
+const ggStrivePool = uniformPool([
+	'CHA_PA_LIMITED_GG4_4_01',
+	'CHA_WA_LIMITED_GG4_4_02',
+	'CHA_WA_LIMITED_GG4_4_03',
+]);
+
+const deemoPool = uniformPool([
+	'CHA_PR_LIMITED_4_DM2',
+	'CHA_WI_LIMITED_4_DEEMO',
+]);
+
 const HEROES_HIDDEN = [
 	'legendary',
 	'support',
@@ -78,7 +158,9 @@ const HEROES_HIDDEN = [
 
 type Puller = (count: number) => HeroForm[];
 
-const PullValues = stringTuple('gg1', 'gg2', 'rz', 'sh', 'contract', 'gs', 'brsk');
+const PullValues = stringTuple(
+	'gg1', 'gg2', 'rz', 'sh', 'contract', 'gs', 'brsk', 'kof1', 'kof2', 'ys8', 'rwby', 'ot', 'er', 'ggst', 'deemo'
+);
 
 type PullType = typeof PullValues[number];
 
@@ -95,6 +177,14 @@ const cmdArgs = {
 			'Shield Hero': 'sh',
 			'Goblin Slayer': 'gs',
 			Berserk: 'brsk',
+			'King of Fighters 1': 'kof1',
+			'King of Fighters 2': 'kof2',
+			'Ys VIII': 'ys8',
+			RWBY: 'rwby',
+			'Octopath Traveler': 'ot',
+			'Eto Rangers': 'er',
+			'Guilty Gear -Strive-': 'ggst',
+			'DEEMO II': 'deemo',
 		},
 	}),
 	count: ArgumentType.number({
@@ -185,6 +275,14 @@ export class PullCommand extends BaseCommand<Arguments> {
 				}),
 			gs: count => ggPull(count, gsPool),
 			brsk: count => ggPull(count, brskPool),
+			kof1: count => ggPull(count, kof1Pool),
+			kof2: count => ggPull(count, kof2Pool),
+			ys8: count => ggPull(count, ys8Pool),
+			rwby: count => ggPull(count, rwbyPool),
+			ot: count => ggPull(count, octopathPool),
+			er: count => ggPull(count, etoRangersPool),
+			ggst: count => ggPull(count, ggStrivePool),
+			deemo: count => ggPull(count, deemoPool),
 		};
 	}
 

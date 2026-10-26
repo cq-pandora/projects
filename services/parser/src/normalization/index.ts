@@ -1,6 +1,6 @@
 import { sync as mkdirp } from 'mkdirp';
 
-import { writeFile } from 'fs';
+import { readdirSync, writeFile } from 'fs';
 import { promisify } from 'util';
 
 import {
@@ -23,6 +23,21 @@ const writeFileAsync = promisify(writeFile);
 
 function absolute(partName: string): string {
 	return pathResolve(paths.decryptOutputDir, `get_${partName}.json`);
+}
+
+const TEXT_SHARD_REGEX = /^get_(text\d+|textdialogue\d+)_([a-z]{2}_[a-z]{2})_(\d+)\.json$/;
+
+/**
+ * Game splits translations into `get_<group>_<locale>_<shard>` sheets and adds groups/shards over time
+ * (e.g. `textdialogue3_*_3` appeared with the Epilogue), so they are discovered instead of listed
+ */
+function textShards(locale: string): string[] {
+	return readdirSync(paths.decryptOutputDir)
+		.map(file => TEXT_SHARD_REGEX.exec(file))
+		.filter((match): match is RegExpExecArray => match !== null && match[2] === locale)
+		.map(([file, group, , shard]) => ({ file, group, shard: Number(shard) }))
+		.sort((a, b) => a.group.localeCompare(b.group) || a.shard - b.shard)
+		.map(({ file }) => pathResolve(paths.decryptOutputDir, file));
 }
 
 type NormalizationFunction<T> = (input: UniversalNormalizationInput) => Promise<NormalizationResult<T>>;
@@ -61,27 +76,7 @@ export default async function normalize(): Promise<void> {
 
 	for (const locale of locales) {
 		const translations = await normalizations.normalizeTranslations({
-			textsRawPaths: [
-				`text1_${locale}_0`,
-				`text1_${locale}_1`,
-				`text1_${locale}_2`,
-				`text2_${locale}_0`,
-				`text2_${locale}_1`,
-				`text2_${locale}_2`,
-				`text2_${locale}_3`,
-				`text3_${locale}_0`,
-				`text3_${locale}_1`,
-				`textdialogue1_${locale}_0`,
-				`textdialogue1_${locale}_1`,
-				`textdialogue1_${locale}_2`,
-				`textdialogue2_${locale}_0`,
-				`textdialogue2_${locale}_1`,
-				`textdialogue2_${locale}_2`,
-				`textdialogue2_${locale}_3`,
-				`textdialogue3_${locale}_0`,
-				`textdialogue3_${locale}_1`,
-				`textdialogue3_${locale}_2`,
-			].map(absolute),
+			textsRawPaths: textShards(locale),
 		});
 
 		localizations[locale] = translations;
