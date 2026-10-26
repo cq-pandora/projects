@@ -6,7 +6,7 @@ import { registerSerializer } from '../Serializer';
 
 export type TranslationIndexSection =
 	'heroes' | 'breads' | 'berries' | 'sigils' | 'goddesses' | 'factions' | 'champions' | 'sp_skills' | 'bosses' |
-	'fishes' | 'fishing_gear' | 'portraits' | 'scarecrows';
+	'fishes' | 'fishing_gear' | 'portraits' | 'scarecrows' | 'accessories';
 
 export interface ITranslationIndicesOptions {
 	key: string;

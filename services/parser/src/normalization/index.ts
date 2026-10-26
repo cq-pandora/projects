@@ -4,7 +4,7 @@ import { promisify } from 'util';
 import {
 	Hero, Berry, Champion, SpSkill, Boss, Bread, Sigil, Goddess, Faction, Fish, FishingGear, TranslationIndexSection,
 	TranslationIndices, TranslationIndex, GenericConstructor, Serialize, Translations, Interaction, TranslationsMeta,
-	Scarecrow
+	Scarecrow, Accessory, ChampionBond
 } from '@cquest/entities';
 
 import { resolve as pathResolve } from 'path';
@@ -57,6 +57,8 @@ const toNormalize = {
 	inheritance: ['Inheritance', normalizations.normalizeInheritance],
 	interactions: [Interaction, normalizations.normalizeInteractions],
 	scarecrows: [Scarecrow, normalizations.normalizeScarecrows],
+	accessories: [Accessory, normalizations.normalizeAccessories],
+	champion_bond: [ChampionBond, normalizations.normalizeChampionBond],
 } as Record<TranslationIndexSection, NormalizationEntry<object>>;
 
 const logger = makeLogger('normalize');
@@ -99,12 +101,17 @@ export default async function normalize(): Promise<void> {
 	logger.verbose('Normalized translations');
 
 	const filenames: UniversalNormalizationInput = {
+		accessoryEarringsRawPath: absolute('accessory_earring'),
+		accessoryNecklacesRawPath: absolute('accessory_necklace'),
+		accessoryOptionsRawPath: absolute('accessory_option'),
 		berriesRawPath: absolute('addstatitem'),
 		breadsRawPath: absolute('bread'),
+		championBondRawPath: absolute('champion_link_level_stat_unlock'),
 		championSkillsByLevelInfoRawPath: absolute('champion_slot'),
 		championsInfoRawPath: absolute('champion'),
 		championsSkillRawPath: absolute('champion_skill'),
 		characterBerriesStatsRawPath: absolute('character_addstatmax'),
+		characterProfilesRawPath: absolute('character_profile'),
 		characterSkinsRawPath: absolute('costume'),
 		charactersGeneralInfoRawPath: absolute('character_visual'),
 		charactersStatsRawPath: absolute('character_stat'),
@@ -119,6 +126,7 @@ export default async function normalize(): Promise<void> {
 		sigilsStatsRawPath: absolute('carvestone_option'),
 		spSkillsRawPath: absolute('spskill'),
 		weaponsRawPath: absolute('weapon'),
+		oztalkChatInfoRawPath: absolute('oztalkchatinfo'),
 		interactionsRawPath: absolute('hero_easteregg'),
 		dummyRawPath: absolute('dummy'),
 		localizations,

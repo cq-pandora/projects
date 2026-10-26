@@ -1,5 +1,6 @@
 import {
-	HeroBerriesStats, HeroSBW, WeaponType, Hero, HeroClass, HeroType, HeroGender, HeroForm, HeroStats, HeroSkin
+	HeroBerriesStats, HeroSBW, WeaponType, Hero, HeroClass, HeroType, HeroGender, HeroForm, HeroStats, HeroSkin,
+	HeroProfile
 } from '@cquest/entities';
 
 import { NormalizationResult } from './common-types';
@@ -9,7 +10,8 @@ import {
 } from '../util';
 
 import {
-	CharacterBerriesRaw, CharacterStatsRaw, CharacterVisualRaw, WeaponsRaw, CharacterCostumesRaw
+	CharacterBerriesRaw, CharacterStatsRaw, CharacterVisualRaw, WeaponsRaw, CharacterCostumesRaw, CharacterProfilesRaw,
+	OztalkChatInfoRaw
 } from './raw-types/heroes';
 
 import { Weapon, WeaponClassID } from './raw-types/heroes/weapons';
@@ -91,6 +93,11 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 	const costumesRaw = await readJSON(input.characterSkinsRawPath) as CharacterCostumesRaw;
 
 	const weaponRaw = await readJSON(input.weaponsRawPath) as WeaponsRaw;
+	const profilesRaw = await readJSON(input.characterProfilesRawPath) as CharacterProfilesRaw;
+	const oztalkRaw = await readJSON(input.oztalkChatInfoRawPath) as OztalkChatInfoRaw;
+
+	const profileByFormId = arrayToId(profilesRaw.character_profile);
+	const oztalkFormIds = new Set(oztalkRaw.oztalk_chat_info.flatMap(chat => chat.chathero ?? []));
 
 	const heroesTranslationsKeysIndex = {} as Record<string, string>;
 
@@ -235,6 +242,27 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 			});
 		});
 
+		// Profiles are keyed by one form id, usually the highest grade one
+		const profileRaw = heroesFormsRaw.map(f => profileByFormId[f.id]).reverse().find(Boolean);
+		const profile = profileRaw && new HeroProfile({
+			age: profileRaw.age,
+			birthday: profileRaw.birth,
+			hobby: profileRaw.hobby,
+			likes: profileRaw.likes,
+			hates: profileRaw.hates,
+			notes: profileRaw.etc,
+			oztalk: heroesFormsRaw.some(f => oztalkFormIds.has(f.id)),
+		});
+
+		if (profileRaw) {
+			const heroName = defaultTranslation[firstForm.name!].text;
+
+			heroesTranslationsKeysIndex[profileRaw.hobby] = `${heroName} profile hobby`;
+			heroesTranslationsKeysIndex[profileRaw.likes] = `${heroName} profile likes`;
+			heroesTranslationsKeysIndex[profileRaw.hates] = `${heroName} profile hates`;
+			heroesTranslationsKeysIndex[profileRaw.etc] = `${heroName} profile notes`;
+		}
+
 		return new Hero({
 			id,
 			readableId: id,
@@ -244,7 +272,8 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 			domain: firstForm.domain!,
 			forms: forms.sort((a, b) => a.star - b.star),
 			sbws,
-			skins
+			skins,
+			profile,
 		});
 	};
 

@@ -1,3 +1,4 @@
+export { default as AccessoriesEmbed } from './AccessoriesEmbed';
 export { default as BerriesEmbed } from './BerriesEmbed';
 export { default as FishingGearsEmbed } from './FishingGearsEmbed';
 export { default as PaginationEmbed, EmbedSource, InitialMessageSource } from './PaginationEmbed';
@@ -5,6 +6,7 @@ export { default as BossesEmbed } from './BossesEmbed';
 export { default as GoddessesEmbed } from './GoddessesEmbed';
 export { default as PortraitsEmbed } from './PortraitsEmbed';
 export { default as ChampionEmbed } from './ChampionEmbed';
+export { default as ChampionBondEmbed } from './ChampionBondEmbed';
 export { default as SPSkillEmbed } from './SPSkillEmbed';
 export { default as FishesEmbed } from './FishesEmbed';
 export { default as SigilsEmbed } from './SigilsEmbed';

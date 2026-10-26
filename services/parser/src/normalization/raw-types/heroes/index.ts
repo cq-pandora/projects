@@ -3,3 +3,4 @@ export { CharacterStatsRaw } from './character-stats';
 export { CharacterVisualRaw } from './character-visual';
 export { CharacterBerriesRaw } from './berries-stats';
 export { CharacterCostumesRaw } from './skins';
+export { CharacterProfilesRaw, OztalkChatInfoRaw } from './profiles';

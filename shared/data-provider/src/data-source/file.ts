@@ -75,6 +75,12 @@ export default class FileDataSource implements IDataSource {
 			case DataType.SCARECROWS:
 				return readText(pathJoin(this.dataRoot, 'scarecrows.json'));
 
+			case DataType.ACCESSORIES:
+				return readText(pathJoin(this.dataRoot, 'accessories.json'));
+
+			case DataType.CHAMPION_BOND:
+				return readText(pathJoin(this.dataRoot, 'champion_bond.json'));
+
 			default: throw new TypeError(`Unsupported data type: ${type}`);
 		}
 	}

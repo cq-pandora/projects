@@ -9,6 +9,7 @@ import { IStatsHolder } from '../interfaces';
 
 import { HeroSBW } from './HeroSBW';
 import { HeroSkin } from './HeroSkin';
+import { HeroProfile } from './HeroProfile';
 import { HeroBerriesStats } from './HeroBerriesStats';
 import { registerSerializer } from '../Serializer';
 
@@ -114,6 +115,7 @@ export interface IHeroOptions {
 	forms: Array<HeroForm>;
 	sbws: Array<HeroSBW>;
 	skins: Array<HeroSkin>;
+	profile?: HeroProfile;
 }
 
 export class Hero {
@@ -126,6 +128,7 @@ export class Hero {
 	@autoserializeAs(HeroForm) public readonly forms!: Array<HeroForm>;
 	@autoserializeAs(HeroSBW) public readonly sbws!: Array<HeroSBW>;
 	@autoserializeAs(HeroSkin) public readonly skins!: Array<HeroSkin>;
+	@autoserializeAs(HeroProfile) public readonly profile?: HeroProfile;
 
 	public static OnDeserialized(instance: Hero): void {
 		for (const form of instance.forms) {
@@ -145,6 +148,7 @@ export class Hero {
 		this.forms = options.forms;
 		this.sbws = options.sbws;
 		this.skins = options.skins;
+		this.profile = options.profile;
 	}
 }
 

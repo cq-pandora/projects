@@ -57,6 +57,19 @@ export type HeroesNormalizationInput = {
 	charactersStatsRawPath: string;
 	characterSkinsRawPath: string;
 	weaponsRawPath: string;
+	characterProfilesRawPath: string;
+	oztalkChatInfoRawPath: string;
+};
+
+export type AccessoriesNormalizationInput = {
+	accessoryEarringsRawPath: string;
+	accessoryNecklacesRawPath: string;
+	accessoryOptionsRawPath: string;
+};
+
+export type ChampionBondNormalizationInput = {
+	championBondRawPath: string;
+	championsSkillRawPath: string;
 };
 
 export type InheritanceNormalizationInput = {
@@ -98,4 +111,4 @@ export type UniversalNormalizationInput =
 	& FactionsNormalizationInput & FishesNormalizationInput & FishingGearNormalizationInput
 	& GoddessesNormalizationInput & HeroesNormalizationInput & InheritanceNormalizationInput
 	& PortraitsNormalizationInput & SigilsNormalizationInput & SpSkillNormalizationInput
-	& InteractionsInput & ScarecrowsNormalizationInput;
+	& InteractionsInput & ScarecrowsNormalizationInput & AccessoriesNormalizationInput & ChampionBondNormalizationInput;

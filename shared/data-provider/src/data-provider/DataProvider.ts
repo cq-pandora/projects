@@ -1,6 +1,6 @@
 import {
-	Berry, Boss, Bread, Champion, Faction, Fish, FishingGear, Goddess, Hero, Inheritance, Portrait,
-	Sigil, SpSkill, TranslationIndices, Scarecrow, Deserialize, Interaction
+	Accessory, Berry, Boss, Bread, Champion, ChampionBond, Faction, Fish, FishingGear, Goddess, Hero, Inheritance,
+	Portrait, Sigil, SpSkill, TranslationIndices, Scarecrow, Deserialize, Interaction
 } from '@cquest/entities';
 
 import {
@@ -12,8 +12,8 @@ import { Locale, Localizations } from '../common';
 
 import { lateinit, init, LateInit } from './lateinit';
 import {
-	generateHeroKeysDescriptionInitializer, generateInheritanceInitializer, generateLocalesInitializer,
-	generateLocalizationsInitializer, generateTranslationIndicesInitializer
+	generateChampionBondInitializer, generateHeroKeysDescriptionInitializer, generateInheritanceInitializer,
+	generateLocalesInitializer, generateLocalizationsInitializer, generateTranslationIndicesInitializer
 } from './initializers';
 import { IDataProvider } from './common';
 
@@ -21,6 +21,7 @@ export default class DataProvider implements IDataProvider {
 	private dataSource?: IDataSource;
 	private aliasProvider?: IAliasProvider;
 
+	readonly accessories = arraySearchable<Accessory>();
 	readonly berries = arraySearchable<Berry>();
 	readonly bosses = arraySearchable<Boss>();
 	readonly breads = arraySearchable<Bread>();
@@ -36,6 +37,10 @@ export default class DataProvider implements IDataProvider {
 	readonly spSkills = arraySearchable<SpSkill>();
 	readonly scarecrows = arraySearchable<Scarecrow>();
 
+	readonly championBond: LateInit<ChampionBond> = lateinit<ChampionBond>(
+		new ChampionBond({ levels: [], skills: [] }),
+		generateChampionBondInitializer(this),
+	);
 	readonly heroKeysDescription: LateInit<HeroKeysDescription> = lateinit<HeroKeysDescription>(
 		{},
 		generateHeroKeysDescriptionInitializer(this),
@@ -73,6 +78,7 @@ export default class DataProvider implements IDataProvider {
 			throw new Error('Data source was not set!');
 		}
 
+		await init(this.championBond);
 		await init(this.heroKeysDescription);
 		await init(this.inheritance);
 		await init(this.locales);
@@ -96,6 +102,14 @@ export default class DataProvider implements IDataProvider {
 		const interactions = await this.dataSource.get(DataType.INTERACTIONS);
 
 		await this.interactions.init(Deserialize(interactions, Interaction));
+
+		await this.accessories.init(generateArraySearchableOptions({
+			...genericOptions,
+			dataType: DataType.ACCESSORIES,
+			context: 'accessories',
+			ctor: Accessory,
+			translationIndices: this.translationIndices,
+		}));
 
 		await this.berries.init(generateArraySearchableOptions({
 			...genericOptions,

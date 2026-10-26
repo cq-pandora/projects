@@ -14,3 +14,5 @@ export { normalize as normalizeFishingGear } from './fishing-gear';
 export { normalize as normalizePortraits } from './portraits';
 export { normalize as normalizeInteractions } from './interactions';
 export { normalize as normalizeScarecrows } from './scarecrows';
+export { normalize as normalizeAccessories } from './accessories';
+export { normalize as normalizeChampionBond } from './champion-bond';

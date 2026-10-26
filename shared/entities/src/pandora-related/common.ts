@@ -7,7 +7,7 @@ function stringTuple<T extends [string] | string[]>(...data: T): T {
 export const ContextValues = stringTuple(
 	'heroes', 'champions', 'sp', 'bosses', 'breads', 'berries', 'sigils',
 	'commands', 'goddesses', 'factions', 'fishes', 'fish-gear', 'fish-ponds',
-	'portraits', 'scarecrows'
+	'portraits', 'scarecrows', 'accessories'
 );
 
 export type ContextType = typeof ContextValues[number];

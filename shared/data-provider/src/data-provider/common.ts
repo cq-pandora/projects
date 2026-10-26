@@ -1,6 +1,6 @@
 import {
-	Berry, Boss, Bread, Champion, Faction, Fish, FishingGear, Goddess, Hero, Inheritance, Interaction, Portrait,
-	Sigil, SpSkill, TranslationIndices, Scarecrow
+	Accessory, Berry, Boss, Bread, Champion, ChampionBond, Faction, Fish, FishingGear, Goddess, Hero, Inheritance,
+	Interaction, Portrait, Sigil, SpSkill, TranslationIndices, Scarecrow
 } from '@cquest/entities';
 
 import { IDataSource } from '../data-source';
@@ -13,6 +13,7 @@ type ArraySearchable<T extends Entities> = ISearchable<T, T[]>;
 type ObjectSearchable<T extends Entities> = ISearchable<T, Record<string, T>>;
 
 export interface IDataProvider {
+	readonly accessories: ArraySearchable<Accessory>;
 	readonly berries: ArraySearchable<Berry>;
 	readonly bosses: ArraySearchable<Boss>;
 	readonly breads: ArraySearchable<Bread>;
@@ -28,6 +29,7 @@ export interface IDataProvider {
 	readonly scarecrows: ArraySearchable<Scarecrow>;
 	readonly portraits: ObjectSearchable<Portrait>;
 
+	readonly championBond: ChampionBond;
 	readonly inheritance: Inheritance;
 	readonly heroKeysDescription: HeroKeysDescription;
 
