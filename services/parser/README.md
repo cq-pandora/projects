@@ -58,3 +58,10 @@ yarn start
 The run resolves the current client version from Google Play, asks Gamebase for the launch endpoint (`https://game.lc-cq.loadcomplete.com/launch/start` since the LoadComplete transfer), and reads the data sheet (`Patch_DataSheet`) and asset bundle (`NPatch_URL`) roots from it. It then downloads, decrypts, normalizes and splits sprites, with a verbose log of every processed file.
 
 Translation sheets (`get_text*_<locale>_<n>` and `get_textdialogue*_<locale>_<n>`) are discovered from the decrypted data, so new shards are picked up without code changes.
+
+### Automated updates
+
+The `Update assets` workflow (`.github/workflows/update-assets.yml`) runs the parser daily and on demand, writing straight into a checkout of [cq-pandora/assets](https://github.com/cq-pandora/assets). If the generated data or sprites changed, it opens (or updates) a pull request there from the `update/game-data` branch; merging it triggers the assets repo's docker build. The full run takes about 10 minutes. It needs two repository secrets:
+
+- `CQ_CRYPTO_JSON`: the contents of `crypto.json`.
+- `ASSETS_TOKEN`: a fine-grained token for `cq-pandora/assets` with read and write access to "Contents" and "Pull requests".
