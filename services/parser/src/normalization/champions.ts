@@ -58,7 +58,8 @@ export async function normalize(input: ChampionsNormalizationInput): Promise<Nor
 				return new ChampionForm({
 					active: mapSkill(skills.filter(s => s.type.toLowerCase() === 'active')[0])!,
 					passive: mapSkill(skills.filter(s => s.type.toLowerCase() === 'passive')[0]),
-					exclusive: mapSkill(skills.filter(s => s.type.toLowerCase() === 'exclusive_passive')[0]),
+					// Bond-era champions use EXCLUSIVE, older ones EXCLUSIVE_PASSIVE
+					exclusive: mapSkill(skills.filter(s => ['exclusive', 'exclusive_passive'].includes(s.type.toLowerCase()))[0]),
 					grade: form.level,
 				});
 			});
