@@ -53,4 +53,6 @@ uv run --project sprites cq-sprites --output /tmp/heroes --scale 2 /path/to/Asse
 yarn start
 ```
 
-In output you'll see full verbose log of what files were processed
+The run resolves the current client version from Google Play, asks Gamebase for the launch endpoint (`https://game.lc-cq.loadcomplete.com/launch/start` since the LoadComplete transfer), and reads the data sheet (`Patch_DataSheet`) and asset bundle (`NPatch_URL`) roots from it. It then downloads, decrypts, normalizes and splits sprites, with a verbose log of every processed file.
+
+Translation sheets (`get_text*_<locale>_<n>` and `get_textdialogue*_<locale>_<n>`) are discovered from the decrypted data, so new shards are picked up without code changes.
