@@ -33,7 +33,7 @@ process.on('unhandledRejection', unhandledRejection);
 
 	logger.verbose('Finished executing preload scripts');
 
-	logger.info(`Logging in with token "${config.token}"...`);
+	logger.info('Logging in...');
 	await client.login(config.token);
 
 	logger.verbose('Loading events...');
