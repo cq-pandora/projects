@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import splitUnity from './split-unity';
+import extractSprites from './sprites';
 import { images, paths } from '../config';
 import { makeLogger } from '../logger';
 
@@ -12,7 +12,7 @@ export default async function split(): Promise<void> {
 
 	for (const [scale, types] of Object.entries(images)) {
 		for (const [type, patterns] of Object.entries(types)) {
-			await splitUnity({
+			await extractSprites({
 				filesDir: assetsDir,
 				patterns,
 				outputDir: path.resolve(outputDir, type),

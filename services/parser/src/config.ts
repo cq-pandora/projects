@@ -15,8 +15,6 @@ const configRaw = readJSON('images-collections');
 export const images: ImagesCollections = configRaw;
 
 interface IPaths {
-	readonly unity: string;
-	readonly unitySpriteSplitter: string;
 	readonly gameCachePath: string;
 	readonly decryptOutputDir: string;
 	readonly spritesOutputDir: string;
@@ -30,8 +28,6 @@ export const paths: IPaths = {
 	gameCachePath: pathsRaw.game_cache_path,
 	informationOutputDir: pathsRaw.information_output_dir,
 	spritesOutputDir: pathsRaw.sprites_output_dir,
-	unity: pathsRaw.unity_executable,
-	unitySpriteSplitter: pathsRaw.unity_sprite_splitter,
 };
 
 interface ICrypto {
