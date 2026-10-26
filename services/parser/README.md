@@ -61,7 +61,7 @@ Translation sheets (`get_text*_<locale>_<n>` and `get_textdialogue*_<locale>_<n>
 
 ### Automated updates
 
-The `Update assets` workflow (`.github/workflows/update-assets.yml`) runs the parser daily and on demand, writing straight into a checkout of [cq-pandora/assets](https://github.com/cq-pandora/assets). If the generated data or sprites changed, it opens (or updates) a pull request there from the `update/game-data` branch; merging it triggers the assets repo's docker build. The full run takes about 10 minutes. It needs two repository secrets:
+The `Update assets` workflow (`.github/workflows/update-assets.yml`) runs the parser every Thursday at 10:00 UTC and on demand, writing straight into a checkout of [cq-pandora/assets](https://github.com/cq-pandora/assets). If the generated data or sprites changed, it opens (or updates) a pull request there from the `update/game-data` branch; merging it triggers the assets repo's docker build. The full run takes about 10 minutes. It needs two repository secrets:
 
 - `CQ_CRYPTO_JSON`: the contents of `crypto.json`.
 - `ASSETS_TOKEN`: a fine-grained token for `cq-pandora/assets` with read and write access to "Contents" and "Pull requests".
