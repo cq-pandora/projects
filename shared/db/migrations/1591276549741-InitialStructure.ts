@@ -4,6 +4,11 @@ import {
 
 export class InitialStructure1591276549741 implements MigrationInterface {
 	public async up(queryRunner: QueryRunner): Promise<void> {
+		// Databases set up by the earlier db-migrate tooling already have these tables
+		if (await queryRunner.hasTable('aliases')) {
+			return;
+		}
+
 		await queryRunner.createTable(
 			new Table({
 				name: 'aliases',
