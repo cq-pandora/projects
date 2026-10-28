@@ -1,4 +1,6 @@
-import { heroes, extractResult } from '@cquest/data-provider';
+import { extractResult } from '@cquest/data-provider';
+
+import { searchHero } from '../util';
 
 import BaseCommand from './abstract/BaseCommand';
 
@@ -25,7 +27,7 @@ export class ProfileCommand extends BaseCommand<Arguments> {
 	public readonly protected = false;
 
 	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
-		const result = heroes.search(args.name);
+		const result = searchHero(args.name);
 
 		if (!result) {
 			await reply('Hero not found!');

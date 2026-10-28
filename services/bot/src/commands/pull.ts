@@ -12,143 +12,208 @@ import {
 	CommandCategory, CommandPayload, CommandResult, CommandResultCode, RollChances, ArgumentType
 } from '../common-types';
 
-const reZeroPool: RollChances = {
-	CHA_WI_LIMITED_RZ_4_05: 1,
-	CHA_PA_LIMITED_RZ_4_03: 1,
-	CHA_PR_LIMITED_RZ_4_07: 3,
-	CHA_WA_LIMITED_RZ_4_02: 3,
-	CHA_WI_LIMITED_RZ_4_04: 3,
-	CHA_WI_LIMITED_RZ_4_06: 3,
+interface CollabBanner {
+	/** Chance of a collab ★4 on a single contract, the rest is a regular ★3 hero */
+	collabChance: number;
+	/**
+	 * Relative weight of each collab hero, equal to its published single-contract % where known.
+	 * The guaranteed 10th contract splits 100% by the same ratio, as the official notices do.
+	 */
+	heroes: RollChances;
+}
+
+// Rates below are from the official contract notices (facebook.com/CrusadersQuest) unless noted otherwise
+
+// GUILTY GEAR Contract No.1: Ramlethal, Sol 1% / Elphelt, I-No, Ky, May, Chipp 3% / ★3 83%
+const gg1Banner: CollabBanner = {
+	collabChance: 0.17,
+	heroes: {
+		CHA_WI_LIMITED_GG_4_1: 1,
+		CHA_WA_LIMITED_GG_4_2: 1,
+		CHA_HU_LIMITED_GG_4_1: 3,
+		CHA_PR_LIMITED_GG_4_1: 3,
+		CHA_WA_LIMITED_GG_4_1: 3,
+		CHA_PA_LIMITED_GG_4_1: 3,
+		CHA_AR_LIMITED_GG_4_1: 3,
+	},
 };
 
-const gg1Pool: RollChances = {
-	CHA_WI_LIMITED_GG_4_1: 1,
-	CHA_WA_LIMITED_GG_4_2: 1,
-	CHA_HU_LIMITED_GG_4_1: 3,
-	CHA_PR_LIMITED_GG_4_1: 3,
-	CHA_WA_LIMITED_GG_4_1: 3,
-	CHA_PA_LIMITED_GG_4_1: 3,
-	CHA_AR_LIMITED_GG_4_1: 3,
+// GUILTY GEAR Contract No.2: Dizzy, Johnny 1% / Baiken, Millia, Sin, Jack-O' 3% / ★3 86%
+const gg2Banner: CollabBanner = {
+	collabChance: 0.14,
+	heroes: {
+		CHA_WI_LIMITED_GG3_4_DIZZY: 1,
+		CHA_WA_LIMITED_GG_4_4: 1,
+		CHA_WA_LIMITED_GG3_4_BAIKEN: 3,
+		CHA_WA_LIMITED_GG_4_3: 3,
+		CHA_PA_LIMITED_GG_4_2: 3,
+		CHA_WI_LIMITED_GG_4_2: 3,
+	},
 };
 
-const gg2Pool: RollChances = {
-	CHA_WI_LIMITED_GG3_4_DIZZY: 1,
-	CHA_WA_LIMITED_GG_4_4: 1,
-	CHA_WA_LIMITED_GG3_4_BAIKEN: 3,
-	CHA_WA_LIMITED_GG_4_3: 3,
-	CHA_PA_LIMITED_GG_4_2: 3,
-	CHA_WI_LIMITED_GG_4_2: 3,
+// GUILTY GEAR Contract No.3 (-STRIVE-): Giovanna 1% / Zato-1, Faust 3% / ★3 93%
+const ggStriveBanner: CollabBanner = {
+	collabChance: 0.07,
+	heroes: {
+		CHA_WA_LIMITED_GG4_4_02: 1,
+		CHA_WA_LIMITED_GG4_4_03: 3,
+		CHA_PA_LIMITED_GG4_4_01: 3,
+	},
 };
 
-const gsPool: RollChances = {
-	CHA_PA_LIMITED_GS_4_02: 10,
-	CHA_WA_LIMITED_GS_4_01: 10,
-	CHA_AR_LIMITED_GS_4_06: 24,
-	CHA_PR_LIMITED_GS_4_03: 24,
-	CHA_PR_LIMITED_GS_4_04: 24,
-	CHA_WA_LIMITED_GS_4_07: 24,
-	CHA_WI_LIMITED_GS_4_05: 24,
+// Re:ZERO: Emilia, Rem 1% / Ferris, Crusch, Ram, Beatrice 3% / ★3 86% (in-game notice as quoted by players)
+const reZeroBanner: CollabBanner = {
+	collabChance: 0.14,
+	heroes: {
+		CHA_WI_LIMITED_RZ_4_05: 1,
+		CHA_PA_LIMITED_RZ_4_03: 1,
+		CHA_PR_LIMITED_RZ_4_07: 3,
+		CHA_WA_LIMITED_RZ_4_02: 3,
+		CHA_WI_LIMITED_RZ_4_04: 3,
+		CHA_WI_LIMITED_RZ_4_06: 3,
+	},
 };
 
-const shPool: RollChances = {
-	CHA_PA_LIMITED_SH_4_02: 1,
-	CHA_PA_LIMITED_SH_4_03: 3,
-	CHA_WA_LIMITED_SH_4_01: 1,
-	CHA_WI_LIMITED_SH_4_04: 3,
-	CHA_WI_LIMITED_SH_4_05: 3,
-	CHA_WI_LIMITED_SH_4_06: 3,
+// Goblin Slayer: Goblin Slayer, Sword Maiden 1% /
+// Priestess, High Elf Archer, Dwarf Shaman, Lizardman Priest, Spearman 2.4% / ★3 86%
+const goblinSlayerBanner: CollabBanner = {
+	collabChance: 0.14,
+	heroes: {
+		CHA_PA_LIMITED_GS_4_02: 10,
+		CHA_WA_LIMITED_GS_4_01: 10,
+		CHA_AR_LIMITED_GS_4_06: 24,
+		CHA_PR_LIMITED_GS_4_03: 24,
+		CHA_PR_LIMITED_GS_4_04: 24,
+		CHA_WA_LIMITED_GS_4_07: 24,
+		CHA_WI_LIMITED_GS_4_05: 24,
+	},
 };
 
-const brskPool: RollChances = {
-	CHA_WA_LIMITED_BRSK_4_01: 1,
-	CHA_WA_LIMITED_BRSK_4_02: 1,
-	CHA_WI_LIMITED_BRSK_4_03: 2,
-	CHA_WA_LIMITED_BRSK_4_04: 2,
-	CHA_PA_LIMITED_BRSK_4_05: 2,
-	CHA_PR_LIMITED_BRSK_4_06: 2,
-	CHA_AR_LIMITED_BRSK_4_07: 2,
-	CHA_HU_LIMITED_BRSK_4_08: 2,
+// The Rising of the Shield Hero: Naofumi, Raphtalia 1% / Filo, Fitoria, Rishia, Glass 3% / ★3 86%
+const shieldHeroBanner: CollabBanner = {
+	collabChance: 0.14,
+	heroes: {
+		CHA_PA_LIMITED_SH_4_02: 1,
+		CHA_WA_LIMITED_SH_4_01: 1,
+		CHA_PA_LIMITED_SH_4_03: 3,
+		CHA_WI_LIMITED_SH_4_04: 3,
+		CHA_WI_LIMITED_SH_4_05: 3,
+		CHA_WI_LIMITED_SH_4_06: 3,
+	},
 };
 
-// Banner rates below are not published by the game, so every hero has the same chance
-const uniformPool = (formIds: string[]): RollChances => Object.fromEntries(formIds.map(id => [id, 1]));
+// Berserk: Guts, Griffith 1% / the other six 2% (official rates not reachable, as published by the CN BWIKI)
+const berserkBanner: CollabBanner = {
+	collabChance: 0.14,
+	heroes: {
+		CHA_WA_LIMITED_BRSK_4_01: 1,
+		CHA_WA_LIMITED_BRSK_4_02: 1,
+		CHA_WI_LIMITED_BRSK_4_03: 2,
+		CHA_WA_LIMITED_BRSK_4_04: 2,
+		CHA_PA_LIMITED_BRSK_4_05: 2,
+		CHA_PR_LIMITED_BRSK_4_06: 2,
+		CHA_AR_LIMITED_BRSK_4_07: 2,
+		CHA_HU_LIMITED_BRSK_4_08: 2,
+	},
+};
 
-const kof1Pool = uniformPool([
-	'CHA_PA_LIMITED_KOF1_4_BILLY',
-	'CHA_WI_LIMITED_KOF1_4_CHIZURU',
-	'CHA_WA_LIMITED_KOF1_4_IORI',
-	'CHA_WA_LIMITED_KOF1_4_KYO',
-	'CHA_HU_LIMITED_KOF1_4_LEONA',
-	'CHA_WA_LIMITED_KOF1_4_RUGAL',
-	'CHA_PR_LIMITED_KOF1_4_KENSOU',
-]);
+// KOF '98 contract: 18% for a collab hero, Kyo and Iori "lower" than the others but without numbers, so all equal.
+// Omega Rugal was the special dungeon clear reward, never a contract hero
+const kof1Banner: CollabBanner = {
+	collabChance: 0.18,
+	heroes: {
+		CHA_PA_LIMITED_KOF1_4_BILLY: 1,
+		CHA_WI_LIMITED_KOF1_4_CHIZURU: 1,
+		CHA_WA_LIMITED_KOF1_4_IORI: 1,
+		CHA_WA_LIMITED_KOF1_4_KYO: 1,
+		CHA_HU_LIMITED_KOF1_4_LEONA: 1,
+		CHA_PR_LIMITED_KOF1_4_KENSOU: 1,
+	},
+};
 
-const kof2Pool = uniformPool([
-	'CHA_PR_LIMITED_KOF2_4_ATHENA',
-	'CHA_WA_LIMITED_KOF2_4_CHRIS',
-	'CHA_PA_LIMITED_KOF2_4_KIM',
-	'CHA_AR_LIMITED_KOF2_4_MAI',
-	'CHA_WI_LIMITED_KOF2_4_SHERMIE',
-	'CHA_PA_LIMITED_KOF2_4_TERRY',
-]);
+// KOF contract 2: officially only "Chris and Mai appear by the lower chance";
+// numbers are the community draw survey estimate (Chris, Mai 1% / others 4% / ★3 82%)
+const kof2Banner: CollabBanner = {
+	collabChance: 0.18,
+	heroes: {
+		CHA_WA_LIMITED_KOF2_4_CHRIS: 1,
+		CHA_AR_LIMITED_KOF2_4_MAI: 1,
+		CHA_PR_LIMITED_KOF2_4_ATHENA: 4,
+		CHA_PA_LIMITED_KOF2_4_KIM: 4,
+		CHA_WI_LIMITED_KOF2_4_SHERMIE: 4,
+		CHA_PA_LIMITED_KOF2_4_TERRY: 4,
+	},
+};
 
-const ys8Pool = uniformPool([
-	'CHA_WA_LIMITED_YS8_4_ADOL',
-	'CHA_WA_LIMITED_YS8_4_DANA',
-	'CHA_HU_LIMITED_YS8_4_HUMMEL',
-	'CHA_WA_LIMITED_YS8_4_LAXIA',
-	'CHA_PA_LIMITED_YS8_4_RICOTTA',
-	'CHA_PA_LIMITED_YS8_4_SAHAD',
-]);
+// Ys VIII: Adol, Dana 1% / Hummel, Ricotta, Laxia, Sahad 3% (official KR notice)
+const ys8Banner: CollabBanner = {
+	collabChance: 0.14,
+	heroes: {
+		CHA_WA_LIMITED_YS8_4_ADOL: 1,
+		CHA_WA_LIMITED_YS8_4_DANA: 1,
+		CHA_HU_LIMITED_YS8_4_HUMMEL: 3,
+		CHA_WA_LIMITED_YS8_4_LAXIA: 3,
+		CHA_PA_LIMITED_YS8_4_RICOTTA: 3,
+		CHA_PA_LIMITED_YS8_4_SAHAD: 3,
+	},
+};
 
-const rwbyPool = uniformPool([
-	'CHA_WA_LIMITED_RB_4_BLAKE',
-	'CHA_HU_LIMITED_RB_4_NORA',
-	'CHA_PA_LIMITED_RB_4_PYRRHA',
-	'CHA_HU_LIMITED_RB_4_RUBY',
-	'CHA_WA_LIMITED_RB_4_WEISS',
-	'CHA_PA_LIMITED_RB_4_YANG',
-	'CHA_AR_LIMITED_RB2_4_01',
-	'CHA_WA_LIMITED_RB2_4_02',
-]);
+// RWBY (2022, with the returning heroes): Cinder Fall, Raven Branwen 1% / the other six 2% / ★3 86%
+const rwbyBanner: CollabBanner = {
+	collabChance: 0.14,
+	heroes: {
+		CHA_AR_LIMITED_RB2_4_01: 1,
+		CHA_WA_LIMITED_RB2_4_02: 1,
+		CHA_WA_LIMITED_RB_4_BLAKE: 2,
+		CHA_HU_LIMITED_RB_4_NORA: 2,
+		CHA_PA_LIMITED_RB_4_PYRRHA: 2,
+		CHA_HU_LIMITED_RB_4_RUBY: 2,
+		CHA_WA_LIMITED_RB_4_WEISS: 2,
+		CHA_PA_LIMITED_RB_4_YANG: 2,
+	},
+};
 
-const octopathPool = uniformPool([
-	'CHA_PR_LIMITED_OT_4_01',
-	'CHA_WI_LIMITED_OT_4_02',
-	'CHA_HU_LIMITED_OT_4_03',
-	'CHA_WA_LIMITED_OT_4_04',
-	'CHA_AR_LIMITED_OT_4_05',
-	'CHA_PA_LIMITED_OT_4_06',
-	'CHA_WA_LIMITED_OT_4_07',
-	'CHA_AR_LIMITED_OT_4_08',
-]);
+// Octopath Traveler: Tressa, Primrose 1% / the other six 2% / ★3 86%
+const octopathBanner: CollabBanner = {
+	collabChance: 0.14,
+	heroes: {
+		CHA_HU_LIMITED_OT_4_03: 1,
+		CHA_AR_LIMITED_OT_4_05: 1,
+		CHA_PR_LIMITED_OT_4_01: 2,
+		CHA_WI_LIMITED_OT_4_02: 2,
+		CHA_WA_LIMITED_OT_4_04: 2,
+		CHA_PA_LIMITED_OT_4_06: 2,
+		CHA_WA_LIMITED_OT_4_07: 2,
+		CHA_AR_LIMITED_OT_4_08: 2,
+	},
+};
 
-const etoRangersPool = uniformPool([
-	'CHA_WA_LIMITED_ER_4_01',
-	'CHA_PA_LIMITED_ER_4_02',
-	'CHA_PA_LIMITED_ER_4_03',
-	'CHA_PR_LIMITED_ER_4_04',
-	'CHA_WI_LIMITED_ER_4_05',
-	'CHA_PR_LIMITED_ER_4_06',
-	'CHA_AR_LIMITED_ER_4_07',
-	'CHA_PR_LIMITED_ER_4_08',
-	'CHA_PA_LIMITED_ER_4_09',
-	'CHA_PA_LIMITED_ER_4_10',
-	'CHA_WA_LIMITED_ER_4_11',
-	'CHA_PA_LIMITED_ER_4_12',
-	'CHA_WI_LIMITED_ER_4_21',
-]);
+// Eto Rangers Contract No.1: Bakumaru, Cream 1% / Hols, Gao, Drago, Nyorori 3% / ★3 86%
+const etoRangers1Banner: CollabBanner = {
+	collabChance: 0.14,
+	heroes: {
+		CHA_WA_LIMITED_ER_4_01: 1,
+		CHA_PR_LIMITED_ER_4_04: 1,
+		CHA_PA_LIMITED_ER_4_02: 3,
+		CHA_PA_LIMITED_ER_4_03: 3,
+		CHA_WI_LIMITED_ER_4_05: 3,
+		CHA_PR_LIMITED_ER_4_06: 3,
+	},
+};
 
-const ggStrivePool = uniformPool([
-	'CHA_PA_LIMITED_GG4_4_01',
-	'CHA_WA_LIMITED_GG4_4_02',
-	'CHA_WA_LIMITED_GG4_4_03',
-]);
-
-const deemoPool = uniformPool([
-	'CHA_PR_LIMITED_4_DM2',
-	'CHA_WI_LIMITED_4_DEEMO',
-]);
+// Eto Rangers Contract No.2: Tart, Pochiro 1% / Pakaracchi, Souffle, Monk, Urii 3% / ★3 86%.
+// Nyanma was not in either contract
+const etoRangers2Banner: CollabBanner = {
+	collabChance: 0.14,
+	heroes: {
+		CHA_PA_LIMITED_ER_4_10: 1,
+		CHA_WA_LIMITED_ER_4_11: 1,
+		CHA_AR_LIMITED_ER_4_07: 3,
+		CHA_PR_LIMITED_ER_4_08: 3,
+		CHA_PA_LIMITED_ER_4_09: 3,
+		CHA_PA_LIMITED_ER_4_12: 3,
+	},
+};
 
 const HEROES_HIDDEN = [
 	'legendary',
@@ -160,7 +225,7 @@ type Puller = (count: number) => HeroForm[];
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- kept for the commented-out "unknown pull type" reply
 const PullValues = stringTuple(
-	'gg1', 'gg2', 'rz', 'sh', 'contract', 'gs', 'brsk', 'kof1', 'kof2', 'ys8', 'rwby', 'ot', 'er', 'ggst', 'deemo'
+	'gg1', 'gg2', 'rz', 'sh', 'contract', 'gs', 'brsk', 'kof1', 'kof2', 'ys8', 'rwby', 'ot', 'er1', 'er2', 'ggst'
 );
 
 type PullType = typeof PullValues[number];
@@ -183,9 +248,9 @@ const cmdArgs = {
 			'Ys VIII': 'ys8',
 			RWBY: 'rwby',
 			'Octopath Traveler': 'ot',
-			'Eto Rangers': 'er',
+			'Eto Rangers 1': 'er1',
+			'Eto Rangers 2': 'er2',
 			'Guilty Gear -Strive-': 'ggst',
-			'DEEMO II': 'deemo',
 		},
 	}),
 	count: ArgumentType.number({
@@ -245,30 +310,24 @@ export class PullCommand extends BaseCommand<Arguments> {
 		}
 		sortedForms.guaranteed = sortedForms[4].filter(f => f.hero.type === 'contract');
 
-		const ggPull = (count: number, chances: RollChances): HeroForm[] => Array.from({ length: count })
+		const collabPull = (count: number, banner: CollabBanner): HeroForm[] => Array.from({ length: count })
 			.map((_, idx) => {
 				if ((1 + idx) % 10) {
-					const grade = pickGrade({ 4: 0.17 }, 3);
+					const grade = pickGrade({ 4: banner.collabChance }, 3);
 
 					if (grade === 3) {
 						return sortedForms[3][random(0, sortedForms[3].length - 1)];
 					}
-
-					const form = chancesRoll(chances);
-
-					return secretFormsById[form];
 				}
 
-				const form = chancesRoll(chances);
-
-				return secretFormsById[form];
+				return secretFormsById[chancesRoll(banner.heroes)];
 			});
 
 		this.pulls = {
-			gg1: count => ggPull(count, gg1Pool),
-			gg2: count => ggPull(count, gg2Pool),
-			rz: count => ggPull(count, reZeroPool),
-			sh: count => ggPull(count, shPool),
+			gg1: count => collabPull(count, gg1Banner),
+			gg2: count => collabPull(count, gg2Banner),
+			rz: count => collabPull(count, reZeroBanner),
+			sh: count => collabPull(count, shieldHeroBanner),
 			contract: count => Array.from({ length: count })
 				.map((_, idx) => {
 					if ((1 + idx) % 10) {
@@ -278,16 +337,16 @@ export class PullCommand extends BaseCommand<Arguments> {
 					}
 					return sortedForms.guaranteed[random(0, sortedForms.guaranteed.length - 1)];
 				}),
-			gs: count => ggPull(count, gsPool),
-			brsk: count => ggPull(count, brskPool),
-			kof1: count => ggPull(count, kof1Pool),
-			kof2: count => ggPull(count, kof2Pool),
-			ys8: count => ggPull(count, ys8Pool),
-			rwby: count => ggPull(count, rwbyPool),
-			ot: count => ggPull(count, octopathPool),
-			er: count => ggPull(count, etoRangersPool),
-			ggst: count => ggPull(count, ggStrivePool),
-			deemo: count => ggPull(count, deemoPool),
+			gs: count => collabPull(count, goblinSlayerBanner),
+			brsk: count => collabPull(count, berserkBanner),
+			kof1: count => collabPull(count, kof1Banner),
+			kof2: count => collabPull(count, kof2Banner),
+			ys8: count => collabPull(count, ys8Banner),
+			rwby: count => collabPull(count, rwbyBanner),
+			ot: count => collabPull(count, octopathBanner),
+			er1: count => collabPull(count, etoRangers1Banner),
+			er2: count => collabPull(count, etoRangers2Banner),
+			ggst: count => collabPull(count, ggStriveBanner),
 		};
 	}
 
@@ -317,7 +376,7 @@ export class PullCommand extends BaseCommand<Arguments> {
 
 		const embed = new EmbedBuilder()
 			.setAuthor({
-				name: `${author.username}#${author.tag}`,
+				name: author.tag,
 				iconURL: author.avatarURL() || undefined,
 			})
 			.setImage('attachment://pull.png')

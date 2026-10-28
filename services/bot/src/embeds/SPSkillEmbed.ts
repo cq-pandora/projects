@@ -25,8 +25,7 @@ export default class SPSkillEmbed extends PaginationEmbed {
 				.toEmbed()
 		));
 
-		this.setArray(embeds)
-			.showPageIndicator(false);
+		this.setArray(embeds);
 
 		if (page) {
 			this.setPage(page);

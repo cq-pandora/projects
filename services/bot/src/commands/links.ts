@@ -11,7 +11,7 @@ import {
 // TODO own abstraction
 const embed = new EmbedBuilder()
 	.setTitle('Useful Links')
-	.setDescription('Visit the [Crusaders Quest Database (cqdb)](https://goo.gl/fdg6M8)!')
+	.setDescription('Visit the [Crusaders Quest Database (cqdb)](https://peterthehan.github.io/cqdb/)!')
 	.addFields(
 		config.links.map(v => ({
 			name: v.title,

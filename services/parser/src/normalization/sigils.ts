@@ -30,7 +30,8 @@ export async function normalize(input: SigilsNormalizationInput): Promise<Normal
 	const sigilsSets = arrayToId(sigilsSetsRaw.carve_stone_set);
 	const sigilsStats = arrayToId(sigilsOptionsRaw.carve_stone_option);
 
-	const sigilsTranslationsIndex = {} as Record<string, number>;
+	// Generic sigils reuse one name for all six grades, so a name points at every grade
+	const sigilsTranslationsIndex = {} as Record<string, number[]>;
 
 	const sigils = sigilsRaw.carve_stone.map((raw, idx) => {
 		let set = undefined as SigilPair | undefined;
@@ -68,7 +69,7 @@ export async function normalize(input: SigilsNormalizationInput): Promise<Normal
 			})
 			.reduce((res, el) => sumStats(res, el));
 
-		sigilsTranslationsIndex[raw.name] = idx;
+		(sigilsTranslationsIndex[raw.name] ??= []).push(idx);
 
 		return new Sigil({
 			id: raw.id,
@@ -87,6 +88,8 @@ export async function normalize(input: SigilsNormalizationInput): Promise<Normal
 
 	return {
 		entities: sigils,
-		translationIndex: sigilsTranslationsIndex,
+		translationIndex: Object.fromEntries(
+			Object.entries(sigilsTranslationsIndex).map(([name, indices]) => [name, indices.join(',')])
+		),
 	};
 }

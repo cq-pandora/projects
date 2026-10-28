@@ -1,10 +1,15 @@
-import { FishingGear, FishingGearType, FishHabitat } from '@cquest/entities';
+import {
+	FishingGear, FishingGearType, FishHabitat, FishingGearSource
+} from '@cquest/entities';
 
 import { NormalizationResult } from './common-types';
 
 import { readJSON } from '../util';
 
-import { FishingGearRaw, Habitat, Type } from './raw-types/fishing-gear';
+import {
+	FishingGearRaw, Habitat, Howtoget, Type
+} from './raw-types/fishing-gear';
+import { FisheriesRaw } from './raw-types/fisheries';
 
 import { FishingGearNormalizationInput } from './input';
 
@@ -26,8 +31,23 @@ function typeMapper(type: Type): FishingGearType {
 	}
 }
 
+function howToGetMapper(howToGet: Howtoget): FishingGearSource {
+	switch (howToGet) {
+		case Howtoget.Collection: return 'collection';
+		case Howtoget.Event: return 'event';
+		case Howtoget.None: return 'none';
+		case Howtoget.Shop: return 'shop';
+		default: throw new Error(`Unknown fishing gear source: ${howToGet}`);
+	}
+}
+
 export async function normalize(input: FishingGearNormalizationInput): Promise<NormalizationResult<FishingGear>> {
 	const fishingGearRaw = await readJSON(input.fishingGearRawPath) as FishingGearRaw;
+	const fisheriesRaw = await readJSON(input.fisheriesRawPath) as FisheriesRaw;
+
+	const collectionRewards = new Map(
+		fisheriesRaw.fishery.filter(f => f.bonusvalue).map(f => [f.bonusvalue as string, f.name])
+	);
 
 	const fishingGearTranslationIndices = {} as Record<string, number>;
 
@@ -49,6 +69,8 @@ export async function normalize(input: FishingGearNormalizationInput): Promise<N
 			price: g.cost_amount,
 			image: g.geartexture,
 			description: g.desc,
+			howToGet: howToGetMapper(g.howtoget),
+			collectionReward: collectionRewards.get(g.id) ?? null,
 		});
 	});
 

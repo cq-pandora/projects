@@ -37,8 +37,13 @@ class BerryCommand extends BaseCommand<Arguments> {
 			};
 		}
 
+		// One berry family (same stat) reads best from the smallest to the legendary one
+		const entities = candidates.every(b => b.targetStat === candidates[0].targetStat)
+			? [...candidates].sort((a, b) => a.grade - b.grade)
+			: candidates;
+
 		const embed = new BerriesEmbed({
-			initial, entities: candidates,
+			initial, entities,
 		});
 
 		await embed.send();

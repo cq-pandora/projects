@@ -23,6 +23,18 @@ export interface IllustCollection {
 	id: string;
 }
 
+export interface PortraitDataRaw {
+	status: string;
+	portrait: PortraitData[];
+}
+
+/** Portrait key -> sprites it is drawn from (with placement), e.g. `portrait_atalante_default` -> `portrait_atlanta_default` */
+export interface PortraitData {
+	id: string;
+	scale: number;
+	value: Record<string, { x: number; y: number; z: number }>;
+}
+
 export enum Class {
 	ClaArcher = 'CLA_ARCHER',
 	ClaChamp = 'CLA_CHAMP',

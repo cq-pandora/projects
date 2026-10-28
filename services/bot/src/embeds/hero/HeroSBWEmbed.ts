@@ -31,7 +31,7 @@ export default class HeroFormsEmbed extends PaginationEmbed {
 			.showPageIndicator(false);
 
 		if (page) {
-			this.setPage(Math.min(page, embeds.length));
+			this.setPage(page);
 		}
 	}
 }

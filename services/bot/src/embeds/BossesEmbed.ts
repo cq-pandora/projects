@@ -15,13 +15,14 @@ export default class BossesEmbed extends PaginationEmbed {
 	constructor({ initial, bosses }: IBossesEmbedOptions) {
 		super({ initial });
 
+		// Same-named bosses appear in many stages with different stats; the game id tells them apart
 		const embeds = arraify(bosses).map(boss => new PandoraEmbed()
 			.setTitle(l(boss.name))
 			.setDescription(statsToString(boss))
 			.setThumbnail(imageUrl(`heroes/${boss.image}`))
+			.setFooter(boss.id)
 			.toEmbed());
 
-		this.setArray(embeds)
-			.showPageIndicator(false);
+		this.setArray(embeds);
 	}
 }

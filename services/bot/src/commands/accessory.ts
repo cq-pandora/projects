@@ -30,7 +30,12 @@ export class AccessoryCommand extends BaseCommand<Arguments> {
 		let entities: Accessory[];
 
 		if (args.name) {
-			const { results } = extractResult(accessories.searchAll(args.name));
+			// "earring"/"necklace" (singular or plural) lists that slot; names are searched otherwise
+			const typeQuery = args.name.trim().toLowerCase().replace(/s$/, '');
+			const ofType = accessories.list().filter(a => a.type === typeQuery);
+			const { results } = ofType.length
+				? { results: ofType }
+				: extractResult(accessories.searchAll(args.name));
 
 			if (!results.length) {
 				await reply('Accessory not found!');

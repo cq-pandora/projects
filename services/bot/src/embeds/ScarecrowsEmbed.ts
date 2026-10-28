@@ -23,6 +23,6 @@ export default class ScarecrowsEmbed extends PaginationEmbed {
 				.setThumbnail(imageUrl(`heroes/${scarecrow.image}`))
 				.toEmbed());
 
-		this.setArray(embeds).showPageIndicator(false);
+		this.setArray(embeds);
 	}
 }

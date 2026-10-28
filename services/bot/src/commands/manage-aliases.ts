@@ -18,10 +18,10 @@ const aliasesToEmbeds = (ts: Alias[]): EmbedSource[] => {
 		.map(({ context, alias, for: fogh }) => `${context}: ${alias} => ${fogh}`)
 		.join('\n');
 
-	return splitText(strings, 1024, '\n').map((text: string, idx: number, total: string[]) => (
+	// PaginationEmbed adds the "Page x/y" footer itself
+	return splitText(strings, 1024, '\n').map((text: string) => (
 		new PandoraEmbed()
 			.setTitle('Aliases list')
-			.setFooter(`Page ${idx}/${total}`)
 			.addField('<context>: <alias> => <targer>', text)
 			.toEmbed()
 	));
@@ -51,7 +51,6 @@ const actions: Record<string, Action> = {
 			const embed = new PaginationEmbed({ initial })
 				.setArray(aliasesToEmbeds(list))
 				// .setChannel(message.channel)
-				.showPageIndicator(false)
 				.send();
 
 			await embed;
@@ -70,10 +69,9 @@ const actions: Record<string, Action> = {
 				return;
 			}
 
+			// .setChannel(message.channel)
 			const embed = new PaginationEmbed({ initial })
-				.setArray(aliasesToEmbeds(list))
-				// .setChannel(message.channel)
-				.showPageIndicator(false);
+				.setArray(aliasesToEmbeds(list));
 
 			await embed.send();
 		} catch (error) {

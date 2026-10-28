@@ -1,5 +1,5 @@
 import { InheritanceLevel } from '@cquest/entities';
-import { heroes, extractResult } from '@cquest/data-provider';
+import { extractResult, inheritance as inheritanceStats } from '@cquest/data-provider';
 
 import BaseCommand from './abstract/BaseCommand';
 
@@ -7,11 +7,12 @@ import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 import { HeroInheritanceEmbed } from '../embeds';
+import { searchHero } from '../util';
 
 const cmdArgs = {
 	name: ArgumentType.string({
 		required: true,
-		description: 'Hero name',
+		description: 'Hero name. Add a class or type to tell same-named heroes apart, e.g. "beatrice wizard"',
 	}),
 	inheritance: ArgumentType.number({
 		required: false,
@@ -34,7 +35,7 @@ export class InheritCommand extends BaseCommand<Arguments> {
 	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { name, inheritance } = args;
 
-		const searchResult = heroes.search(name);
+		const searchResult = searchHero(name, 6);
 
 		if (!searchResult) {
 			await reply('Hero not found!');
@@ -56,10 +57,21 @@ export class InheritCommand extends BaseCommand<Arguments> {
 			};
 		}
 
+		const maxLevel = Object.keys(inheritanceStats[hero.clazz]).length;
+
+		if (!Number.isInteger(inheritance) || inheritance < 0 || inheritance > maxLevel) {
+			await reply(`Inheritance level must be a whole number from 0 to ${maxLevel}!`);
+
+			return {
+				statusCode: CommandResultCode.SUBENTITY_NOT_FOUND,
+				args: JSON.stringify({ name, inheritance }),
+			};
+		}
+
 		const levels = (
 			(inheritance !== 0)
 				? [inheritance]
-				: [0, 5, 10, 15, 20, 25, 30, 35, 40]
+				: [0, 5, 10, 15, 20, 25, 30, 35, 40].filter(level => level <= maxLevel)
 		) as InheritanceLevel[];
 
 		const embed = new HeroInheritanceEmbed({

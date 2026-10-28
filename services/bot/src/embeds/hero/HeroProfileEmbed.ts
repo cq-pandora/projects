@@ -23,14 +23,14 @@ export default class HeroProfileEmbed extends PaginationEmbed {
 			.setColor(HeroClassColors[hero.clazz])
 			.setDescription(l(profile.notes))
 			.addField('Gender', capitalizeFirstLetter(hero.gender), true)
-			.addField('Age', profile.age, true)
-			.addField('Birthday', profile.birthday, true)
+			// Usually plain values ("19", "6/10"), but unknown ones are the TEXT_PROFILE_UNKNOWN key
+			.addField('Age', l(profile.age), true)
+			.addField('Birthday', l(profile.birthday), true)
 			.addField('Hobby', l(profile.hobby))
 			.addField('Likes', l(profile.likes))
 			.addField('Hates', l(profile.hates))
 			.addField('Oztalk', profile.oztalk ? 'Yes' : 'No', true);
 
-		this.setArray([embed.toEmbed()])
-			.showPageIndicator(false);
+		this.setArray([embed.toEmbed()]);
 	}
 }

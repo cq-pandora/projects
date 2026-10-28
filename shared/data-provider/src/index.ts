@@ -11,8 +11,9 @@ export const {
 	init, reinit, setDataSource, getDataSource, setAliasProvider, getAliasProvider, addTranslationIndices
 } = defaultInstance;
 
-export function translate(keyRaw?: string, locale: Locale = 'en_us'): string {
-	if (typeof keyRaw === 'undefined') return '';
+export function translate(keyRaw?: string | null, locale: Locale = 'en_us'): string {
+	// Deserialized entities carry `null` for absent optional keys (e.g. promotable heroes have no recruit dialogue)
+	if (keyRaw === undefined || keyRaw === null) return '';
 
 	const key = keyRaw.toUpperCase();
 

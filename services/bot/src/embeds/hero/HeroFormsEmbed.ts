@@ -20,17 +20,24 @@ export default class HeroFormsEmbed extends PaginationEmbed {
 			? '-'
 			: `TEXT_CHAMPION_DOMAIN_${hero.domain}`;
 
-		const embeds = hero.forms.map(form => new PandoraEmbed()
-			.setTitle(`${l(form.name)} (${form.star}★)`)
-			.setThumbnail(imageUrl(`heroes/${form.image}`))
-			.setDescription(l(form.lore))
-			.setColor(HeroClassColors[hero.clazz])
-			.addField('Class', capitalizeFirstLetter(hero.clazz), true)
-			.addField('Type', capitalizeFirstLetter(hero.type), true)
-			.addField('Faction', l(faction), true)
-			.addField('Gender', capitalizeFirstLetter(hero.gender), true)
-			.addField('Recruit dialogue', l(form.recruitDialog), false)
-			.toEmbed());
+		const embeds = hero.forms.map((form) => {
+			const embed = new PandoraEmbed()
+				.setTitle(`${l(form.name)} (${form.star}★)`)
+				.setThumbnail(imageUrl(`heroes/${form.image}`))
+				.setDescription(l(form.lore))
+				.setColor(HeroClassColors[hero.clazz])
+				.addField('Class', capitalizeFirstLetter(hero.clazz), true)
+				.addField('Type', capitalizeFirstLetter(hero.type), true)
+				.addField('Faction', l(faction), true)
+				.addField('Gender', capitalizeFirstLetter(hero.gender), true);
+
+			// Promotable and event heroes have no recruit dialogue
+			if (form.recruitDialog) {
+				embed.addField('Recruit dialogue', l(form.recruitDialog), false);
+			}
+
+			return embed.toEmbed();
+		});
 
 		this.setArray(embeds)
 			.showPageIndicator(false);

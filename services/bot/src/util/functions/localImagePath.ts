@@ -1,3 +1,5 @@
+import { join as pathJoin } from 'node:path';
+
 import config from '../../config';
 
-export default (filename: string): string => `${config.localImagePrefix}${filename}${config.imageSuffix}`;
+export default (filename: string): string => pathJoin(config.localImagePrefix, `${filename}${config.imageSuffix}`);

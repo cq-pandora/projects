@@ -1,6 +1,3 @@
-import { Message } from 'discord.js';
-
-import { GenericConstructor } from '@cquest/entities';
 import {
 	berries, bosses, champions, fishes, fishingGear, goddesses, factions, heroes, spSkills, sigils, portraits
 } from '@cquest/data-provider';
@@ -12,27 +9,35 @@ import BaseCommand from './abstract/BaseCommand';
 import {
 	BerriesEmbed, BossesEmbed, ChampionEmbed, FishesEmbed, FishingGearsEmbed, GoddessesEmbed, FactionsEmbed,
 	HeroBlockEmbed, HeroFormsEmbed, HeroSBWEmbed, HeroSkinsEmbed, PortraitsEmbed, SigilsEmbed, SPSkillEmbed,
-	PaginationEmbed,
+	PaginationEmbed, InitialMessageSource,
 } from '../embeds';
 
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
 
-class Picker<T> {
-	private readonly collection: T[];
-	private readonly embed: GenericConstructor<PaginationEmbed>;
+// Embeds take differently named options, so every collection supplies its own factory
+type EmbedFactory<T> = (initial: InitialMessageSource, entity: T) => PaginationEmbed;
 
-	constructor(collection: T[], embed: GenericConstructor<PaginationEmbed>) {
+interface IPicker {
+	pick(initial: InitialMessageSource): PaginationEmbed;
+}
+
+class Picker<T> implements IPicker {
+	private readonly collection: T[];
+	private readonly factory: EmbedFactory<T>;
+
+	constructor(collection: T[], factory: EmbedFactory<T>) {
 		this.collection = collection;
-		this.embed = embed;
+		this.factory = factory;
 	}
 
-	pick(message?: Message): PaginationEmbed {
-		// eslint-disable-next-line new-cap
-		return new this.embed(message, this.collection[random(0, this.collection.length - 1)]);
+	pick(initial: InitialMessageSource): PaginationEmbed {
+		return this.factory(initial, this.collection[random(0, this.collection.length - 1)]);
 	}
 }
+
+const locales = ['en_us'];
 
 const CollectionValues = stringTuple('berry', 'boss', 'champion', 'fish', 'fishing-gear',
 	'rod', 'bait', 'float', 'goddess', 'faction',
@@ -61,34 +66,56 @@ export class PickCommand extends BaseCommand<Arguments> {
 	readonly description = 'Pick random entity from specified collection';
 	readonly protected = false;
 
-	private pickMapping?: Record<CollectionName, Picker<object>>;
+	private pickMapping?: Record<CollectionName, IPicker>;
 
 	private initializePickMapping(): void {
 		const fishingGearz = fishingGear.list();
 		const heroez = heroes.list();
+		const gearPicker = (gears: typeof fishingGearz) => new Picker(
+			gears,
+			(initial, gear) => new FishingGearsEmbed({ initial, gears: gear })
+		);
 
 		this.pickMapping = {
-			berry: new Picker(berries.list(), BerriesEmbed),
-			boss: new Picker(bosses.list(), BossesEmbed),
-			champion: new Picker(champions.list(), ChampionEmbed),
-			fish: new Picker(fishes.list(), FishesEmbed),
-			'fishing-gear': new Picker(fishingGearz, FishingGearsEmbed),
-			rod: new Picker(fishingGearz.filter(g => g.type === 'item_rod'), FishingGearsEmbed),
-			bait: new Picker(fishingGearz.filter(g => g.type === 'item_bait'), FishingGearsEmbed),
-			float: new Picker(fishingGearz.filter(g => g.type === 'item_float'), FishingGearsEmbed),
-			goddess: new Picker(goddesses.list(), GoddessesEmbed),
-			faction: new Picker(factions.list(), FactionsEmbed),
-			block: new Picker(heroez, HeroBlockEmbed),
-			sbw: new Picker(heroez.filter(h => h.sbws?.length), HeroSBWEmbed),
-			hero: new Picker(heroez, HeroFormsEmbed),
-			skin: new Picker(heroez.filter(h => h.skins?.length), HeroSkinsEmbed),
-			portrait: new Picker(portraits.list(), PortraitsEmbed),
-			sigil: new Picker(sigils.list(), SigilsEmbed),
-			skill: new Picker(spSkills.list(), SPSkillEmbed),
+			berry: new Picker(berries.list(), (initial, berry) => new BerriesEmbed({ initial, entities: berry })),
+			boss: new Picker(bosses.list(), (initial, boss) => new BossesEmbed({ initial, bosses: boss })),
+			champion: new Picker(champions.list(), (initial, champion) => new ChampionEmbed({ initial, champion })),
+			fish: new Picker(fishes.list(), (initial, fish) => new FishesEmbed({ initial, fishes: fish })),
+			'fishing-gear': gearPicker(fishingGearz),
+			rod: gearPicker(fishingGearz.filter(g => g.type === 'item_rod')),
+			bait: gearPicker(fishingGearz.filter(g => g.type === 'item_bait')),
+			float: gearPicker(fishingGearz.filter(g => g.type === 'item_float')),
+			goddess: new Picker(
+				goddesses.list(),
+				(initial, goddess) => new GoddessesEmbed({ initial, goddesses: goddess })
+			),
+			faction: new Picker(
+				factions.list(),
+				(initial, faction) => new FactionsEmbed({ initial, factions: faction })
+			),
+			block: new Picker(heroez, (initial, hero) => new HeroBlockEmbed({ initial, hero, locales })),
+			sbw: new Picker(
+				heroez.filter(h => h.sbws?.length),
+				(initial, hero) => new HeroSBWEmbed({ initial, hero, locales })
+			),
+			hero: new Picker(heroez, (initial, hero) => new HeroFormsEmbed({ initial, hero, locales })),
+			skin: new Picker(
+				heroez.filter(h => h.skins?.length),
+				(initial, hero) => new HeroSkinsEmbed({ initial, hero, locales })
+			),
+			portrait: new Picker(
+				portraits.list(),
+				(initial, portrait) => new PortraitsEmbed({ initial, portraits: portrait.keys })
+			),
+			sigil: new Picker(sigils.list(), (initial, sigil) => new SigilsEmbed({ initial, sigs: sigil })),
+			skill: new Picker(
+				spSkills.list(),
+				(initial, skill) => new SPSkillEmbed({ initial, skill, page: undefined })
+			),
 		};
 	}
 
-	async run({ args, reply }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
+	async run({ args, reply, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { collection } = args;
 
 		if (this.pickMapping === undefined) {
@@ -104,7 +131,7 @@ export class PickCommand extends BaseCommand<Arguments> {
 			};
 		}
 
-		await this.pickMapping![collection as CollectionName].pick(undefined).send();
+		await this.pickMapping![collection as CollectionName].pick(initial).send();
 
 		return {
 			statusCode: CommandResultCode.SUCCESS,

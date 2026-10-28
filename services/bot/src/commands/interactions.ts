@@ -1,7 +1,4 @@
-import {
-	heroes, interactions, translate, extractResult
-} from '@cquest/data-provider';
-import { Interaction } from '@cquest/entities';
+import { interactions, translate, extractResult } from '@cquest/data-provider';
 import logger from '@cquest/logger';
 
 import BaseCommand from './abstract/BaseCommand';
@@ -9,12 +6,14 @@ import BaseCommand from './abstract/BaseCommand';
 import {
 	CommandCategory, CommandResult, CommandPayload, CommandResultCode, ArgumentType
 } from '../common-types';
-import { renderInteraction, chunk, allSettled } from '../util';
+import {
+	renderInteraction, chunk, allSettled, searchHero
+} from '../util';
 
 const cmdArgs = {
 	name: ArgumentType.string({
 		required: true,
-		description: 'Hero to filter by participation',
+		description: 'Hero to filter by participation. Add a class or type to tell same-named heroes apart',
 	}),
 };
 
@@ -33,7 +32,7 @@ export class InteractionsCommand extends BaseCommand<Arguments> {
 
 		const { name } = args;
 
-		const searchResult = heroes.search(name);
+		const searchResult = searchHero(name);
 
 		if (!searchResult) {
 			await reply('Hero not found!');
@@ -45,10 +44,10 @@ export class InteractionsCommand extends BaseCommand<Arguments> {
 
 		const { result: hero, locales } = extractResult(searchResult);
 
-		const heroInteractions = hero.forms.reduce(
-			(r, v) => r.concat(extractResult(interactions.searchAll(v.id)).results),
-			[] as Interaction[]
-		);
+		// An interaction can feature several forms of the same hero; list it once
+		const heroInteractions = [...new Set(hero.forms.flatMap(
+			form => extractResult(interactions.searchAll(form.id)).results
+		))];
 
 		if (!heroInteractions.length) {
 			await reply('Hero has no interactions!');
@@ -61,7 +60,7 @@ export class InteractionsCommand extends BaseCommand<Arguments> {
 		const ints = await allSettled(heroInteractions.map(
 			async i => {
 				const actors = i.actors.map(actor => ({
-					text: translate(actor.text, locales[0]).replace('\n', ' '),
+					text: translate(actor.text, locales[0]).replaceAll('\n', ' '),
 					imageKey: actor.imageKey,
 				}));
 
@@ -72,14 +71,6 @@ export class InteractionsCommand extends BaseCommand<Arguments> {
 		));
 
 		const succeededInts = [] as Buffer[];
-
-		if (!heroInteractions.length) {
-			await reply('Hero has no interactions!');
-
-			return {
-				statusCode: CommandResultCode.SUCCESS,
-			};
-		}
 
 		for (const int of ints) {
 			if (int.status === 'rejected') {

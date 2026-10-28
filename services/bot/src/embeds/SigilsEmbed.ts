@@ -43,6 +43,6 @@ export default class SigilsEmbed extends PaginationEmbed {
 				.toEmbed();
 		});
 
-		this.setArray(embeds).showPageIndicator(false);
+		this.setArray(embeds);
 	}
 }

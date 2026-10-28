@@ -28,7 +28,6 @@ export default class FactionsEmbed extends PaginationEmbed {
 				.toEmbed();
 		});
 
-		this.setArray(embeds)
-			.showPageIndicator(false);
+		this.setArray(embeds);
 	}
 }

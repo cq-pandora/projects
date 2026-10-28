@@ -1,4 +1,4 @@
-import { Fish } from '@cquest/entities';
+import { Fish, FishReward } from '@cquest/entities';
 import { translate as l } from '@cquest/data-provider';
 
 import {
@@ -9,12 +9,18 @@ import config from '../config';
 import PaginationEmbed, { InitialMessageSource } from './PaginationEmbed';
 import PandoraEmbed from './PandoraEmbed';
 
-const rewards: Record<string, string> = {
+const rewardEmojis: Record<string, string> = {
 	ITEM_FISHCOIN: config.emojis.fishcoin,
 	ITEM_GOLD: config.emojis.gold,
-	RANDOMBOX_EVENT_GOOD_CATBOX: config.emojis.mossyCatChest,
-	RANDOMBOX_EVENT_NORMAL_CATBOX: config.emojis.intactCatChest,
+	RANDOMBOX_EVENT_GOOD_CATBOX: config.emojis.intactCatChest,
+	RANDOMBOX_EVENT_NORMAL_CATBOX: config.emojis.mossyCatChest,
 };
+
+function formatReward(reward: FishReward): string {
+	const amount = reward.amount > 1 ? `${toClearNumber(reward.amount)} ` : '';
+
+	return `${amount}${rewardEmojis[reward.type] ?? (l(reward.name) || reward.type)}`;
+}
 
 interface IFishesEmbedOptions {
 	initial: InitialMessageSource;
@@ -31,9 +37,7 @@ export default class FishesEmbed extends PaginationEmbed {
 			.addField('Exp', fish.exp, true)
 			.addField('Area type', capitalizeFirstLetter(fish.habitat), true)
 			.addField('Initial range', `${fish.startsFrom}m`, true)
-			.addField(`Reward${fish.rewards.length > 1 ? 's' : ''}`,
-				fish.rewards.map(r => `${r.amount > 1 ? toClearNumber(r.amount) : ''} ${rewards[r.type]}`).join('\n'),
-				true)
+			.addField(`Reward${fish.rewards.length > 1 ? 's' : ''}`, fish.rewards.map(formatReward).join('\n'), true)
 			.setThumbnail(imageUrl(`fish/${fish.image}`))
 			.toEmbed());
 

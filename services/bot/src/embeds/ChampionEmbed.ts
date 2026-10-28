@@ -37,8 +37,7 @@ export default class ChampionEmbed extends PaginationEmbed {
 			return embed.toEmbed();
 		});
 
-		this.setArray(embeds)
-			.showPageIndicator(false);
+		this.setArray(embeds);
 
 		if (page) {
 			this.setPage(page);

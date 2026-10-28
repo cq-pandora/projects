@@ -25,10 +25,15 @@ export type FactionsNormalizationInput = {
 
 export type FishesNormalizationInput = {
 	fishesRawPath: string;
+	fisheriesRawPath: string;
+	itemsRawPath: string;
+	materialsRawPath: string;
+	randomBoxesRawPath: string;
 };
 
 export type FishingGearNormalizationInput = {
 	fishingGearRawPath: string;
+	fisheriesRawPath: string;
 };
 
 export type GoddessesNormalizationInput = {
@@ -78,6 +83,7 @@ export type InheritanceNormalizationInput = {
 
 export type PortraitsNormalizationInput = {
 	portraitsRawPath: string;
+	portraitsDataRawPath: string;
 };
 
 export type SigilsNormalizationInput = {

@@ -21,6 +21,6 @@ export default class GoddessesEmbed extends PaginationEmbed {
 			.setThumbnail(imageUrl(`heroes/${goddess.image}`))
 			.toEmbed());
 
-		this.setArray(embeds).showPageIndicator(false);
+		this.setArray(embeds);
 	}
 }

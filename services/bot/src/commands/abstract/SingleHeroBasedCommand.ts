@@ -1,5 +1,5 @@
-import { HeroForm } from '@cquest/entities';
-import { heroes, extractResult } from '@cquest/data-provider';
+import { Hero, HeroForm } from '@cquest/entities';
+import { extractResult } from '@cquest/data-provider';
 
 import BaseCommand from './BaseCommand';
 
@@ -10,11 +10,12 @@ import {
 import {
 	HeroBlockEmbed, HeroFormsEmbed, HeroSBWEmbed, HeroSBWBlockEmbed, HeroSkinsEmbed
 } from '../../embeds';
+import { searchHero } from '../../util';
 
 const cmdArgs = {
 	name: ArgumentType.string({
 		required: true,
-		description: 'Hero name',
+		description: 'Hero name. Add a class or type to tell same-named heroes apart, e.g. "beatrice wizard"',
 	}),
 	star: ArgumentType.number({
 		required: false,
@@ -36,20 +37,29 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand<Argumen
 	public abstract readonly description: string;
 	public readonly protected = false;
 	private readonly embed: HeroBasedEmbeds;
-	private readonly checkSBW: boolean;
 	private readonly checkGrade: boolean;
 
-	protected constructor(embed: HeroBasedEmbeds, checkSBW = false, checkGrade = true) {
+	protected constructor(embed: HeroBasedEmbeds, checkGrade = true) {
 		super();
 		this.embed = embed;
-		this.checkSBW = checkSBW;
 		this.checkGrade = checkGrade;
+	}
+
+	/** Reply text when the hero lacks what the embed shows (no SBW, no skins, ...), otherwise undefined */
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- hook signature for subclasses
+	protected missingDataReply(hero: Hero): string | undefined {
+		return undefined;
+	}
+
+	/** 1-based embed page showing the given form, or undefined when the embed has no page for it */
+	protected pageOf(hero: Hero, form: HeroForm): number | undefined {
+		return hero.forms.indexOf(form) + 1;
 	}
 
 	async run({ reply, args, initial }: CommandPayload<Arguments>): Promise<Partial<CommandResult>> {
 		const { star, name } = args;
 
-		const result = heroes.search(name);
+		const result = searchHero(name, star);
 
 		if (!result) {
 			await reply('Hero not found!');
@@ -61,12 +71,14 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand<Argumen
 
 		const { result: hero, locales } = extractResult(result);
 
-		if (this.checkSBW && !hero.sbws.length) {
-			await reply('Soulbound weapon not found for hero!');
+		const missingData = this.missingDataReply(hero);
+
+		if (missingData) {
+			await reply(missingData);
 
 			return {
 				statusCode: CommandResultCode.ENTITY_GRADE_NOT_FOUND,
-				target: 'sbw',
+				target: this.commandName,
 				args: JSON.stringify({ name, star }),
 			};
 		}
@@ -82,7 +94,9 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand<Argumen
 				form = hero.forms[hero.forms.length - 1];
 			}
 
-			if (!form) {
+			const formPage = form && this.pageOf(hero, form);
+
+			if (!formPage) {
 				await reply('Hero grade not found!');
 
 				return {
@@ -90,7 +104,7 @@ export default abstract class SingleHeroBasedCommand extends BaseCommand<Argumen
 				};
 			}
 
-			page = hero.forms.indexOf(form) + 1;
+			page = formPage;
 		}
 
 		// eslint-disable-next-line new-cap

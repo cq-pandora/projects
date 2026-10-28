@@ -14,6 +14,8 @@ export type HeroKeysDescription = Record<string, string>;
 export interface ISearchResult<T> {
 	result: T;
 	locales: Locale[];
+	// Fuzzy match score (higher is better); only set by fuzzy searchables
+	score?: number;
 }
 
 export interface ISearchable<T extends Entities, C extends Container<T>> {

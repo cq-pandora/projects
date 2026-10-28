@@ -14,7 +14,11 @@ export async function normalize(input: GoddessesNormalizationInput): Promise<Nor
 	const goddessTranslationIndex = {} as Record<string, number>;
 
 	const goddesses = goddessesRaw.sister.map((raw, idx) => {
-		goddessTranslationIndex[raw.name] = idx;
+		// A goddess has several rows with the same name and skill (base, `_HEAD_*` story variants, `_S2` art).
+		// Search returns one page per goddess: the `_S2` row (current art) when present, else the first row.
+		if (!(raw.name in goddessTranslationIndex) || raw.id.endsWith('_S2')) {
+			goddessTranslationIndex[raw.name] = idx;
+		}
 
 		return new Goddess({
 			id: raw.id,

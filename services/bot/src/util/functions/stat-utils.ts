@@ -10,7 +10,7 @@ const statsInfoMapping: StatsKeyTranslations = {
 	atk_power: ['Attack power', false],
 	crit_chance: ['Crit chance', true],
 	crit_dmg: ['Crit damage', true],
-	great: ['Great', true],
+	great: ['Great success chance', true],
 	atkPower: ['Attack power', false],
 	hp: ['HP', false],
 	critChance: ['Crit chance', true],
@@ -23,26 +23,24 @@ const statsInfoMapping: StatsKeyTranslations = {
 	resistancePenetration: ['Resistance penetration', false],
 	dmgReduction: ['Damage reduction', true],
 	lifesteal: ['Lifesteal', true],
-	critChanceReduction: ['Crit chance reduction', true],
-	all: ['All', true],
+	// In-game name of `critdodgerate` (accessory option CRIT_DODGE, "Critical Resistance" sigils)
+	critChanceReduction: ['Crit resistance', true],
+	all: ['All stats', true],
 };
 
 export const translateStat = (stat: keyof StatsKeyTranslations): string | undefined => statsInfoMapping[stat]?.[0];
+
+// Value alone, in the stat's unit (percent stats are stored as fractions)
+export const formatStatValue = (stat: keyof StatsKeyTranslations, value: number): string => (
+	statsInfoMapping[stat]?.[1]
+		? `${(value * 100).toFixed(2)}%`
+		: toClearNumber(value.toFixed(2))
+);
 
 export const formatStat = (stat: keyof StatsKeyTranslations, value: number): string | undefined => {
 	const statInfo = statsInfoMapping[stat];
 
 	if (!statInfo) return undefined;
 
-	const [name, isPercentage] = statInfo;
-
-	let val: string;
-
-	if (isPercentage) {
-		val = `${(value * 100).toFixed(2)}%`;
-	} else {
-		val = toClearNumber(value.toFixed(2));
-	}
-
-	return `**${name}**: ${val}`;
+	return `**${statInfo[0]}**: ${formatStatValue(stat, value)}`;
 };

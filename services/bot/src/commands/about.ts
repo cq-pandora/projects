@@ -18,7 +18,7 @@ export class AboutCommand extends BaseCommand<NoCommandArguments> {
 		await reply([
 			{
 				title: 'About',
-				description: `Made with ❤ by ${owner.username} (${owner.tag}).\n\nThis bot is not affiliated, associated, authorized by, endorsed by, or in any way officially connected with NHN Entertainment Corp., LoadComplete Inc., or any of their subsidiaries or their affiliates.`,
+				description: `Made with ❤ by ${owner.tag}.\n\nThis bot is not affiliated, associated, authorized by, endorsed by, or in any way officially connected with NHN Corp., Loadcomplete Co., Ltd., or any of their subsidiaries or their affiliates.`,
 				fields: [
 					{
 						name: `Invite ${client.user?.username}`,
@@ -26,8 +26,8 @@ export class AboutCommand extends BaseCommand<NoCommandArguments> {
 						inline: true,
 					},
 					{
-						name: 'Join Servers',
-						value: '[Pandora Dev Server](https://discord.gg/pK9qsJY)\n[Crusaders Quest](https://discord.gg/6TRnyhj)',
+						name: 'Join Server',
+						value: '[Pandora Dev Server](https://discord.gg/pK9qsJY)',
 						inline: true,
 					},
 					{

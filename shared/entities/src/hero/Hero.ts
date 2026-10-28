@@ -21,7 +21,7 @@ export interface IHeroFormOptions {
 	accuracy: number;
 	armor: number;
 	armorPenetration: number;
-	recruitDialog: string;
+	recruitDialog: string | null;
 	atkPower: number;
 	critChance: number;
 	critChanceReduction: number;
@@ -46,7 +46,7 @@ export class HeroForm implements IStatsHolder {
 	readonly all: number = -1;
 	@autoserialize public readonly id!: string;
 	@autoserialize public readonly name!: string;
-	@autoserializeAs('recruit_dialog') public readonly recruitDialog!: string;
+	@autoserializeAs('recruit_dialog') public readonly recruitDialog!: string | null;
 	@autoserialize public readonly image!: string;
 	@autoserialize public readonly star!: number;
 	@autoserialize public readonly accuracy!: number;

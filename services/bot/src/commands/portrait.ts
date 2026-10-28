@@ -1,4 +1,4 @@
-import { portraits, extractResult } from '@cquest/data-provider';
+import { portraits, extractResult, translate } from '@cquest/data-provider';
 
 import BaseCommand from './abstract/BaseCommand';
 
@@ -37,9 +37,15 @@ export class PortraitCommand extends BaseCommand<Arguments> {
 			};
 		}
 
-		const { result: portrait } = extractResult(searchResult);
+		const { result: portrait, locales } = extractResult(searchResult);
+		// Portraits are keyed by the character name translation key
+		const nameKey = Object.keys(portraits.structure()).find(key => portraits.structure()[key] === portrait);
 
-		const embed = new PortraitsEmbed({ initial, portraits: portrait.keys });
+		const embed = new PortraitsEmbed({
+			initial,
+			portraits: portrait.keys,
+			title: nameKey && translate(nameKey, locales[0]),
+		});
 
 		await embed.send();
 

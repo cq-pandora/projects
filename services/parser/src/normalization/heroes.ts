@@ -100,6 +100,17 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 	const oztalkFormIds = new Set(oztalkRaw.oztalk_chat_info.flatMap(chat => chat.chathero ?? []));
 
 	const heroesTranslationsKeysIndex = {} as Record<string, string>;
+	const usedIds = new Set<string>();
+
+	// Some skill keys are episode-specific variants (e.g. `TEXT_SKILL_WA_WILD_NATURE_DESC_S2EP3`) that the game ships
+	// without any text; the base key holds the text the variant was derived from
+	const textKey = <K extends string | null>(key: K): K => {
+		if (!key || defaultTranslation[key]?.text) return key;
+
+		const baseKey = key.replace(/_S\d+EP\d+$/, '');
+
+		return (defaultTranslation[baseKey]?.text ? baseKey : key) as K;
+	};
 
 	const soulbounds = weaponRaw.weapon.reduce((res, obj) => {
 		if (!obj.reqhero_ref) return res;
@@ -156,7 +167,11 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 
 		const firstForm = heroesFormsRaw[0];
 
-		const id = (defaultTranslation[firstForm.name!].text || firstForm.name!).toLowerCase().split(' ').join('_');
+		const baseId = (defaultTranslation[firstForm.name!].text || firstForm.name!).toLowerCase().split(' ').join('_');
+		// Different heroes can share a display name (e.g. contract Beatrice and Re:Zero Beatrice)
+		const id = usedIds.has(baseId) ? `${baseId}_${firstForm.id.toLowerCase()}` : baseId;
+
+		usedIds.add(id);
 
 		const forms = [];
 		let sbws = [] as HeroSBW[];
@@ -164,6 +179,10 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 
 		for (const formRaw of heroesFormsRaw) {
 			const { stats } = formRaw;
+			const blockName = textKey(stats.skill_name!);
+			const blockDescription = textKey(stats.skill_desc!);
+			const passiveName = textKey(stats.skill_subname!);
+			const passiveDescription = textKey(stats.skill_subdesc!);
 
 			forms.push(new HeroForm({
 				id: formRaw.id,
@@ -186,12 +205,12 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 				lore: formRaw.desc!,
 				blockImage: stats.skill_icon!,
 				skillLvl: formRaw.grade < 4 ? 1 : (formRaw.grade === 6 ? 3 : 2),
-				passiveName: stats.skill_subname!,
-				blockName: stats.skill_name!,
-				blockDescription: stats.skill_desc!,
-				passiveDescription: stats.skill_subdesc!,
+				passiveName,
+				blockName,
+				blockDescription,
+				passiveDescription,
 				maxBerries: maxBerriesStats[stats.addstatmaxid!],
-				recruitDialog: formRaw.gachaspeech!,
+				recruitDialog: formRaw.gachaspeech,
 			}));
 
 			const possibleSkinIds = heroToSkinsIds[formRaw.id];
@@ -212,10 +231,10 @@ export async function normalize(input: HeroesNormalizationInput): Promise<Normal
 
 			heroesTranslationsKeysIndex[formRaw.name!] = `${defaultTranslation[formRaw.name!].text} (${formRaw.grade}★) name`;
 			heroesTranslationsKeysIndex[formRaw.desc!] = `${defaultTranslation[formRaw.name!].text} (${formRaw.grade}★) lore`;
-			heroesTranslationsKeysIndex[stats.skill_name!] = `${defaultTranslation[formRaw.name!].text} (${formRaw.grade}★) block name`;
-			heroesTranslationsKeysIndex[stats.skill_desc!] = `${defaultTranslation[formRaw.name!].text} (${formRaw.grade}★) block description`;
-			heroesTranslationsKeysIndex[stats.skill_subname!] = `${defaultTranslation[formRaw.name!].text} (${formRaw.grade}★) passive name`;
-			heroesTranslationsKeysIndex[stats.skill_subdesc!] = `${defaultTranslation[formRaw.name!].text} (${formRaw.grade}★) passive description`;
+			heroesTranslationsKeysIndex[blockName] = `${defaultTranslation[formRaw.name!].text} (${formRaw.grade}★) block name`;
+			heroesTranslationsKeysIndex[blockDescription] = `${defaultTranslation[formRaw.name!].text} (${formRaw.grade}★) block description`;
+			heroesTranslationsKeysIndex[passiveName] = `${defaultTranslation[formRaw.name!].text} (${formRaw.grade}★) passive name`;
+			heroesTranslationsKeysIndex[passiveDescription] = `${defaultTranslation[formRaw.name!].text} (${formRaw.grade}★) passive description`;
 
 			for (const sbw of formSbws) {
 				heroesTranslationsKeysIndex[sbw.name] = `${defaultTranslation[formRaw.name!].text} (${formRaw.grade}★) SBW name`;

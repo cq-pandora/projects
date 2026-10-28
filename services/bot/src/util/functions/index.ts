@@ -28,3 +28,4 @@ export { default as loadRootConfig } from './loadRootConfig';
 export { default as renderInteraction } from './renderInteraction';
 export { default as stringTuple } from './stringTuple';
 export { default as allSettled } from './allSettled';
+export { default as searchHero } from './searchHero';

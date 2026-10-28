@@ -75,6 +75,7 @@ export default class PaginationEmbed {
 		return this.array[this.page - 1];
 	}
 
+	/** Indicators are stamped by `setArray`, so this only affects arrays set after the call */
 	showPageIndicator(pageIndicator: boolean): this {
 		this.pageIndicator = pageIndicator;
 
@@ -112,11 +113,16 @@ export default class PaginationEmbed {
 		}
 
 		if (this.array.length > 1 && this.pageIndicator) {
-			this.array = this.array.map(
-				(e: EmbedSource, idx: number) => e.setFooter({
-					text: `Page ${idx + 1}/${this.array.length}`,
-				})
-			);
+			this.array = this.array.map((e: EmbedSource, idx: number) => {
+				const pageText = `Page ${idx + 1}/${this.array.length}`;
+				// Keep a footer the page embed set itself (e.g. sigil set name) next to the indicator
+				const ownText = e.data.footer?.text;
+
+				return e.setFooter({
+					text: ownText ? `${ownText} • ${pageText}` : pageText,
+					iconURL: e.data.footer?.icon_url,
+				});
+			});
 		}
 
 		return this;

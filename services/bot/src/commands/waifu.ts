@@ -27,7 +27,7 @@ export class WaifuCommand extends BaseCommand<EmptyArgs> {
 		await reply([
 			new EmbedBuilder()
 				.setImage(imageUrl(`heroes/${hero.forms[hero.forms.length - 1].image}`))
-				.setFooter({ text: `${author.username}#${author.tag}` })
+				.setFooter({ text: author.tag })
 		]);
 
 		return {

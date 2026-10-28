@@ -8,6 +8,9 @@ import { FishHabitat } from './Fish';
 
 export type FishingGearType = 'item_rod' | 'item_float' | 'item_bait';
 
+/** `none` is bought for its `price` in the fishing shop, `shop` in the Trading Post */
+export type FishingGearSource = 'none' | 'shop' | 'collection' | 'event';
+
 export interface IFishingGearOptions {
 	id: string;
 	name: string;
@@ -23,6 +26,9 @@ export interface IFishingGearOptions {
 	currency: string;
 	price: number;
 	image: string;
+	howToGet: FishingGearSource;
+	/** Translation key of the fishing spot whose Fish Tome rewards this gear */
+	collectionReward: string | null;
 }
 
 export class FishingGear {
@@ -40,6 +46,8 @@ export class FishingGear {
 	@autoserialize public readonly currency!: string;
 	@autoserialize public readonly price!: number;
 	@autoserialize public readonly image!: string;
+	@autoserializeAs('how_to_get') public readonly howToGet!: FishingGearSource;
+	@autoserializeAs('collection_reward') public readonly collectionReward!: string | null;
 
 	constructor(options: IFishingGearOptions) {
 		if (!options) return; // only for tests
@@ -58,6 +66,8 @@ export class FishingGear {
 		this.price = options.price;
 		this.image = options.image;
 		this.description = options.description;
+		this.howToGet = options.howToGet;
+		this.collectionReward = options.collectionReward;
 	}
 }
 
