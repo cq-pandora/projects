@@ -21,3 +21,8 @@ services/bot/custom_translation_indices.json
 
 .yarn
 services/parser/sprites/.venv
+
+# Local secrets and machine paths
+.env
+services/parser/crypto.json
+services/parser/paths.json
