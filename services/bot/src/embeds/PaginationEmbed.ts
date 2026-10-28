@@ -63,6 +63,10 @@ export default class PaginationEmbed {
 		return this;
 	}
 
+	get pages(): readonly EmbedSource[] {
+		return this.array;
+	}
+
 	protected isLastPage(): boolean {
 		return this.page === this.array.length;
 	}
