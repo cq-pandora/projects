@@ -8,20 +8,32 @@ import { Class, SPSkillsRaw, SPSkillType } from './raw-types/sp-skills';
 
 import { SpSkillNormalizationInput } from './input';
 
-function classMapper(clazz: Class): HeroClass {
+const ID_PREFIX_CLASSES: Record<string, HeroClass> = {
+	AR: 'archer',
+	HU: 'hunter',
+	PA: 'paladin',
+	PR: 'priest',
+	WA: 'warrior',
+	WI: 'wizard',
+};
+
+function classMapper(clazz: Class, id: string): HeroClass {
 	switch (clazz) {
 		case Class.ClaArcher: return 'archer';
 		case Class.ClaWizard: return 'wizard';
 		case Class.ClaPriest: return 'priest';
 		case Class.ClaPaladin: return 'paladin';
 		case Class.ClaHunter: return 'hunter';
-		case Class.Briseis:
-		case Class.LimitedBrsk02:
-		case Class.LimitedBrsk04:
-		case Class.LimitedBrsk05:
-		case Class.ClaWarrior:
-			return 'warrior';
-		default: throw new Error(`Unsupported SP skill class: ${clazz}`);
+		case Class.ClaWarrior: return 'warrior';
+		default: {
+			// Hero-unique skills (BRISEIS, LIMITED_BRSK_*) carry the owner instead of a class;
+			// their id prefix (`PA_`, `WA_`) holds the class
+			const clazzByPrefix = ID_PREFIX_CLASSES[id.split('_')[0]];
+
+			if (!clazzByPrefix) throw new Error(`Unsupported SP skill class: ${clazz} (${id})`);
+
+			return clazzByPrefix;
+		}
 	}
 }
 
@@ -33,7 +45,7 @@ export async function normalize(input: SpSkillNormalizationInput): Promise<Norma
 
 	const spSkillsTranslationIndex = {} as Record<string, number>;
 
-	const spSkills = spMax.map(s => {
+	const trees = spMax.map(s => {
 		const spTree = [s];
 
 		for (
@@ -44,17 +56,39 @@ export async function normalize(input: SpSkillNormalizationInput): Promise<Norma
 			spTree.push(skill);
 		}
 
-		const forms = spTree.reverse().map(sk => new SpSkillForm(
+		return spTree.reverse();
+	});
+
+	// Some hero-unique skills (Briseis) list each level as a separate unlinked `level: 1` row sharing one name,
+	// so trees with the same class and name are joined in id order (`_LV1`, `_LV2`) and renumbered
+	const treesByName = new Map<string, typeof trees>();
+
+	for (const tree of trees) {
+		const key = `${tree[0].class}:${tree[0].name}`;
+
+		treesByName.set(key, [...(treesByName.get(key) ?? []), tree]);
+	}
+
+	const spSkills = [...treesByName.values()].map(group => {
+		const rows = group.length > 1
+			? group.sort((a, b) => a[0].id.localeCompare(b[0].id)).flat()
+			: group[0];
+		const [first] = rows;
+
+		const forms = rows.map((sk, idx) => new SpSkillForm(
 			{
-				level: sk.level, description: sk.desc, shortDescription: sk.simpledesc, image: sk.icon
+				level: group.length > 1 ? idx + 1 : sk.level,
+				description: sk.desc,
+				shortDescription: sk.simpledesc,
+				image: sk.icon,
 			}
 		));
 
 		return new SpSkill({
-			id: (s.name || '').toLowerCase(),
-			name: s.name,
-			clazz: classMapper(s.class),
-			type: s.type === SPSkillType.Normal ? 'normal' : 'ultimate',
+			id: (first.name || '').toLowerCase(),
+			name: first.name,
+			clazz: classMapper(first.class, first.id),
+			type: first.type === SPSkillType.Normal ? 'normal' : 'ultimate',
 			forms
 		});
 	});
