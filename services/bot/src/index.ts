@@ -42,7 +42,7 @@ process.on('unhandledRejection', unhandledRejection);
 	client.on('shardReconnecting', () => {
 		logger.warn('Connection to Discord interrupted. Reconnecting...');
 	});
-	client.on('ready', () => {
+	client.on('clientReady', () => {
 		logger.info(`Logged in as ${client.user!.tag}`);
 		client.user!.setActivity('with Slash Commands!', { type: ActivityType.Playing });
 	});
