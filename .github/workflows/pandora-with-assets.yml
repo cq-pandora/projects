@@ -5,7 +5,10 @@ on:
     branches:
       - master
     paths:
-      - services/bot/*
+      - services/bot/**
+      - shared/**
+      - package.json
+      - yarn.lock
       - .github/workflows/pandora-with-assets.yml
 
 jobs:
